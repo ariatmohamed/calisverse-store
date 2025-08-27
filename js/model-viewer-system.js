@@ -113,6 +113,43 @@ class ModelViewerSystem {
         this.observer.observe(container);
     }
 
+    initializeModelViewer(container, productId) {
+        const modelViewer = container.querySelector('model-viewer');
+        if (!modelViewer) return;
+
+        // Add loading and error handling
+        modelViewer.addEventListener('load', () => {
+            this.hideLoadingSpinner(container);
+            console.log(`Model loaded successfully for ${productId}`);
+        });
+
+        modelViewer.addEventListener('error', (event) => {
+            console.error(`Model failed to load for ${productId}:`, event);
+            this.showFallbackImage(container, productId);
+        });
+
+        // Add progress tracking
+        modelViewer.addEventListener('progress', (event) => {
+            const progress = event.detail.totalProgress;
+            this.updateLoadingProgress(container, progress);
+        });
+
+        // Pause rendering when tab is not visible
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                modelViewer.pause();
+            } else {
+                modelViewer.play();
+            }
+        });
+
+        // Add variant buttons
+        this.addVariantButtons(container, productId, modelViewer);
+
+        // Add sticky cart button
+        this.addStickyCartButton(container, productId);
+    }
+
     setupViewerEvents(viewer, container, equipmentType) {
         const loadingElement = this.createLoadingElement(container);
         const fallbackElement = this.createFallbackElement(container, equipmentType);
