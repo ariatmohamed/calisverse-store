@@ -84,11 +84,16 @@ class PremiumModelViewer {
         modelViewer.setAttribute('rotation-per-second', '30deg');
         
         // Premium lighting and shadows - neutral studio environment
-        modelViewer.setAttribute('environment-image', 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_03_1k.hdr');
+        modelViewer.setAttribute('environment-image', 'neutral');
         modelViewer.setAttribute('shadow-intensity', '1.2');
         modelViewer.setAttribute('shadow-softness', '0.3');
-        modelViewer.setAttribute('exposure', '1.5');
+        modelViewer.setAttribute('exposure', '1.8');
         modelViewer.setAttribute('tone-mapping', 'aces');
+        
+        // Ensure model is visible on first render
+        modelViewer.setAttribute('interaction-prompt', 'none');
+        modelViewer.setAttribute('auto-rotate', '');
+        modelViewer.setAttribute('auto-rotate-delay', '1000');
         
         // Performance and UX
         modelViewer.setAttribute('loading', 'lazy');
@@ -114,6 +119,15 @@ class PremiumModelViewer {
 
         // Event handlers
         this.setupEventHandlers(modelViewer, container, productName);
+        
+        // Debug asset loading
+        if (window.debugAssetChecker) {
+            window.debugAssetChecker.checkAsset(modelViewer.src).then(exists => {
+                if (!exists) {
+                    console.error(`❌ Model not found: ${modelViewer.src}`);
+                }
+            });
+        }
         
         // Set default variant as active
         this.setDefaultVariant(container, productName);
@@ -385,11 +399,15 @@ class PremiumModelViewer {
 
     applyStudioLighting(modelViewer) {
         // Ensure consistent studio lighting is applied
-        modelViewer.setAttribute('environment-image', 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_03_1k.hdr');
+        modelViewer.setAttribute('environment-image', 'neutral');
         modelViewer.setAttribute('shadow-intensity', '1.2');
         modelViewer.setAttribute('shadow-softness', '0.3');
-        modelViewer.setAttribute('exposure', '1.5');
+        modelViewer.setAttribute('exposure', '1.8');
         modelViewer.setAttribute('tone-mapping', 'aces');
+        
+        // Add ambient lighting to prevent black models
+        modelViewer.style.setProperty('--min-hotspot-opacity', '0.8');
+        modelViewer.style.setProperty('--max-hotspot-opacity', '1');
         
         // Force lighting update
         if (modelViewer.model) {
