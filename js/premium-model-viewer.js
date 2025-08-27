@@ -71,9 +71,10 @@ class PremiumModelViewer {
         // Create model-viewer element
         const modelViewer = document.createElement('model-viewer');
         
-        // Set premium attributes
-        modelViewer.src = `/models/${productName}-black.glb`;
-        modelViewer.poster = `/images/${productName}-black-poster.jpg`;
+        // Set premium attributes with visible default variant
+        const defaultVariant = productName === 'rings' ? 'walnut' : 'black';
+        modelViewer.src = `/models/${productName}-${defaultVariant}.glb`;
+        modelViewer.poster = `/images/${productName}-${defaultVariant}-poster.jpg`;
         modelViewer.alt = `${productName.replace('-', ' ')} 3D Model`;
         
         // Premium viewer settings
@@ -86,8 +87,10 @@ class PremiumModelViewer {
         // Rings-specific optimized settings
         if (productName === 'rings') {
             modelViewer.setAttribute('interaction-prompt', 'auto');
-            modelViewer.setAttribute('shadow-intensity', '0.6');
-            modelViewer.setAttribute('exposure', '1.0');
+            modelViewer.setAttribute('shadow-intensity', '0.8');
+            modelViewer.setAttribute('exposure', '1.2');
+            // Enhanced lighting for better material visibility
+            modelViewer.setAttribute('skybox-image', 'neutral');
         } else {
             modelViewer.setAttribute('interaction-prompt', 'none');
             modelViewer.setAttribute('shadow-intensity', '1.2');
@@ -135,6 +138,12 @@ class PremiumModelViewer {
                     console.error(`❌ Model not found: ${modelViewer.src}`);
                 }
             });
+            // Also check poster
+            window.debugAssetChecker.checkAsset(modelViewer.poster).then(exists => {
+                if (!exists) {
+                    console.error(`❌ Poster not found: ${modelViewer.poster}`);
+                }
+            });
         }
         
         // Set default variant as active
@@ -162,7 +171,17 @@ class PremiumModelViewer {
     }
 
     setDefaultVariant(container, productName) {
-        // Set first color swatch as active by default
+        // Set appropriate default variant based on product
+        if (productName === 'rings') {
+            // For rings, set walnut as default (more visible than black)
+            const walnutSwatch = container.querySelector('.color-swatch[data-color="0x8b4513"], .color-swatch.gunmetal-gray');
+            if (walnutSwatch && !container.querySelector('.color-swatch.active')) {
+                walnutSwatch.classList.add('active');
+                return;
+            }
+        }
+        
+        // Fallback to first swatch for other products
         const firstSwatch = container.querySelector('.color-swatch');
         if (firstSwatch && !container.querySelector('.color-swatch.active')) {
             firstSwatch.classList.add('active');
@@ -300,9 +319,9 @@ class PremiumModelViewer {
 
     createVariantControls(container, modelViewer, productName) {
         const variants = [
-            { id: 'black', name: 'Matte Black', color: '#1a1a1a' },
             { id: 'walnut', name: 'Walnut Wood', color: '#8b4513' },
-            { id: 'steel', name: 'Brushed Steel', color: '#c0c0c0' }
+            { id: 'steel', name: 'Brushed Steel', color: '#c0c0c0' },
+            { id: 'black', name: 'Matte Black', color: '#1a1a1a' }
         ];
 
         const variantControls = document.createElement('div');
@@ -310,8 +329,8 @@ class PremiumModelViewer {
         variantControls.innerHTML = `
             <div class="variant-label">Material:</div>
             <div class="variant-buttons">
-                ${variants.map(variant => `
-                    <button class="premium-variant-btn ${variant.id === 'black' ? 'active' : ''}" 
+                ${variants.map((variant, index) => `
+                    <button class="premium-variant-btn ${(productName === 'rings' && variant.id === 'walnut') || (productName !== 'rings' && variant.id === 'black') ? 'active' : ''}" 
                             data-variant="${variant.id}"
                             data-model="/models/${productName}-${variant.id}.glb"
                             data-poster="/images/${productName}-${variant.id}-poster.jpg">
@@ -371,13 +390,14 @@ class PremiumModelViewer {
     }
 
     createStickyCartButton(container, productName) {
+        const defaultVariantName = productName === 'rings' ? 'Walnut' : 'Black';
         const stickyCart = document.createElement('div');
         stickyCart.className = 'premium-sticky-cart';
         stickyCart.innerHTML = `
             <button class="premium-add-to-cart" onclick="addToCart('${productName}')">
                 <span class="cart-icon">🛒</span>
                 <span class="cart-text">Add to Cart</span>
-                <span class="cart-variant">Black</span>
+                <span class="cart-variant">${defaultVariantName}</span>
             </button>
         `;
 
