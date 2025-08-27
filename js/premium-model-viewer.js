@@ -91,10 +91,9 @@ class PremiumModelViewer {
         // Create model-viewer element
         const modelViewer = document.createElement('model-viewer');
         
-        // Set premium attributes with visible default variant
-        const defaultVariant = productName === 'rings' ? 'walnut' : 'black';
-        modelViewer.src = `/models/${productName}-${defaultVariant}.glb`;
-        modelViewer.poster = `/images/${productName}-${defaultVariant}-poster.jpg`;
+        // Set premium attributes - use exact model paths as requested
+        modelViewer.src = `/models/${productName}.glb`;
+        modelViewer.poster = `/images/${productName}-poster.jpg`;
         modelViewer.alt = `${productName.replace('-', ' ')} 3D Model`;
         
         // Premium viewer settings
@@ -104,28 +103,13 @@ class PremiumModelViewer {
         modelViewer.setAttribute('auto-rotate-delay', '3000');
         modelViewer.setAttribute('rotation-per-second', '30deg');
         
-        // Product-specific optimized settings
-        if (productName === 'rings') {
-            modelViewer.setAttribute('interaction-prompt', 'auto');
-            modelViewer.setAttribute('shadow-intensity', '0.8');
-            modelViewer.setAttribute('exposure', '1.2');
-            modelViewer.setAttribute('skybox-image', 'neutral');
-        } else if (productName === 'pullup-bar') {
-            modelViewer.setAttribute('interaction-prompt', 'auto');
-            modelViewer.setAttribute('shadow-intensity', '1.0');
-            modelViewer.setAttribute('exposure', '1.4');
-        } else if (productName === 'parallettes') {
-            modelViewer.setAttribute('interaction-prompt', 'auto');
-            modelViewer.setAttribute('shadow-intensity', '1.0');
-            modelViewer.setAttribute('exposure', '1.4');
-        } else {
-            modelViewer.setAttribute('interaction-prompt', 'none');
-            modelViewer.setAttribute('shadow-intensity', '1.2');
-            modelViewer.setAttribute('exposure', '1.8');
-        }
-        
-        // Premium lighting - neutral studio environment
+        // Consistent settings for all products as requested
+        modelViewer.setAttribute('interaction-prompt', 'auto');
+        modelViewer.setAttribute('shadow-intensity', '1.0');
+        modelViewer.setAttribute('exposure', '1.0');
         modelViewer.setAttribute('environment-image', 'neutral');
+        
+        // Premium lighting settings
         modelViewer.setAttribute('shadow-softness', '0.3');
         modelViewer.setAttribute('tone-mapping', 'aces');
         
@@ -133,16 +117,10 @@ class PremiumModelViewer {
         modelViewer.setAttribute('auto-rotate', '');
         modelViewer.setAttribute('auto-rotate-delay', '1000');
         
-        // Enhanced auto-rotation for all products
-        if (productName === 'rings') {
-            modelViewer.setAttribute('auto-rotate', '');
-            modelViewer.setAttribute('auto-rotate-delay', '500');
-            modelViewer.setAttribute('rotation-per-second', '45deg');
-        } else if (productName === 'pullup-bar' || productName === 'parallettes') {
-            modelViewer.setAttribute('auto-rotate', '');
-            modelViewer.setAttribute('auto-rotate-delay', '1000');
-            modelViewer.setAttribute('rotation-per-second', '30deg');
-        }
+        // Consistent auto-rotation for all products
+        modelViewer.setAttribute('auto-rotate', '');
+        modelViewer.setAttribute('auto-rotate-delay', '1000');
+        modelViewer.setAttribute('rotation-per-second', '30deg');
         
         // Performance and UX
         modelViewer.setAttribute('loading', 'lazy');
@@ -170,17 +148,16 @@ class PremiumModelViewer {
         // Event handlers
         this.setupEventHandlers(modelViewer, container, productName);
         
-        // Debug asset loading
+        // Debug asset loading with exact paths
+        console.log(`🔍 Loading model: ${modelViewer.src}`);
+        console.log(`🔍 Loading poster: ${modelViewer.poster}`);
+        
         if (window.debugAssetChecker) {
             window.debugAssetChecker.checkAsset(modelViewer.src).then(exists => {
                 if (!exists) {
                     console.error(`❌ Model not found: ${modelViewer.src}`);
-                }
-            });
-            // Also check poster
-            window.debugAssetChecker.checkAsset(modelViewer.poster).then(exists => {
-                if (!exists) {
-                    console.error(`❌ Poster not found: ${modelViewer.poster}`);
+                } else {
+                    console.log(`✅ Model found: ${modelViewer.src}`);
                 }
             });
         }
@@ -255,16 +232,10 @@ class PremiumModelViewer {
         // Force camera controls to be enabled
         setTimeout(() => {
             modelViewer.cameraControls = true;
-            // Enhanced auto-rotate for all products
-            if (container.id === 'rings-viewer') {
-                modelViewer.autoRotate = true;
-                modelViewer.autoRotateDelay = 500;
-                modelViewer.rotationPerSecond = '45deg';
-            } else if (container.id === 'pullup-viewer' || container.id === 'parallettes-viewer') {
-                modelViewer.autoRotate = true;
-                modelViewer.autoRotateDelay = 1000;
-                modelViewer.rotationPerSecond = '30deg';
-            }
+            // Force auto-rotate for all viewers
+            modelViewer.autoRotate = true;
+            modelViewer.autoRotateDelay = 1000;
+            modelViewer.rotationPerSecond = '30deg';
             console.log(`🎮 Ensured interactivity for ${container.id}`);
         }, 100);
     }
@@ -439,14 +410,13 @@ class PremiumModelViewer {
     }
 
     createStickyCartButton(container, productName) {
-        const defaultVariantName = productName === 'rings' ? 'Walnut' : 'Black';
         const stickyCart = document.createElement('div');
         stickyCart.className = 'premium-sticky-cart';
         stickyCart.innerHTML = `
             <button class="premium-add-to-cart" onclick="addToCart('${productName}')">
                 <span class="cart-icon">🛒</span>
                 <span class="cart-text">Add to Cart</span>
-                <span class="cart-variant">${defaultVariantName}</span>
+                <span class="cart-variant">Default</span>
             </button>
         `;
 
