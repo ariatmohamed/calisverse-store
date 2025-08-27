@@ -54,46 +54,7 @@
             position: relative;
         }
         
-        /* Premium animated background will be handled by premium-background.js */
-        
-        .particle:nth-child(2n) {
-            background: rgba(59, 130, 246, 0.3);
-            box-shadow: 0 0 6px rgba(59, 130, 246, 0.5);
-            animation-duration: 20s;
-        }
-        
-        .particle:nth-child(3n) {
-            background: rgba(6, 182, 212, 0.3);
-            box-shadow: 0 0 6px rgba(6, 182, 212, 0.5);
-            animation-duration: 25s;
-        }
-        
-        @keyframes gradientShift {
-            0%, 100% {
-                background: radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-                            radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-                            radial-gradient(circle at 40% 40%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
-                            linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
-            }
-            25% {
-                background: radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.2) 0%, transparent 50%),
-                            radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-                            radial-gradient(circle at 60% 60%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
-                            linear-gradient(225deg, #0a0a0f 0%, #2e1a1a 50%, #3e1616 100%);
-            }
-            50% {
-                background: radial-gradient(circle at 40% 60%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
-                            radial-gradient(circle at 60% 40%, rgba(59, 130, 246, 0.2) 0%, transparent 50%),
-                            radial-gradient(circle at 20% 20%, rgba(6, 182, 212, 0.12) 0%, transparent 50%),
-                            linear-gradient(315deg, #0a0a0f 0%, #1a2e1a 50%, #16213e 100%);
-            }
-            75% {
-                background: radial-gradient(circle at 60% 40%, rgba(139, 92, 246, 0.18) 0%, transparent 50%),
-                            radial-gradient(circle at 40% 60%, rgba(59, 130, 246, 0.12) 0%, transparent 50%),
-                            radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
-                            linear-gradient(45deg, #0a0a0f 0%, #2e2e1a 50%, #3e3e16 100%);
-            }
-        }
+        /* Premium Igloo animated background handled by igloo-animated-background.js */
         
         @keyframes float {
             0% {
@@ -3619,7 +3580,8 @@
     </script>
     
     <!-- Load new premium components -->
-    <script src="./js/premium-background.js"></script>
+    <script src="./js/igloo-animated-background.js"></script>
+    <script src="./js/model-viewer-system.js"></script>
     <script src="./js/3d-performance-optimizer.js"></script>
     <script src="./js/gltf-3d-models.js"></script>
     <script src="./js/professional-3d-viewer.js"></script>

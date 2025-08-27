@@ -1,0 +1,80 @@
+# Netlify Headers Configuration for CalisVerse
+
+/*
+  # Security Headers
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  
+  # Content Security Policy
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdnjs.cloudflare.com https://threejs.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https:; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self';
+
+# 3D Model Files
+/models/*.glb
+  Content-Type: model/gltf-binary
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Methods: GET, HEAD, OPTIONS
+  Access-Control-Allow-Headers: Range, Content-Range, Content-Length
+
+/models/*.gltf
+  Content-Type: model/gltf+json
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+
+# Texture and Image Files
+/images/*.jpg
+  Content-Type: image/jpeg
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/*.jpeg
+  Content-Type: image/jpeg
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/*.png
+  Content-Type: image/png
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/*.webp
+  Content-Type: image/webp
+  Cache-Control: public, max-age=31536000, immutable
+
+# JavaScript Files
+/js/*.js
+  Content-Type: application/javascript
+  Cache-Control: public, max-age=86400
+
+# CSS Files
+/css/*.css
+  Content-Type: text/css
+  Cache-Control: public, max-age=86400
+
+# Font Files
+/fonts/*.woff2
+  Content-Type: font/woff2
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*.woff
+  Content-Type: font/woff
+  Cache-Control: public, max-age=31536000, immutable
+
+# Compression for text files
+/js/*
+  Content-Encoding: gzip
+
+/css/*
+  Content-Encoding: gzip
+
+# Enable CORS for model-viewer
+/models/*
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Methods: GET, HEAD, OPTIONS
+  Access-Control-Allow-Headers: Range, Content-Range, Content-Length, Accept-Encoding
+
+# Preload critical resources
+/
+  Link: </js/igloo-animated-background.js>; rel=preload; as=script
+  Link: </js/model-viewer-system.js>; rel=preload; as=script
+  Link: </css/premium-glass-cards.css>; rel=preload; as=style
