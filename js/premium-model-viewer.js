@@ -83,15 +83,23 @@ class PremiumModelViewer {
         modelViewer.setAttribute('auto-rotate-delay', '3000');
         modelViewer.setAttribute('rotation-per-second', '30deg');
         
-        // Premium lighting and shadows - neutral studio environment
+        // Rings-specific optimized settings
+        if (productName === 'rings') {
+            modelViewer.setAttribute('interaction-prompt', 'auto');
+            modelViewer.setAttribute('shadow-intensity', '0.6');
+            modelViewer.setAttribute('exposure', '1.0');
+        } else {
+            modelViewer.setAttribute('interaction-prompt', 'none');
+            modelViewer.setAttribute('shadow-intensity', '1.2');
+            modelViewer.setAttribute('exposure', '1.8');
+        }
+        
+        // Premium lighting - neutral studio environment
         modelViewer.setAttribute('environment-image', 'neutral');
-        modelViewer.setAttribute('shadow-intensity', '1.2');
         modelViewer.setAttribute('shadow-softness', '0.3');
-        modelViewer.setAttribute('exposure', '1.8');
         modelViewer.setAttribute('tone-mapping', 'aces');
         
         // Ensure model is visible on first render
-        modelViewer.setAttribute('interaction-prompt', 'none');
         modelViewer.setAttribute('auto-rotate', '');
         modelViewer.setAttribute('auto-rotate-delay', '1000');
         
@@ -170,12 +178,21 @@ class PremiumModelViewer {
         container.style.position = 'relative';
         
         // Ensure overlays don't block interaction
-        const overlays = container.querySelectorAll('.loading-text, .controls-hint');
+        const overlays = container.querySelectorAll('.loading-text, .controls-hint, .loading, .scroll-overlay');
         overlays.forEach(overlay => {
             if (!overlay.classList.contains('color-swatch') && !overlay.classList.contains('color-bar')) {
                 overlay.style.pointerEvents = 'none';
             }
         });
+        
+        // Special handling for rings viewer overlays
+        if (container.id === 'rings-viewer') {
+            const ringsOverlays = container.querySelectorAll('.loading, .loading-text, .controls-hint, .scroll-overlay');
+            ringsOverlays.forEach(overlay => {
+                overlay.style.pointerEvents = 'none';
+                overlay.style.zIndex = '0';
+            });
+        }
         
         // Force camera controls to be enabled
         setTimeout(() => {
@@ -218,9 +235,31 @@ class PremiumModelViewer {
                 loadingState.style.opacity = '0';
                 setTimeout(() => loadingState.remove(), 300);
             }
+            
+            // Hide existing loading text elements
+            const existingLoading = container.querySelectorAll('.loading, .loading-text');
+            existingLoading.forEach(el => {
+                el.style.display = 'none';
+            });
+            
             // Ensure model is visible and lit properly
             this.applyStudioLighting(modelViewer);
             console.log(`✅ Model loaded: ${productName}`);
+        });
+        
+        // Also hide loading on model-visibility event
+        modelViewer.addEventListener('model-visibility', () => {
+            const loadingState = this.loadingStates.get(productName);
+            if (loadingState) {
+                loadingState.style.opacity = '0';
+                setTimeout(() => loadingState.remove(), 300);
+            }
+            
+            // Hide existing loading text elements
+            const existingLoading = container.querySelectorAll('.loading, .loading-text');
+            existingLoading.forEach(el => {
+                el.style.display = 'none';
+            });
         });
 
         // Show loading progress
