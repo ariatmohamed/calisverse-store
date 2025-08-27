@@ -83,11 +83,12 @@ class PremiumModelViewer {
         modelViewer.setAttribute('auto-rotate-delay', '3000');
         modelViewer.setAttribute('rotation-per-second', '30deg');
         
-        // Premium lighting and shadows
-        modelViewer.setAttribute('environment-image', 'neutral');
-        modelViewer.setAttribute('shadow-intensity', '1');
-        modelViewer.setAttribute('shadow-softness', '0.5');
-        modelViewer.setAttribute('exposure', '1.2');
+        // Premium lighting and shadows - neutral studio environment
+        modelViewer.setAttribute('environment-image', 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_03_1k.hdr');
+        modelViewer.setAttribute('shadow-intensity', '1.2');
+        modelViewer.setAttribute('shadow-softness', '0.3');
+        modelViewer.setAttribute('exposure', '1.5');
+        modelViewer.setAttribute('tone-mapping', 'aces');
         
         // Performance and UX
         modelViewer.setAttribute('loading', 'lazy');
@@ -105,10 +106,17 @@ class PremiumModelViewer {
             height: 100%;
             background: transparent;
             --poster-color: transparent;
+            --progress-bar-color: #8b5cf6;
+            --progress-mask: rgba(139, 92, 246, 0.2);
+            pointer-events: auto;
+            z-index: 1;
         `;
 
         // Event handlers
         this.setupEventHandlers(modelViewer, container, productName);
+        
+        // Set default variant as active
+        this.setDefaultVariant(container, productName);
         
         // Add variant controls
         this.createVariantControls(container, modelViewer, productName);
@@ -119,6 +127,9 @@ class PremiumModelViewer {
         // Add interaction hints
         this.createInteractionHints(container);
         
+        // Ensure model viewer is interactive
+        this.ensureInteractivity(modelViewer, container);
+        
         // Store reference
         this.modelViewers.set(productName, modelViewer);
         
@@ -126,6 +137,37 @@ class PremiumModelViewer {
         container.appendChild(modelViewer);
         
         console.log(`✅ Created premium viewer for ${productName}`);
+    }
+
+    setDefaultVariant(container, productName) {
+        // Set first color swatch as active by default
+        const firstSwatch = container.querySelector('.color-swatch');
+        if (firstSwatch && !container.querySelector('.color-swatch.active')) {
+            firstSwatch.classList.add('active');
+        }
+    }
+
+    ensureInteractivity(modelViewer, container) {
+        // Ensure model viewer receives pointer events
+        modelViewer.style.pointerEvents = 'auto';
+        modelViewer.style.touchAction = 'pan-y';
+        
+        // Set container to allow interactions
+        container.style.position = 'relative';
+        
+        // Ensure overlays don't block interaction
+        const overlays = container.querySelectorAll('.loading-text, .controls-hint');
+        overlays.forEach(overlay => {
+            if (!overlay.classList.contains('color-swatch') && !overlay.classList.contains('color-bar')) {
+                overlay.style.pointerEvents = 'none';
+            }
+        });
+        
+        // Force camera controls to be enabled
+        setTimeout(() => {
+            modelViewer.cameraControls = true;
+            console.log(`🎮 Ensured interactivity for ${container.id}`);
+        }, 100);
     }
 
     createLoadingState(container, productName) {
@@ -162,6 +204,8 @@ class PremiumModelViewer {
                 loadingState.style.opacity = '0';
                 setTimeout(() => loadingState.remove(), 300);
             }
+            // Ensure model is visible and lit properly
+            this.applyStudioLighting(modelViewer);
             console.log(`✅ Model loaded: ${productName}`);
         });
 
@@ -245,12 +289,23 @@ class PremiumModelViewer {
                 variantControls.querySelectorAll('.premium-variant-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
 
-                // Update model
+                // Update model with proper lighting
                 const newSrc = btn.dataset.model;
                 const newPoster = btn.dataset.poster;
                 
+                // Maintain lighting during switch
+                const currentOrbit = modelViewer.getCameraOrbit();
+                
                 modelViewer.src = newSrc;
                 modelViewer.poster = newPoster;
+                
+                // Restore camera position and apply lighting
+                setTimeout(() => {
+                    if (currentOrbit) {
+                        modelViewer.cameraOrbit = currentOrbit.toString();
+                    }
+                    this.applyStudioLighting(modelViewer);
+                }, 100);
                 
                 // Update sticky cart button
                 this.updateStickyCart(container, btn.dataset.variant);
@@ -328,12 +383,28 @@ class PremiumModelViewer {
         }
     }
 
+    applyStudioLighting(modelViewer) {
+        // Ensure consistent studio lighting is applied
+        modelViewer.setAttribute('environment-image', 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_03_1k.hdr');
+        modelViewer.setAttribute('shadow-intensity', '1.2');
+        modelViewer.setAttribute('shadow-softness', '0.3');
+        modelViewer.setAttribute('exposure', '1.5');
+        modelViewer.setAttribute('tone-mapping', 'aces');
+        
+        // Force lighting update
+        if (modelViewer.model) {
+            modelViewer.environmentImage = modelViewer.environmentImage;
+        }
+    }
+
     // Public API methods
     switchVariant(productName, variant) {
         const modelViewer = this.modelViewers.get(productName);
         if (modelViewer) {
             modelViewer.src = `/models/${productName}-${variant}.glb`;
             modelViewer.poster = `/images/${productName}-${variant}-poster.jpg`;
+            // Apply lighting after switch
+            setTimeout(() => this.applyStudioLighting(modelViewer), 100);
         }
     }
 
