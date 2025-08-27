@@ -1,0 +1,194 @@
+/* Premium Animated Background - Igloo Vibe */
+
+.premium-animated-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+.background-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(20, 184, 166, 0.2) 0%, transparent 50%),
+        linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+    animation: gradientFlow 20s ease-in-out infinite;
+}
+
+.background-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: rgba(139, 92, 246, 0.6);
+    border-radius: 50%;
+    animation: particleFloat 15s linear infinite;
+}
+
+.particle:nth-child(2n) {
+    background: rgba(59, 130, 246, 0.5);
+    animation-duration: 20s;
+    animation-delay: -5s;
+}
+
+.particle:nth-child(3n) {
+    background: rgba(20, 184, 166, 0.4);
+    animation-duration: 25s;
+    animation-delay: -10s;
+}
+
+.particle:nth-child(4n) {
+    width: 1px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.3);
+    animation-duration: 30s;
+    animation-delay: -15s;
+}
+
+/* Parallax layers */
+.parallax-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120%;
+    height: 120%;
+    background: 
+        radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+            rgba(139, 92, 246, 0.1) 0%, 
+            transparent 40%);
+    transition: transform 0.3s ease-out;
+    transform: translate(var(--parallax-x, 0), var(--parallax-y, 0));
+}
+
+.parallax-layer.layer-2 {
+    background: 
+        radial-gradient(circle at calc(var(--mouse-x, 50%) * 0.8) calc(var(--mouse-y, 50%) * 0.8), 
+            rgba(59, 130, 246, 0.08) 0%, 
+            transparent 50%);
+    animation-delay: -2s;
+}
+
+.parallax-layer.layer-3 {
+    background: 
+        radial-gradient(circle at calc(var(--mouse-x, 50%) * 0.6) calc(var(--mouse-y, 50%) * 0.6), 
+            rgba(20, 184, 166, 0.06) 0%, 
+            transparent 60%);
+    animation-delay: -4s;
+}
+
+/* Animations */
+@keyframes gradientFlow {
+    0%, 100% {
+        background-position: 0% 0%, 100% 100%, 50% 50%;
+        filter: hue-rotate(0deg);
+    }
+    25% {
+        background-position: 100% 0%, 0% 100%, 80% 20%;
+        filter: hue-rotate(15deg);
+    }
+    50% {
+        background-position: 100% 100%, 0% 0%, 20% 80%;
+        filter: hue-rotate(30deg);
+    }
+    75% {
+        background-position: 0% 100%, 100% 0%, 60% 40%;
+        filter: hue-rotate(15deg);
+    }
+}
+
+@keyframes particleFloat {
+    0% {
+        transform: translateY(100vh) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-10vh) translateX(100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .premium-animated-background {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    }
+    
+    .background-gradient {
+        background: 
+            radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 50%),
+            linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        animation-duration: 30s;
+    }
+    
+    .particle {
+        display: none; /* Hide particles on mobile for performance */
+    }
+    
+    .parallax-layer {
+        display: none; /* Disable parallax on mobile */
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .background-gradient,
+    .particle,
+    .parallax-layer {
+        animation: none;
+    }
+    
+    .parallax-layer {
+        transform: none;
+        transition: none;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .premium-animated-background {
+        background: #000;
+    }
+    
+    .background-gradient {
+        background: linear-gradient(135deg, #000 0%, #333 100%);
+        animation: none;
+    }
+    
+    .particle {
+        background: rgba(255, 255, 255, 0.8);
+    }
+}
+
+/* GPU acceleration hints */
+.premium-animated-background,
+.background-gradient,
+.parallax-layer {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}

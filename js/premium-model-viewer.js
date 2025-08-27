@@ -38,26 +38,46 @@ class PremiumModelViewer {
         });
     }
 
-    initializeProductViewers() {
-        // Find all 3D containers
-        const containers = document.querySelectorAll('#pullup-viewer, #rings-viewer, #parallettes-viewer, .viewer-3d, .professional-3d-viewer');
+    initializeViewers() {
+        // Initialize all product viewers with premium model-viewer
+        const viewerContainers = document.querySelectorAll('[id$="-viewer"]');
         
-        containers.forEach(container => {
-            const productName = this.getProductName(container);
+        viewerContainers.forEach(container => {
+            const productName = this.extractProductName(container);
             if (productName) {
+                // Clear any existing Three.js content
+                this.clearLegacyContent(container);
                 this.createPremiumViewer(container, productName);
             }
         });
     }
 
-    getProductName(container) {
+    extractProductName(container) {
         // Extract product name from container ID or dataset
-        if (container.id === 'pullup-viewer') return 'pullup-bar';
-        if (container.id === 'rings-viewer') return 'rings';
-        if (container.id === 'parallettes-viewer') return 'parallettes';
+        const id = container.id;
+        if (id.includes('rings')) return 'rings';
+        if (id.includes('pullup')) return 'pullup-bar';
+        if (id.includes('parallettes')) return 'parallettes';
         
-        // Fallback to dataset
-        return container.dataset.equipment || container.dataset.product;
+        // Fallback to dataset or other methods
+        return container.dataset.product || null;
+    }
+    
+    clearLegacyContent(container) {
+        // Remove any existing Three.js canvases or conflicting elements
+        const canvases = container.querySelectorAll('canvas');
+        const threejsElements = container.querySelectorAll('.threejs-container, .three-viewer');
+        
+        canvases.forEach(canvas => {
+            if (canvas.parentElement !== container) return;
+            canvas.remove();
+        });
+        
+        threejsElements.forEach(el => el.remove());
+        
+        // Clear any existing model-viewer elements to prevent duplicates
+        const existingViewers = container.querySelectorAll('model-viewer');
+        existingViewers.forEach(viewer => viewer.remove());
     }
 
     createPremiumViewer(container, productName) {
@@ -84,13 +104,20 @@ class PremiumModelViewer {
         modelViewer.setAttribute('auto-rotate-delay', '3000');
         modelViewer.setAttribute('rotation-per-second', '30deg');
         
-        // Rings-specific optimized settings
+        // Product-specific optimized settings
         if (productName === 'rings') {
             modelViewer.setAttribute('interaction-prompt', 'auto');
             modelViewer.setAttribute('shadow-intensity', '0.8');
             modelViewer.setAttribute('exposure', '1.2');
-            // Enhanced lighting for better material visibility
             modelViewer.setAttribute('skybox-image', 'neutral');
+        } else if (productName === 'pullup-bar') {
+            modelViewer.setAttribute('interaction-prompt', 'auto');
+            modelViewer.setAttribute('shadow-intensity', '1.0');
+            modelViewer.setAttribute('exposure', '1.4');
+        } else if (productName === 'parallettes') {
+            modelViewer.setAttribute('interaction-prompt', 'auto');
+            modelViewer.setAttribute('shadow-intensity', '1.0');
+            modelViewer.setAttribute('exposure', '1.4');
         } else {
             modelViewer.setAttribute('interaction-prompt', 'none');
             modelViewer.setAttribute('shadow-intensity', '1.2');
@@ -106,21 +133,21 @@ class PremiumModelViewer {
         modelViewer.setAttribute('auto-rotate', '');
         modelViewer.setAttribute('auto-rotate-delay', '1000');
         
-        // Fix rings rotation issue - force enable auto-rotate
+        // Enhanced auto-rotation for all products
         if (productName === 'rings') {
             modelViewer.setAttribute('auto-rotate', '');
             modelViewer.setAttribute('auto-rotate-delay', '500');
             modelViewer.setAttribute('rotation-per-second', '45deg');
+        } else if (productName === 'pullup-bar' || productName === 'parallettes') {
+            modelViewer.setAttribute('auto-rotate', '');
+            modelViewer.setAttribute('auto-rotate-delay', '1000');
+            modelViewer.setAttribute('rotation-per-second', '30deg');
         }
         
         // Performance and UX
         modelViewer.setAttribute('loading', 'lazy');
-        if (productName === 'rings') {
-            // For rings, reveal immediately to start auto-rotation
-            modelViewer.setAttribute('reveal', 'auto');
-        } else {
-            modelViewer.setAttribute('reveal', 'interaction');
-        }
+        // All products reveal automatically to start auto-rotation
+        modelViewer.setAttribute('reveal', 'auto');
         modelViewer.setAttribute('seamless-poster', '');
         
         // Zoom and interaction limits
@@ -228,11 +255,15 @@ class PremiumModelViewer {
         // Force camera controls to be enabled
         setTimeout(() => {
             modelViewer.cameraControls = true;
-            // Special handling for rings auto-rotate
+            // Enhanced auto-rotate for all products
             if (container.id === 'rings-viewer') {
                 modelViewer.autoRotate = true;
                 modelViewer.autoRotateDelay = 500;
                 modelViewer.rotationPerSecond = '45deg';
+            } else if (container.id === 'pullup-viewer' || container.id === 'parallettes-viewer') {
+                modelViewer.autoRotate = true;
+                modelViewer.autoRotateDelay = 1000;
+                modelViewer.rotationPerSecond = '30deg';
             }
             console.log(`🎮 Ensured interactivity for ${container.id}`);
         }, 100);
