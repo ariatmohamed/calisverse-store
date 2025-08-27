@@ -1,0 +1,375 @@
+/* Premium Glass Morphism Cards with Trust Elements */
+
+.product-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 24px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        0 2px 8px rgba(139, 92, 246, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.product-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(139, 92, 246, 0.3);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.4),
+        0 8px 32px rgba(139, 92, 246, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.product-card:hover::before {
+    opacity: 1;
+}
+
+/* Product Header */
+.product-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.product-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #ffffff, #e2e8f0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.product-subtitle {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+/* Trust Badges */
+.trust-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.trust-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #22c55e;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.trust-badge.premium {
+    background: rgba(139, 92, 246, 0.1);
+    border-color: rgba(139, 92, 246, 0.2);
+    color: #8b5cf6;
+}
+
+.trust-badge.security {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.2);
+    color: #3b82f6;
+}
+
+.trust-badge-icon {
+    font-size: 10px;
+}
+
+/* Price Section */
+.price-section {
+    margin: 20px 0;
+    padding: 16px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.price-main {
+    font-size: 32px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 4px;
+    background: linear-gradient(135deg, #8b5cf6, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.price-original {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: line-through;
+    margin-right: 8px;
+}
+
+.price-save {
+    display: inline-block;
+    padding: 4px 8px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #ef4444;
+    margin-left: 8px;
+}
+
+/* Micro-copy */
+.product-microcopy {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 16px 0;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.microcopy-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.microcopy-icon {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(139, 92, 246, 0.2);
+    border-radius: 50%;
+    font-size: 10px;
+    color: #8b5cf6;
+    flex-shrink: 0;
+}
+
+/* Secure Checkout Indicators */
+.secure-checkout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 16px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.security-icon {
+    color: #22c55e;
+    font-size: 16px;
+}
+
+.security-text {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+}
+
+.payment-methods {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.payment-method {
+    width: 24px;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    font-weight: 700;
+    color: #1a1a2e;
+}
+
+/* Enhanced Add to Cart Button */
+.premium-add-to-cart {
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #c084fc 100%);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    margin-top: 20px;
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+}
+
+.premium-add-to-cart::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.premium-add-to-cart:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
+    background: linear-gradient(135deg, #7c3aed 0%, #9333ea 50%, #a855f7 100%);
+}
+
+.premium-add-to-cart:hover::before {
+    left: 100%;
+}
+
+.premium-add-to-cart:active {
+    transform: translateY(0);
+}
+
+/* Warranty and Support Section */
+.warranty-section {
+    margin-top: 20px;
+    padding: 16px;
+    background: rgba(139, 92, 246, 0.05);
+    border: 1px solid rgba(139, 92, 246, 0.1);
+    border-radius: 12px;
+}
+
+.warranty-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.warranty-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.warranty-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.warranty-check {
+    color: #22c55e;
+    font-size: 12px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .product-card {
+        padding: 20px;
+        border-radius: 16px;
+    }
+    
+    .product-title {
+        font-size: 20px;
+    }
+    
+    .price-main {
+        font-size: 28px;
+    }
+    
+    .trust-badges {
+        gap: 6px;
+    }
+    
+    .trust-badge {
+        padding: 4px 8px;
+        font-size: 10px;
+    }
+    
+    .premium-add-to-cart {
+        padding: 14px 20px;
+        font-size: 15px;
+    }
+}
+
+/* Dark theme enhancements */
+@media (prefers-color-scheme: dark) {
+    .product-card {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .product-card:hover {
+        background: rgba(255, 255, 255, 0.06);
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .product-card,
+    .premium-add-to-cart,
+    .trust-badge {
+        transition: none;
+    }
+    
+    .product-card:hover {
+        transform: none;
+    }
+    
+    .premium-add-to-cart::before {
+        display: none;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .product-card {
+        border-color: rgba(255, 255, 255, 0.3);
+        background: rgba(0, 0, 0, 0.8);
+    }
+    
+    .trust-badge {
+        border-width: 2px;
+    }
+    
+    .premium-add-to-cart {
+        border: 2px solid #8b5cf6;
+    }
+}

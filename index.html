@@ -6,6 +6,8 @@
     <title>CalisVerse - Professional Equipment Store | Auto-Deploy Test</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://threejs.org/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://threejs.org/examples/js/loaders/DRACOLoader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
@@ -15,6 +17,7 @@
     <link rel="stylesheet" href="./css/color-picker-styles.css">
     <link rel="stylesheet" href="./css/checkout-styles.css">
     <link rel="stylesheet" href="./css/notification-styles.css">
+    <link rel="stylesheet" href="./css/premium-glass-cards.css">
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
@@ -51,51 +54,7 @@
             position: relative;
         }
         
-        /* Animated Background */
-        .animated-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            background: radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-                        radial-gradient(circle at 40% 40%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
-                        linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
-            animation: gradientShift 20s ease-in-out infinite;
-        }
-        
-        .animated-background::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(139, 92, 246, 0.08) 0%, transparent 40%);
-            transition: background 0.3s ease;
-        }
-        
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
-        
-        .particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: rgba(139, 92, 246, 0.4);
-            border-radius: 50%;
-            box-shadow: 0 0 6px rgba(139, 92, 246, 0.6);
-            animation: float 15s infinite linear;
-        }
+        /* Premium animated background will be handled by premium-background.js */
         
         .particle:nth-child(2n) {
             background: rgba(59, 130, 246, 0.3);
@@ -3659,16 +3618,19 @@
     
     </script>
     
-    <!-- Load scripts in correct dependency order -->
+    <!-- Load new premium components -->
+    <script src="./js/premium-background.js"></script>
+    <script src="./js/3d-performance-optimizer.js"></script>
+    <script src="./js/gltf-3d-models.js"></script>
+    <script src="./js/professional-3d-viewer.js"></script>
+    
+    <!-- Load existing scripts -->
     <script src="./js/fixed-cart-system.js"></script>
-    <script src="./js/3d-models.js"></script>
     <script src="./js/color-picker.js"></script>
-    <script src="./js/enhanced-3d-controls.js"></script>
     <script src="./js/scroll-animations.js"></script>
     <script src="./js/cart-override.js"></script>
     <script src="./js/checkout-system.js"></script>
     <script src="./js/form-handler.js"></script>
-    <script src="./js/performance-optimizer.js"></script>
     <script src="./js/mobile-optimizer.js"></script>
 </body>
 </html>
