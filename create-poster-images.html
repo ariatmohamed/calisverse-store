@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Poster Images</title>
+</head>
+<body>
+    <h1>Creating Poster Images...</h1>
+    <canvas id="canvas" width="800" height="600" style="border: 1px solid #ccc;"></canvas>
+    <div id="status"></div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const status = document.getElementById('status');
+
+        function createPosterImage(productName, variant, filename) {
+            // Clear canvas
+            ctx.clearRect(0, 0, 800, 600);
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, 800, 600);
+            gradient.addColorStop(0, '#1a1a2e');
+            gradient.addColorStop(0.5, '#16213e');
+            gradient.addColorStop(1, '#0f0f23');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 800, 600);
+            
+            // Product name
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 48px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(productName.toUpperCase(), 400, 250);
+            
+            // Variant
+            ctx.fillStyle = '#8b5cf6';
+            ctx.font = '32px Arial';
+            ctx.fillText(variant.charAt(0).toUpperCase() + variant.slice(1), 400, 300);
+            
+            // Loading text
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.font = '24px Arial';
+            ctx.fillText('Loading 3D Model...', 400, 450);
+            
+            // Download image
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/jpeg', 0.9);
+            link.click();
+            
+            return new Promise(resolve => setTimeout(resolve, 100));
+        }
+
+        async function generateAllPosters() {
+            const products = [
+                { name: 'Pullup Bar', id: 'pullup-bar' },
+                { name: 'Rings', id: 'rings' },
+                { name: 'Parallettes', id: 'parallettes' }
+            ];
+            const variants = ['black', 'walnut', 'steel'];
+            
+            status.innerHTML = 'Generating poster images...';
+            
+            for (const product of products) {
+                for (const variant of variants) {
+                    const filename = `${product.id}-${variant}-poster.jpg`;
+                    await createPosterImage(product.name, variant, filename);
+                    status.innerHTML += `<br>✅ Generated: ${filename}`;
+                }
+            }
+            
+            status.innerHTML += '<br><br>🎉 All poster images generated! Move them to /images/ folder.';
+        }
+
+        // Auto-generate on load
+        generateAllPosters();
+    </script>
+</body>
+</html>

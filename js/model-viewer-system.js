@@ -68,14 +68,22 @@ class ModelViewerSystem {
         // Create model-viewer element
         const viewer = document.createElement('model-viewer');
         viewer.setAttribute('src', modelPath);
-        viewer.setAttribute('poster', posterPath);
-        viewer.setAttribute('alt', `${equipmentType} 3D model`);
-        viewer.setAttribute('camera-controls', '');
         viewer.setAttribute('auto-rotate', '');
-        viewer.setAttribute('auto-rotate-delay', '3000');
-        viewer.setAttribute('rotation-per-second', '30deg');
-        viewer.setAttribute('interaction-prompt', 'none');
+        viewer.setAttribute('camera-controls', '');
+        viewer.setAttribute('shadow-intensity', '1');
+        viewer.setAttribute('exposure', '1.2');
+        viewer.setAttribute('shadow-softness', '0.5');
         viewer.setAttribute('loading', 'lazy');
+        viewer.setAttribute('reveal', 'interaction');
+        
+        viewer.style.width = '100%';
+        viewer.style.height = '400px';
+        viewer.style.background = 'transparent';
+        viewer.style.cssText = `
+            --poster-color: transparent;
+            --progress-bar-color: #8B5CF6;
+            --progress-bar-height: 3px;
+        `;
         
         // Performance settings
         viewer.setAttribute('camera-orbit', '45deg 75deg 4m');
@@ -89,15 +97,6 @@ class ModelViewerSystem {
             viewer.setAttribute('camera-orbit', '45deg 75deg 5m');
             viewer.setAttribute('auto-rotate-delay', '5000');
         }
-
-        viewer.style.cssText = `
-            width: 100%;
-            height: 400px;
-            background: transparent;
-            --poster-color: transparent;
-            --progress-bar-color: #8B5CF6;
-            --progress-bar-height: 3px;
-        `;
 
         // Add loading and error handling
         this.setupViewerEvents(viewer, container, equipmentType);
@@ -285,7 +284,7 @@ class ModelViewerSystem {
         button.classList.add('active');
 
         // Switch model with loading state
-        const container = viewer.closest('.model-viewer-container');
+        const container = viewer.closest('.product-3d-container');
         const loading = container.querySelector('.model-loading-overlay');
         
         loading.style.display = 'flex';
