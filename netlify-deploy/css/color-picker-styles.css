@@ -1,0 +1,255 @@
+/* Color Picker Styles */
+.color-bar {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    z-index: 10;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.product-3d-container:hover .color-bar {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+.color-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Pull-up Bar Color Swatches */
+.color-swatch.matte-black {
+    background: linear-gradient(135deg, #1A1A1A 0%, #0A0A0A 100%);
+}
+
+.color-swatch.gunmetal-gray {
+    background: linear-gradient(135deg, #2C3539 0%, #1A1F22 100%);
+}
+
+.color-swatch.chrome-silver {
+    background: linear-gradient(135deg, #E8E8E8 0%, #C0C0C0 100%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.color-swatch.purple {
+    background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+}
+
+.color-swatch.white {
+    background: linear-gradient(135deg, #F8F8F8 0%, #E0E0E0 100%);
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+.color-swatch.bronze {
+    background: linear-gradient(135deg, #CD7F32 0%, #8B4513 100%);
+}
+
+/* Generic color swatches for other products */
+.color-swatch:nth-child(1):not([class*=" "]):not([class^="matte"]):not([class^="gunmetal"]):not([class^="chrome"]):not([class^="purple"]):not([class^="white"]):not([class^="bronze"]) {
+    background: linear-gradient(135deg, #444444 0%, #666666 100%);
+}
+
+.color-swatch:nth-child(2):not([class*=" "]):not([class^="matte"]):not([class^="gunmetal"]):not([class^="chrome"]):not([class^="purple"]):not([class^="white"]):not([class^="bronze"]) {
+    background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+}
+
+.color-swatch:nth-child(3):not([class*=" "]):not([class^="matte"]):not([class^="gunmetal"]):not([class^="chrome"]):not([class^="purple"]):not([class^="white"]):not([class^="bronze"]) {
+    background: linear-gradient(135deg, #2C2C2C 0%, #1A1A1A 100%);
+}
+
+.color-swatch:nth-child(4):not([class*=" "]):not([class^="matte"]):not([class^="gunmetal"]):not([class^="chrome"]):not([class^="purple"]):not([class^="white"]):not([class^="bronze"]) {
+    background: linear-gradient(135deg, #C0C0C0 0%, #E8E8E8 100%);
+}
+
+.color-swatch:nth-child(5):not([class*=" "]):not([class^="matte"]):not([class^="gunmetal"]):not([class^="chrome"]):not([class^="purple"]):not([class^="white"]):not([class^="bronze"]) {
+    background: linear-gradient(135deg, #8B4513 0%, #CD853F 100%);
+}
+
+.color-swatch:nth-child(6):not([class*=" "]):not([class^="matte"]):not([class^="gunmetal"]):not([class^="chrome"]):not([class^="purple"]):not([class^="white"]):not([class^="bronze"]) {
+    background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+}
+
+.color-swatch:hover {
+    transform: scale(1.2);
+    border-color: rgba(139, 92, 246, 0.6);
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+}
+
+.color-swatch.active {
+    transform: scale(1.1);
+    border-color: rgba(139, 92, 246, 0.8);
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.6);
+}
+
+.color-swatch::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.3s ease;
+}
+
+.color-swatch:hover::before {
+    width: 20px;
+    height: 20px;
+}
+
+.color-swatch.active::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Color picker tooltip */
+.color-swatch[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.color-swatch[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* Animation for color changes */
+@keyframes colorChange {
+    0% { opacity: 0.7; transform: scale(0.95); }
+    50% { opacity: 1; transform: scale(1.05); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.color-changing {
+    animation: colorChange 0.6s ease-out;
+}
+
+/* Enhanced 3D viewer interactions */
+.product-3d-container.interacting {
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+    transform: scale(1.02);
+}
+
+.product-3d-container {
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.product-3d-container:hover {
+    cursor: grab;
+}
+
+.product-3d-container:active {
+    cursor: grabbing;
+}
+
+/* Loading states for color changes */
+.color-changing::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(139, 92, 246, 0.3);
+    border-top: 3px solid #8B5CF6;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: spin 1s linear infinite;
+    z-index: 1000;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .color-bar {
+        bottom: 15px;
+        padding: 10px 12px;
+        gap: 6px;
+    }
+    
+    .color-swatch {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .color-swatch:hover {
+        transform: scale(1.15);
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .color-bar {
+        background: rgba(0, 0, 0, 0.95);
+        border-color: rgba(139, 92, 246, 0.8);
+    }
+    
+    .color-swatch {
+        border-width: 3px;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .color-bar,
+    .color-swatch,
+    .color-swatch::before {
+        transition: none;
+    }
+    
+    .color-changing {
+        animation: none;
+    }
+}

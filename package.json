@@ -1,0 +1,18 @@
+{
+  "name": "calisverse",
+  "version": "1.0.0",
+  "description": "Revolutionary 3D e-commerce website for calisthenics equipment",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo 'Build complete'",
+    "start": "npx serve ."
+  },
+  "keywords": ["calisthenics", "3d", "ecommerce", "three.js", "arabic"],
+  "author": "CalisVerse Team",
+  "license": "MIT",
+  "dependencies": {
+    "three": "^0.158.0",
+    "gsap": "^3.12.2"
+  }
+}

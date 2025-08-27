@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalisVerse - Professional 3D Equipment Experience</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0a0a0f;
+            --secondary: #1a1a2e;
+            --accent: #8B5CF6;
+            --accent-light: #a855f7;
+            --text: #ffffff;
+            --text-secondary: #a0aec0;
+            --text-muted: #718096;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--primary);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Fixed Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+            padding: 20px 40px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--text);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: radial-gradient(circle at center, var(--secondary) 0%, var(--primary) 70%);
+            position: relative;
+            overflow: hidden;
+            scroll-snap-align: start;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, var(--text) 0%, var(--accent) 50%, var(--accent-light) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            color: var(--text-secondary);
+            margin-bottom: 50px;
+            font-weight: 400;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .scroll-arrow {
+            width: 2px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--accent), transparent);
+            margin-top: 10px;
+            animation: scrollPulse 2s infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(10px); }
+        }
+
+        /* Product Sections */
+        .product-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            scroll-snap-align: start;
+        }
+
+        .product-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-3d-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 60vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: auto;
+            margin-left: 20vw;
+        }
+        
+        .product-3d-container canvas {
+            pointer-events: auto;
+        }
+
+        .product-info {
+            position: absolute;
+            top: 50%;
+            right: 80px;
+            transform: translateY(-50%);
+            max-width: 420px;
+            z-index: 10;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .product-category {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .product-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 30px;
+            line-height: 1.1;
+        }
+
+        .product-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            line-height: 1.7;
+        }
+
+        .product-features {
+            margin-bottom: 50px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 12px;
+        }
+
+        .product-price {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--accent);
+            margin-bottom: 30px;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            padding: 18px 40px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        /* Alternating Layout */
+        .product-section:nth-child(odd) .product-info {
+            right: 80px;
+            left: auto;
+        }
+
+        .product-section:nth-child(even) .product-info {
+            left: 80px;
+            right: auto;
+        }
+        
+        .product-section:nth-child(even) .product-3d-container {
+            margin-left: 20vw;
+        }
+
+        /* Background Gradients */
+        .product-section:nth-child(2) {
+            background: radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+        }
+
+        .product-section:nth-child(3) {
+            background: radial-gradient(circle at 80% 50%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+        }
+
+        .product-section:nth-child(4) {
+            background: radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+        }
+
+        .product-section:nth-child(5) {
+            background: radial-gradient(circle at 80% 50%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+        }
+
+        /* 3D Controls Hint */
+        .controls-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            z-index: 10;
+        }
+
+        /* Loading State */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--accent);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .product-info {
+                top: auto;
+                bottom: 20px;
+                left: 20px;
+                right: 20px;
+                transform: none;
+                max-width: none;
+                padding: 30px;
+            }
+
+            .product-section:nth-child(odd) .product-info,
+            .product-section:nth-child(even) .product-info {
+                left: 20px;
+                right: 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                padding: 15px 20px;
+            }
+
+            .product-info {
+                top: auto;
+                bottom: 20px;
+                left: 15px;
+                right: 15px;
+                transform: none;
+                padding: 25px;
+            }
+
+            .product-title {
+                font-size: 2rem;
+            }
+
+            .product-price {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-content">
+            <a href="#" class="logo">CalisVerse</a>
+            <ul class="nav-links">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#equipment">Equipment</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Professional Calisthenics Equipment</h1>
+            <p>Experience our premium equipment in stunning 3D. Each product crafted for serious athletes who demand excellence.</p>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll to explore</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- Pull-Up Bar Section -->
+    <section class="product-section" id="pullup-section">
+        <div class="product-container">
+            <div class="product-3d-container" id="pullup-viewer">
+                <div class="loading">Loading 3D Model...</div>
+                <div class="controls-hint">Click & Drag to Rotate • Scroll to Zoom</div>
+            </div>
+            <div class="product-info">
+                <div class="product-category">Pull-Up Equipment</div>
+                <h2 class="product-title">Professional Pull-Up Bar</h2>
+                <p class="product-description">
+                    Heavy-duty steel construction designed for serious training. Wall-mounted system with reinforced brackets 
+                    supports up to 350lbs. Ergonomic grip design reduces hand fatigue during extended workouts.
+                </p>
+                <div class="product-features">
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <span>350lb weight capacity</span>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <span>Reinforced steel brackets</span>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <span>Ergonomic grip texture</span>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <span>Easy wall installation</span>
+                    </div>
+                </div>
+                <div class="product-price">$79.99</div>
+                <div class="product-actions">
+                    <button class="btn-primary">Add to Cart</button>
+                    <button class="btn-secondary">Learn More</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gymnastics Rings Section -->
+    <section class="product-section" id="rings-section">
+        <div class="product-container">
+            <div class="product-info">
+                <div class="product-category">Ring Training</div>
+                <h2 class="product-title">Wooden Gymnastics Rings</h2>
+                <p class="product-description">
+                    Premium birch wood rings with competition-grade specifications. Adjustable straps with cam buckles 
+                    for quick height changes. Natural wood provides superior grip even when hands are sweaty.
+                </p>
+                <div class="product-features">
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <span>Premium birch wood construction</span>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <span>Adjustable 15ft straps included</span>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <span>Competition regulation size</span>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <span>Natural anti-slip surface</span>
+                    </div>
+                </div>
+                <div class="product-price">$59.99</div>
+                <div class="product-actions">
+                    <button class="btn-primary">Add to Cart</button>
+                    <button class="btn-secondary">Learn More</button>
+                </div>
+            </div>
+            <div class="product-3d-container" id="rings-viewer">
+                <div class="loading">Loading 3D Model...</div>
+                <div class="controls-hint">Click & Drag to Rotate • Scroll to Zoom</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Parallettes Section -->
+    <section class="product-section" id="parallettes-section">
+        <div class="product-container">
+            <div class="product-3d-container" id="parallettes-viewer">
+                <div class="loading">Loading 3D Model...</div>
+                <div class="controls-hint">Click & Drag to Rotate • Scroll to Zoom</div>
+            </div>
+            <div class="product-info">
+                <div class="product-category">Floor Training</div>
+                <h2 class="product-title">Wooden Parallettes</h2>
+                <p class="product-description">
+                    Handcrafted wooden parallettes perfect for L-sits, handstands, and push-up variations. 
+                    Stable base design with rubber feet prevents sliding. Premium wood finish resists wear and moisture.
+                </p>
+                <div class="product-features">
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <span>Handcrafted hardwood construction</span>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <span>Non-slip rubber feet</span>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <span>12" height for proper clearance</span>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <span>Moisture-resistant finish</span>
+                    </div>
+                </div>
+                <div class="product-price">$39.99</div>
+                <div class="product-actions">
+                    <button class="btn-primary">Add to Cart</button>
+                    <button class="btn-secondary">Learn More</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dip Bars Section -->
+    <section class="product-section" id="dipbars-section">
+        <div class="product-container">
+            <div class="product-info">
+                <div class="product-category">Dip Training</div>
+                <h2 class="product-title">Adjustable Dip Bars</h2>
+                <p class="product-description">
+                    Professional-grade adjustable dip bars with height customization from 32" to 38". 
+                    Heavy steel frame construction with powder-coated finish. Ergonomic handles reduce wrist strain.
+                </p>
+                <div class="product-features">
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <span>Adjustable height 32"-38"</span>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <span>Heavy steel frame construction</span>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <span>Powder-coated finish</span>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">✓</div>
+                        <span>Ergonomic grip handles</span>
+                    </div>
+                </div>
+                <div class="product-price">$149.99</div>
+                <div class="product-actions">
+                    <button class="btn-primary">Add to Cart</button>
+                    <button class="btn-secondary">Learn More</button>
+                </div>
+            </div>
+            <div class="product-3d-container" id="dipbars-viewer">
+                <div class="loading">Loading 3D Model...</div>
+                <div class="controls-hint">Click & Drag to Rotate • Scroll to Zoom</div>
+            </div>
+        </div>
+    </section>
+
+    <script src="js/3d-models.js"></script>
+    <script src="js/scroll-animations.js"></script>
+</body>
+</html>

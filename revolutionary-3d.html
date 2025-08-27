@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalisVerse - Strength Without Limits</title>
+    
+    <!-- 3D Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r158/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r158/three.min.js"></script>
+    <script>
+        // OrbitControls implementation
+        THREE.OrbitControls = function ( object, domElement ) {
+            this.object = object;
+            this.domElement = ( domElement !== undefined ) ? domElement : document;
+            this.enabled = true;
+            this.target = new THREE.Vector3();
+            this.enableDamping = false;
+            this.dampingFactor = 0.25;
+            this.enableZoom = true;
+            this.zoomSpeed = 1.0;
+            this.enableRotate = true;
+            this.rotateSpeed = 1.0;
+            this.enablePan = true;
+            this.panSpeed = 1.0;
+            this.screenSpacePanning = false;
+            this.keyPanSpeed = 7.0;
+            this.autoRotate = false;
+            this.autoRotateSpeed = 2.0;
+            this.enableKeys = true;
+            this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 };
+            this.mouseButtons = { LEFT: THREE.MOUSE.LEFT, MIDDLE: THREE.MOUSE.MIDDLE, RIGHT: THREE.MOUSE.RIGHT };
+            this.target0 = this.target.clone();
+            this.position0 = this.object.position.clone();
+            this.zoom0 = this.object.zoom;
+            
+            var scope = this;
+            var changeEvent = { type: 'change' };
+            var startEvent = { type: 'start' };
+            var endEvent = { type: 'end' };
+            var STATE = { NONE: - 1, ROTATE: 0, DOLLY: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_DOLLY_PAN: 4 };
+            var state = STATE.NONE;
+            var EPS = 0.000001;
+            var spherical = new THREE.Spherical();
+            var sphericalDelta = new THREE.Spherical();
+            var scale = 1;
+            var panOffset = new THREE.Vector3();
+            var zoomChanged = false;
+            var rotateStart = new THREE.Vector2();
+            var rotateEnd = new THREE.Vector2();
+            var rotateDelta = new THREE.Vector2();
+            var panStart = new THREE.Vector2();
+            var panEnd = new THREE.Vector2();
+            var panDelta = new THREE.Vector2();
+            var dollyStart = new THREE.Vector2();
+            var dollyEnd = new THREE.Vector2();
+            var dollyDelta = new THREE.Vector2();
+            
+            this.update = function () {
+                var offset = new THREE.Vector3();
+                var quat = new THREE.Quaternion().setFromUnitVectors( object.up, new THREE.Vector3( 0, 1, 0 ) );
+                var quatInverse = quat.clone().inverse();
+                var lastPosition = new THREE.Vector3();
+                var lastQuaternion = new THREE.Quaternion();
+                
+                return function update() {
+                    var position = scope.object.position;
+                    offset.copy( position ).sub( scope.target );
+                    offset.applyQuaternion( quat );
+                    spherical.setFromVector3( offset );
+                    
+                    if ( scope.autoRotate && state === STATE.NONE ) {
+                        rotateLeft( getAutoRotationAngle() );
+                    }
+                    
+                    spherical.theta += sphericalDelta.theta;
+                    spherical.phi += sphericalDelta.phi;
+                    spherical.theta = Math.max( scope.minAzimuthAngle, Math.min( scope.maxAzimuthAngle, spherical.theta ) );
+                    spherical.phi = Math.max( scope.minPolarAngle, Math.min( scope.maxPolarAngle, spherical.phi ) );
+                    spherical.makeSafe();
+                    spherical.radius *= scale;
+                    spherical.radius = Math.max( scope.minDistance, Math.min( scope.maxDistance, spherical.radius ) );
+                    
+                    scope.target.add( panOffset );
+                    offset.setFromSpherical( spherical );
+                    offset.applyQuaternion( quatInverse );
+                    position.copy( scope.target ).add( offset );
+                    scope.object.lookAt( scope.target );
+                    
+                    if ( scope.enableDamping === true ) {
+                        sphericalDelta.theta *= ( 1 - scope.dampingFactor );
+                        sphericalDelta.phi *= ( 1 - scope.dampingFactor );
+                        panOffset.multiplyScalar( 1 - scope.dampingFactor );
+                    } else {
+                        sphericalDelta.set( 0, 0, 0 );
+                        panOffset.set( 0, 0, 0 );
+                    }
+                    
+                    scale = 1;
+                    
+                    if ( zoomChanged || lastPosition.distanceToSquared( scope.object.position ) > EPS || 8 * ( 1 - lastQuaternion.dot( scope.object.quaternion ) ) > EPS ) {
+                        scope.dispatchEvent( changeEvent );
+                        lastPosition.copy( scope.object.position );
+                        lastQuaternion.copy( scope.object.quaternion );
+                        zoomChanged = false;
+                        return true;
+                    }
+                    
+                    return false;
+                };
+            }();
+            
+            function getAutoRotationAngle() {
+                return 2 * Math.PI / 60 / 60 * scope.autoRotateSpeed;
+            }
+            
+            function getZoomScale() {
+                return Math.pow( 0.95, scope.zoomSpeed );
+            }
+            
+            function rotateLeft( angle ) {
+                sphericalDelta.theta -= angle;
+            }
+            
+            function rotateUp( angle ) {
+                sphericalDelta.phi -= angle;
+            }
+            
+            function panLeft( distance, objectMatrix ) {
+                var v = new THREE.Vector3();
+                v.setFromMatrixColumn( objectMatrix, 0 );
+                v.multiplyScalar( - distance );
+                panOffset.add( v );
+            }
+            
+            function panUp( distance, objectMatrix ) {
+                var v = new THREE.Vector3();
+                if ( scope.screenSpacePanning === true ) {
+                    v.setFromMatrixColumn( objectMatrix, 1 );
+                } else {
+                    v.setFromMatrixColumn( objectMatrix, 0 );
+                    v.crossVectors( scope.object.up, v );
+                }
+                v.multiplyScalar( distance );
+                panOffset.add( v );
+            }
+            
+            var pan = function () {
+                var offset = new THREE.Vector3();
+                return function pan( deltaX, deltaY ) {
+                    var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+                    if ( scope.object.isPerspectiveCamera ) {
+                        var position = scope.object.position;
+                        offset.copy( position ).sub( scope.target );
+                        var targetDistance = offset.length();
+                        targetDistance *= Math.tan( ( scope.object.fov / 2 ) * Math.PI / 180.0 );
+                        panLeft( 2 * deltaX * targetDistance / element.clientHeight, scope.object.matrix );
+                        panUp( 2 * deltaY * targetDistance / element.clientHeight, scope.object.matrix );
+                    } else if ( scope.object.isOrthographicCamera ) {
+                        panLeft( deltaX * ( scope.object.right - scope.object.left ) / scope.object.zoom / element.clientWidth, scope.object.matrix );
+                        panUp( deltaY * ( scope.object.top - scope.object.bottom ) / scope.object.zoom / element.clientHeight, scope.object.matrix );
+                    } else {
+                        console.warn( 'WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.' );
+                        scope.enablePan = false;
+                    }
+                };
+            }();
+            
+            function dollyIn( dollyScale ) {
+                if ( scope.object.isPerspectiveCamera ) {
+                    scale /= dollyScale;
+                } else if ( scope.object.isOrthographicCamera ) {
+                    scope.object.zoom = Math.max( scope.minZoom, Math.min( scope.maxZoom, scope.object.zoom * dollyScale ) );
+                    scope.object.updateProjectionMatrix();
+                    zoomChanged = true;
+                } else {
+                    console.warn( 'WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.' );
+                    scope.enableZoom = false;
+                }
+            }
+            
+            function dollyOut( dollyScale ) {
+                if ( scope.object.isPerspectiveCamera ) {
+                    scale *= dollyScale;
+                } else if ( scope.object.isOrthographicCamera ) {
+                    scope.object.zoom = Math.max( scope.minZoom, Math.min( scope.maxZoom, scope.object.zoom / dollyScale ) );
+                    scope.object.updateProjectionMatrix();
+                    zoomChanged = true;
+                } else {
+                    console.warn( 'WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.' );
+                    scope.enableZoom = false;
+                }
+            }
+            
+            function handleMouseDownRotate( event ) {
+                rotateStart.set( event.clientX, event.clientY );
+            }
+            
+            function handleMouseDownDolly( event ) {
+                dollyStart.set( event.clientX, event.clientY );
+            }
+            
+            function handleMouseDownPan( event ) {
+                panStart.set( event.clientX, event.clientY );
+            }
+            
+            function handleMouseMoveRotate( event ) {
+                rotateEnd.set( event.clientX, event.clientY );
+                rotateDelta.subVectors( rotateEnd, rotateStart ).multiplyScalar( scope.rotateSpeed );
+                var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+                rotateLeft( 2 * Math.PI * rotateDelta.x / element.clientHeight );
+                rotateUp( 2 * Math.PI * rotateDelta.y / element.clientHeight );
+                rotateStart.copy( rotateEnd );
+                scope.update();
+            }
+            
+            function handleMouseMoveDolly( event ) {
+                dollyEnd.set( event.clientX, event.clientY );
+                dollyDelta.subVectors( dollyEnd, dollyStart );
+                if ( dollyDelta.y > 0 ) {
+                    dollyIn( getZoomScale() );
+                } else if ( dollyDelta.y < 0 ) {
+                    dollyOut( getZoomScale() );
+                }
+                dollyStart.copy( dollyEnd );
+                scope.update();
+            }
+            
+            function handleMouseMovePan( event ) {
+                panEnd.set( event.clientX, event.clientY );
+                panDelta.subVectors( panEnd, panStart ).multiplyScalar( scope.panSpeed );
+                pan( panDelta.x, panDelta.y );
+                panStart.copy( panEnd );
+                scope.update();
+            }
+            
+            function handleMouseWheel( event ) {
+                if ( event.deltaY < 0 ) {
+                    dollyOut( getZoomScale() );
+                } else if ( event.deltaY > 0 ) {
+                    dollyIn( getZoomScale() );
+                }
+                scope.update();
+            }
+            
+            function onMouseDown( event ) {
+                if ( scope.enabled === false ) return;
+                event.preventDefault();
+                switch ( event.button ) {
+                    case scope.mouseButtons.LEFT:
+                        if ( event.ctrlKey || event.metaKey || event.shiftKey ) {
+                            if ( scope.enablePan === false ) return;
+                            handleMouseDownPan( event );
+                            state = STATE.PAN;
+                        } else {
+                            if ( scope.enableRotate === false ) return;
+                            handleMouseDownRotate( event );
+                            state = STATE.ROTATE;
+                        }
+                        break;
+                    case scope.mouseButtons.MIDDLE:
+                        if ( scope.enableZoom === false ) return;
+                        handleMouseDownDolly( event );
+                        state = STATE.DOLLY;
+                        break;
+                    case scope.mouseButtons.RIGHT:
+                        if ( scope.enablePan === false ) return;
+                        handleMouseDownPan( event );
+                        state = STATE.PAN;
+                        break;
+                }
+                if ( state !== STATE.NONE ) {
+                    document.addEventListener( 'mousemove', onMouseMove, false );
+                    document.addEventListener( 'mouseup', onMouseUp, false );
+                    scope.dispatchEvent( startEvent );
+                }
+            }
+            
+            function onMouseMove( event ) {
+                if ( scope.enabled === false ) return;
+                event.preventDefault();
+                switch ( state ) {
+                    case STATE.ROTATE:
+                        if ( scope.enableRotate === false ) return;
+                        handleMouseMoveRotate( event );
+                        break;
+                    case STATE.DOLLY:
+                        if ( scope.enableZoom === false ) return;
+                        handleMouseMoveDolly( event );
+                        break;
+                    case STATE.PAN:
+                        if ( scope.enablePan === false ) return;
+                        handleMouseMovePan( event );
+                        break;
+                }
+            }
+            
+            function onMouseUp( event ) {
+                if ( scope.enabled === false ) return;
+                document.removeEventListener( 'mousemove', onMouseMove, false );
+                document.removeEventListener( 'mouseup', onMouseUp, false );
+                scope.dispatchEvent( endEvent );
+                state = STATE.NONE;
+            }
+            
+            function onMouseWheel( event ) {
+                if ( scope.enabled === false || scope.enableZoom === false || ( state !== STATE.NONE && state !== STATE.ROTATE ) ) return;
+                event.preventDefault();
+                event.stopPropagation();
+                scope.dispatchEvent( startEvent );
+                handleMouseWheel( event );
+                scope.dispatchEvent( endEvent );
+            }
+            
+            scope.domElement.addEventListener( 'contextmenu', function ( event ) { event.preventDefault(); }, false );
+            scope.domElement.addEventListener( 'mousedown', onMouseDown, false );
+            scope.domElement.addEventListener( 'wheel', onMouseWheel, false );
+            
+            this.update();
+        };
+        
+        THREE.OrbitControls.prototype = Object.create( THREE.EventDispatcher.prototype );
+        THREE.OrbitControls.prototype.constructor = THREE.OrbitControls;
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Amiri', 'Inter', sans-serif;
+            background: #000;
+            overflow: hidden;
+            cursor: grab;
+        }
+        
+        body:active {
+            cursor: grabbing;
+        }
+        
+        /* 3D Canvas Container */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+        
+        /* UI Overlay System */
+        .ui-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        /* Floating Navigation */
+        .floating-nav {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 20px 30px;
+            pointer-events: auto;
+            transform: translateZ(0);
+            animation: slideInFromTop 1s ease-out;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: #8B5CF6;
+            transform: translateY(-2px);
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin-left: 20px;
+        }
+        
+        /* Product Info Panel */
+        .floating-info {
+            position: absolute;
+            bottom: 50px;
+            right: 50px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            pointer-events: auto;
+            transform: translateZ(0);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.5s ease;
+        }
+        
+        .floating-info.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .product-title {
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .product-price {
+            color: #8B5CF6;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .product-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .cta-button {
+            background: linear-gradient(135deg, #8B5CF6, #A855F7);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+        }
+        
+        /* Control Hints */
+        .floating-controls {
+            position: absolute;
+            bottom: 50px;
+            left: 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            pointer-events: auto;
+            animation: slideInFromBottom 1s ease-out 0.5s both;
+        }
+        
+        .control-hint {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 12px 20px;
+            color: white;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Journey Navigation */
+        .journey-nav {
+            position: absolute;
+            top: 50%;
+            left: 50px;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 300px;
+            pointer-events: auto;
+        }
+        
+        .room-info h3 {
+            color: white;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .room-info p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+        }
+        
+        .journey-button {
+            background: linear-gradient(135deg, #8B5CF6, #A855F7);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .journey-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+        
+        /* 3D Shopping Cart */
+        .cart-3d {
+            position: absolute;
+            top: 50%;
+            right: 50px;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            padding: 20px;
+            width: 300px;
+            pointer-events: auto;
+            opacity: 0;
+            transform: translateY(-50%) translateX(100px);
+            transition: all 0.5s ease;
+        }
+        
+        .cart-3d.visible {
+            opacity: 1;
+            transform: translateY(-50%) translateX(0);
+        }
+        
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .cart-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .cart-count {
+            background: #8B5CF6;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .cart-items {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            animation: slideInCart 0.5s ease;
+        }
+        
+        .cart-item-info {
+            flex: 1;
+        }
+        
+        .cart-item-name {
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .cart-item-price {
+            color: #8B5CF6;
+            font-size: 12px;
+        }
+        
+        .cart-item-remove {
+            background: rgba(255, 0, 0, 0.2);
+            border: none;
+            color: #ff6b6b;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .cart-total {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .cart-total-text {
+            display: flex;
+            justify-content: space-between;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .cart-checkout {
+            background: linear-gradient(135deg, #8B5CF6, #A855F7);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .cart-checkout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+        
+        /* Customization Panel */
+        .customization-panel {
+            position: absolute;
+            bottom: 50px;
+            right: 50px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            width: 350px;
+            pointer-events: auto;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.5s ease;
+        }
+        
+        .customization-panel.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .customization-title {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .customization-option {
+            margin-bottom: 20px;
+        }
+        
+        .option-label {
+            color: white;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .color-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .color-option.selected {
+            border-color: #8B5CF6;
+            transform: scale(1.1);
+        }
+        
+        .size-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .size-option {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .size-option.selected {
+            background: #8B5CF6;
+            border-color: #8B5CF6;
+        }
+        
+        @keyframes slideInCart {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #000 0%, #1a1a2e 50%, #16213e 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 1s ease;
+        }
+        
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loading-logo {
+            font-size: 48px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+        
+        .loading-subtitle {
+            color: #8B5CF6;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+        
+        .loading-bar {
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .loading-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #8B5CF6, #A855F7);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        @keyframes slideInFromTop {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInFromBottom {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .floating-nav {
+                top: 20px;
+                right: 20px;
+                left: 20px;
+                padding: 15px 20px;
+            }
+            
+            .nav-links {
+                gap: 20px;
+                font-size: 14px;
+            }
+            
+            .floating-info {
+                bottom: 20px;
+                right: 20px;
+                left: 20px;
+                max-width: none;
+                padding: 20px;
+            }
+            
+            .floating-controls {
+                bottom: 20px;
+                left: 20px;
+            }
+            
+            .loading-logo {
+                font-size: 36px;
+            }
+            
+            .loading-bar {
+                width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo">CalisVerse</div>
+        <div class="loading-subtitle">Strength Without Limits</div>
+        <div class="loading-bar">
+            <div class="loading-progress" id="loadingProgress"></div>
+        </div>
+    </div>
+    
+    <!-- 3D Canvas Container -->
+    <div id="canvas-container"></div>
+    
+    <!-- UI Overlay -->
+    <div class="ui-overlay">
+        <!-- Floating Navigation -->
+        <nav class="floating-nav">
+            <div class="nav-links">
+                <div class="logo">CalisVerse</div>
+                <a href="#" class="nav-link">Home</a>
+                <a href="#" class="nav-link">Equipment</a>
+                <a href="#" class="nav-link">Offers</a>
+                <a href="#" class="nav-link">Contact</a>
+            </div>
+        </nav>
+        
+        <!-- Product Info Panel -->
+        <div class="floating-info" id="productInfo">
+            <h2 class="product-title" id="productTitle">عارضة العقلة المحترفة</h2>
+            <div class="product-price" id="productPrice">299 ر.س</div>
+            <p class="product-description" id="productDescription">
+                عارضة عقلة احترافية مصنوعة من الفولاذ المقاوم للصدأ، مصممة لتحمل الاستخدام المكثف وتوفر قبضة مثالية للتمارين المتقدمة.
+            </p>
+            <button class="cta-button" onclick="addToCart()">أضف إلى السلة</button>
+        </div>
+        
+        <!-- Control Hints -->
+        <div class="floating-controls">
+            <div class="control-hint">
+                <span>🖱️</span>
+                <span>Drag to Rotate</span>
+            </div>
+            <div class="control-hint">
+                <span>🔍</span>
+                <span>Scroll to Zoom</span>
+            </div>
+            <div class="control-hint">
+                <span>👆</span>
+                <span>Click to Focus</span>
+            </div>
+        </div>
+        
+        <!-- Journey Navigation -->
+        <div class="journey-nav" id="journeyNav" style="display: none;">
+            <div class="room-info">
+                <h3 id="roomName">Showroom Entrance</h3>
+                <p id="roomDescription">Welcome to CalisVerse Interactive Experience</p>
+            </div>
+            <button class="journey-button" id="nextRoomBtn" onclick="moveToNextRoom()">Next Room</button>
+            <button class="journey-button" id="startJourneyBtn" onclick="startJourney()">Start Journey</button>
+        </div>
+        
+        <!-- 3D Shopping Cart -->
+        <div class="cart-3d" id="cart3D">
+            <div class="cart-header">
+                <div class="cart-title">Cart</div>
+                <div class="cart-count" id="cartCount">0</div>
+            </div>
+            <div class="cart-items" id="cartItems">
+                <!-- Cart items will be added here -->
+            </div>
+            <div class="cart-total">
+                <div class="cart-total-text">
+                    <span>Total:</span>
+                    <span id="cartTotal">$0.00</span>
+                </div>
+            </div>
+            <button class="cart-checkout" onclick="checkout()">Checkout</button>
+        </div>
+        
+        <!-- Product Customization Panel -->
+        <div class="customization-panel" id="customizationPanel">
+            <div class="customization-title">Customize Product</div>
+            
+            <div class="customization-option">
+                <label class="option-label">Color:</label>
+                <div class="color-options">
+                    <div class="color-option selected" style="background: #333333" data-color="black"></div>
+                    <div class="color-option" style="background: #8B5CF6" data-color="purple"></div>
+                    <div class="color-option" style="background: #ffffff; border: 1px solid #ccc" data-color="white"></div>
+                    <div class="color-option" style="background: #ff6b6b" data-color="red"></div>
+                </div>
+            </div>
+            
+            <div class="customization-option">
+                <label class="option-label">Size:</label>
+                <div class="size-options">
+                    <div class="size-option" data-size="small">Small</div>
+                    <div class="size-option selected" data-size="medium">Medium</div>
+                    <div class="size-option" data-size="large">Large</div>
+                </div>
+            </div>
+            
+            <button class="cta-button" onclick="addCustomizedToCart()">Add to Cart</button>
+            <button class="cta-button" onclick="showCustomization()" style="margin-top: 10px; background: rgba(139, 92, 246, 0.2); border: 1px solid #8B5CF6;">Customize</button>
+        </div>
+    </div>
+    
+    <script>
+        // Global variables
+        let scene, camera, renderer, controls;
+        let currentProduct = null;
+        let products = {};
+        let isLoading = true;
+        let currentRoom = 'entrance';
+        let rooms = {};
+        let journeyActive = false;
+        let cart = [];
+        let cartTotal = 0;
+        let currentCustomization = {
+            color: 'black',
+            size: 'medium'
+        };
+        
+        // Room system
+        const roomData = {
+            entrance: {
+                name: 'Showroom Entrance',
+                description: 'Welcome to CalisVerse Interactive Experience',
+                position: { x: 0, y: 0, z: 0 },
+                nextRoom: 'beginner'
+            },
+            beginner: {
+                name: 'Beginner Section',
+                description: 'Perfect equipment to start your journey',
+                position: { x: -10, y: 0, z: 0 },
+                nextRoom: 'intermediate'
+            },
+            intermediate: {
+                name: 'Intermediate Section',
+                description: 'Develop your skills further',
+                position: { x: 0, y: 0, z: -10 },
+                nextRoom: 'advanced'
+            },
+            advanced: {
+                name: 'Advanced Section',
+                description: 'Professional grade equipment',
+                position: { x: 10, y: 0, z: 0 },
+                nextRoom: 'checkout'
+            },
+            checkout: {
+                name: 'Checkout',
+                description: 'Complete your order',
+                position: { x: 0, y: 0, z: 10 },
+                nextRoom: null
+            }
+        };
+        
+        // Product data
+        const productData = {
+            pullupBar: {
+                title: 'Professional Pull-Up Bar',
+                price: '$79.99',
+                description: 'Professional pull-up bar made from stainless steel, designed to withstand intensive use and provide perfect grip for advanced exercises.'
+            },
+            rings: {
+                title: 'Wooden Gymnastics Rings',
+                price: '$59.99',
+                description: 'High-quality natural wood gymnastics rings with adjustable straps, perfect for upper body workouts.'
+            },
+            parallettes: {
+                title: 'Wooden Parallettes',
+                price: '$39.99',
+                description: 'Wooden parallettes designed for handstand and push-up exercises, providing excellent stability and comfort.'
+            }
+        };
+        
+        // Initialize the 3D scene
+        function init() {
+            // Create scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x000000);
+            
+            // Create camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 2, 8);
+            
+            // Create renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1;
+            
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+            
+            // Add controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.enableZoom = true;
+            controls.enablePan = false;
+            controls.maxDistance = 15;
+            controls.minDistance = 3;
+            
+            // Setup lighting
+            setupLighting();
+            
+            // Create equipment models
+            createEquipment();
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Start animation loop
+            animate();
+            
+            // Simulate loading
+            simulateLoading();
+        }
+        
+        function setupLighting() {
+            // Ambient light
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
+            scene.add(ambientLight);
+            
+            // Main directional light
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(10, 10, 5);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            scene.add(directionalLight);
+            
+            // Fill light
+            const fillLight = new THREE.DirectionalLight(0x8B5CF6, 0.3);
+            fillLight.position.set(-5, 5, -5);
+            scene.add(fillLight);
+            
+            // Rim light
+            const rimLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            rimLight.position.set(0, 5, -10);
+            scene.add(rimLight);
+        }
+        
+        function createEquipment() {
+            // Create pull-up bar
+            createPullUpBar();
+            
+            // Create gymnastics rings
+            createRings();
+            
+            // Create parallettes
+            createParallettes();
+            
+            // Create environment
+            createEnvironment();
+        }
+        
+        function createPullUpBar() {
+            const group = new THREE.Group();
+            
+            // Main bar
+            const barGeometry = new THREE.CylinderGeometry(0.05, 0.05, 1.2, 16);
+            const barMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0x444444,
+                metalness: 0.8,
+                roughness: 0.2
+            });
+            const bar = new THREE.Mesh(barGeometry, barMaterial);
+            bar.rotation.z = Math.PI / 2;
+            bar.castShadow = true;
+            group.add(bar);
+            
+            // Support posts
+            for (let i = -0.5; i <= 0.5; i += 1) {
+                const postGeometry = new THREE.CylinderGeometry(0.03, 0.03, 1.5, 8);
+                const post = new THREE.Mesh(postGeometry, barMaterial);
+                post.position.set(i, -0.75, 0);
+                post.castShadow = true;
+                group.add(post);
+            }
+            
+            group.position.set(0, 1, 0);
+            group.userData = { type: 'pullupBar', name: 'عارضة العقلة المحترفة' };
+            products.pullupBar = group;
+            scene.add(group);
+        }
+        
+        function createRings() {
+            const group = new THREE.Group();
+            
+            // Ring geometry
+            const ringGeometry = new THREE.TorusGeometry(0.12, 0.02, 8, 16);
+            const ringMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0x8B4513,
+                roughness: 0.8,
+                metalness: 0.1
+            });
+            
+            // Create two rings
+            for (let i = -0.3; i <= 0.3; i += 0.6) {
+                const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+                ring.position.set(i, 0, 0);
+                ring.castShadow = true;
+                group.add(ring);
+                
+                // Straps
+                const strapGeometry = new THREE.CylinderGeometry(0.01, 0.01, 1, 8);
+                const strapMaterial = new THREE.MeshBasicMaterial({ color: 0x333333 });
+                const strap = new THREE.Mesh(strapGeometry, strapMaterial);
+                strap.position.set(i, 0.5, 0);
+                group.add(strap);
+            }
+            
+            group.position.set(-3, 2, -1);
+            group.userData = { type: 'rings', name: 'حلقات الجمباز الخشبية' };
+            products.rings = group;
+            scene.add(group);
+        }
+        
+        function createParallettes() {
+            const group = new THREE.Group();
+            
+            // Parallette geometry
+            const handleGeometry = new THREE.CylinderGeometry(0.025, 0.025, 0.3, 8);
+            const legGeometry = new THREE.CylinderGeometry(0.02, 0.02, 0.15, 8);
+            const woodMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0xDEB887,
+                roughness: 0.7,
+                metalness: 0.1
+            });
+            
+            // Create two parallettes
+            for (let i = -0.2; i <= 0.2; i += 0.4) {
+                const parallette = new THREE.Group();
+                
+                // Handle
+                const handle = new THREE.Mesh(handleGeometry, woodMaterial);
+                handle.rotation.z = Math.PI / 2;
+                handle.position.y = 0.075;
+                handle.castShadow = true;
+                parallette.add(handle);
+                
+                // Legs
+                for (let j = -0.12; j <= 0.12; j += 0.24) {
+                    const leg = new THREE.Mesh(legGeometry, woodMaterial);
+                    leg.position.set(j, 0, 0);
+                    leg.castShadow = true;
+                    parallette.add(leg);
+                }
+                
+                parallette.position.set(i, 0, 0);
+                group.add(parallette);
+            }
+            
+            group.position.set(3, 0, 1);
+            group.userData = { type: 'parallettes', name: 'متوازيات خشبية' };
+            products.parallettes = group;
+            scene.add(group);
+        }
+        
+        function createEnvironment() {
+            // Floor
+            const floorGeometry = new THREE.PlaneGeometry(20, 20);
+            const floorMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0x222222,
+                roughness: 0.1,
+                metalness: 0.8
+            });
+            const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+            floor.rotation.x = -Math.PI / 2;
+            floor.receiveShadow = true;
+            scene.add(floor);
+        }
+        
+        function setupEventListeners() {
+            // Mouse events for product interaction
+            const raycaster = new THREE.Raycaster();
+            const mouse = new THREE.Vector2();
+            
+            renderer.domElement.addEventListener('click', onMouseClick);
+            renderer.domElement.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('resize', onWindowResize);
+        }
+        
+        function onMouseClick(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            raycaster.setFromCamera(mouse, camera);
+            
+            const intersects = raycaster.intersectObjects(scene.children, true);
+            
+            if (intersects.length > 0) {
+                const object = intersects[0].object;
+                let parent = object;
+                
+                // Find the product group
+                while (parent.parent && !parent.userData.type) {
+                    parent = parent.parent;
+                }
+                
+                if (parent.userData.type) {
+                    focusOnProduct(parent);
+                }
+            }
+        }
+        
+        function onMouseMove(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            raycaster.setFromCamera(mouse, camera);
+            
+            const intersects = raycaster.intersectObjects(scene.children, true);
+            
+            if (intersects.length > 0) {
+                document.body.style.cursor = 'pointer';
+            } else {
+                document.body.style.cursor = 'grab';
+            }
+        }
+        
+        function focusOnProduct(product) {
+            currentProduct = product;
+            
+            // Update UI
+            const productInfo = productData[product.userData.type];
+            if (productInfo) {
+                document.getElementById('productTitle').textContent = productInfo.title;
+                document.getElementById('productPrice').textContent = productInfo.price;
+                document.getElementById('productDescription').textContent = productInfo.description;
+                document.getElementById('productInfo').classList.add('visible');
+                
+                // Show customization panel for customizable products
+                if (['pullupBar', 'rings', 'parallettes'].includes(product.userData.type)) {
+                    showCustomization();
+                }
+            }
+            
+            // Animate camera to focus on product
+            gsap.to(controls.target, {
+                duration: 1.5,
+                x: product.position.x,
+                y: product.position.y,
+                z: product.position.z,
+                ease: "power2.out"
+            });
+            
+            gsap.to(camera.position, {
+                duration: 1.5,
+                x: product.position.x + 2,
+                y: product.position.y + 1,
+                z: product.position.z + 3,
+                ease: "power2.out"
+            });
+            
+            // Apply current customization to product
+            applyCustomizationToProduct(product);
+        }
+        
+        function applyCustomizationToProduct(product) {
+            const colorMap = {
+                black: 0x333333,
+                purple: 0x8B5CF6,
+                white: 0xffffff,
+                red: 0xff6b6b
+            };
+            
+            const sizeMap = {
+                small: 0.8,
+                medium: 1.0,
+                large: 1.2
+            };
+            
+            // Apply color
+            product.traverse(child => {
+                if (child.isMesh && child.material) {
+                    child.material.color.setHex(colorMap[currentCustomization.color]);
+                }
+            });
+            
+            // Apply size
+            const targetScale = sizeMap[currentCustomization.size];
+            gsap.to(product.scale, {
+                duration: 0.5,
+                x: targetScale,
+                y: targetScale,
+                z: targetScale,
+                ease: "power2.out"
+            });
+        }
+        
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            controls.update();
+            
+            // Gentle rotation for products
+            Object.values(products).forEach(product => {
+                product.rotation.y += 0.005;
+            });
+            
+            renderer.render(scene, camera);
+        }
+        
+        function simulateLoading() {
+            const progressBar = document.getElementById('loadingProgress');
+            const loadingScreen = document.getElementById('loadingScreen');
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    setTimeout(() => {
+                        loadingScreen.classList.add('hidden');
+                        isLoading = false;
+                    }, 500);
+                }
+                progressBar.style.width = progress + '%';
+            }, 100);
+        }
+        
+        function addToCart() {
+            if (currentProduct) {
+                const productType = currentProduct.userData.type;
+                const productInfo = productData[productType];
+                
+                if (productInfo) {
+                    const cartItem = {
+                        id: Date.now(),
+                        name: productInfo.title,
+                        price: parseFloat(productInfo.price.replace('$', '')),
+                        type: productType,
+                        customization: {...currentCustomization}
+                    };
+                    
+                    cart.push(cartItem);
+                    updateCartDisplay();
+                    animateAddToCart(currentProduct);
+                    showCart();
+                }
+            }
+        }
+        
+        function addCustomizedToCart() {
+            if (currentProduct) {
+                addToCart();
+                hideCustomization();
+            }
+        }
+        
+        function animateAddToCart(product) {
+            // Create a clone of the product for animation
+            const clone = product.clone();
+            clone.scale.multiplyScalar(0.3);
+            scene.add(clone);
+            
+            // Animate the clone flying to cart
+            gsap.to(clone.position, {
+                duration: 1,
+                x: 5,
+                y: 3,
+                z: 2,
+                ease: "power2.out"
+            });
+            
+            gsap.to(clone.scale, {
+                duration: 1,
+                x: 0.1,
+                y: 0.1,
+                z: 0.1,
+                ease: "power2.out",
+                onComplete: () => {
+                    scene.remove(clone);
+                }
+            });
+        }
+        
+        function updateCartDisplay() {
+            const cartCount = document.getElementById('cartCount');
+            const cartItems = document.getElementById('cartItems');
+            const cartTotalElement = document.getElementById('cartTotal');
+            
+            cartCount.textContent = cart.length;
+            
+            // Calculate total
+            cartTotal = cart.reduce((sum, item) => sum + item.price, 0);
+            cartTotalElement.textContent = `$${cartTotal.toFixed(2)}`;
+            
+            // Update cart items display
+            cartItems.innerHTML = '';
+            cart.forEach(item => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+                    </div>
+                    <button class="cart-item-remove" onclick="removeFromCart(${item.id})">×</button>
+                `;
+                cartItems.appendChild(cartItem);
+            });
+        }
+        
+        function removeFromCart(itemId) {
+            cart = cart.filter(item => item.id !== itemId);
+            updateCartDisplay();
+            
+            if (cart.length === 0) {
+                hideCart();
+            }
+        }
+        
+        function showCart() {
+            document.getElementById('cart3D').classList.add('visible');
+        }
+        
+        function hideCart() {
+            document.getElementById('cart3D').classList.remove('visible');
+        }
+        
+        function checkout() {
+            if (cart.length > 0) {
+                alert(`Checkout complete! Total: $${cartTotal.toFixed(2)}`);
+                cart = [];
+                updateCartDisplay();
+                hideCart();
+            }
+        }
+        
+        function showCustomization() {
+            document.getElementById('customizationPanel').classList.add('visible');
+        }
+        
+        function hideCustomization() {
+            document.getElementById('customizationPanel').classList.remove('visible');
+        }
+        
+        // Journey system functions
+        function startJourney() {
+            journeyActive = true;
+            currentRoom = 'entrance';
+            document.getElementById('journeyNav').style.display = 'block';
+            document.getElementById('startJourneyBtn').style.display = 'none';
+            updateRoomInfo();
+            moveToRoom('beginner');
+        }
+        
+        function moveToNextRoom() {
+            const nextRoom = roomData[currentRoom].nextRoom;
+            if (nextRoom) {
+                moveToRoom(nextRoom);
+            }
+        }
+        
+        function moveToRoom(roomName) {
+            if (!roomData[roomName]) return;
+            
+            currentRoom = roomName;
+            const roomPos = roomData[roomName].position;
+            
+            // Animate camera to new room
+            gsap.to(camera.position, {
+                duration: 3,
+                x: roomPos.x + 5,
+                y: roomPos.y + 3,
+                z: roomPos.z + 8,
+                ease: "power2.inOut"
+            });
+            
+            gsap.to(controls.target, {
+                duration: 3,
+                x: roomPos.x,
+                y: roomPos.y,
+                z: roomPos.z,
+                ease: "power2.inOut"
+            });
+            
+            // Update room equipment
+            setTimeout(() => {
+                createRoomEquipment(roomName);
+                updateRoomInfo();
+            }, 1500);
+        }
+        
+        function updateRoomInfo() {
+            const room = roomData[currentRoom];
+            document.getElementById('roomName').textContent = room.name;
+            document.getElementById('roomDescription').textContent = room.description;
+            
+            const nextBtn = document.getElementById('nextRoomBtn');
+            if (room.nextRoom) {
+                nextBtn.style.display = 'block';
+                nextBtn.textContent = room.nextRoom === 'checkout' ? 'Checkout' : 'Next Room';
+            } else {
+                nextBtn.style.display = 'none';
+            }
+        }
+        
+        function createRoomEquipment(roomName) {
+            // Clear existing products
+            Object.values(products).forEach(product => {
+                scene.remove(product);
+            });
+            products = {};
+            
+            const roomPos = roomData[roomName].position;
+            
+            switch(roomName) {
+                case 'beginner':
+                    createBeginnerEquipment(roomPos);
+                    break;
+                case 'intermediate':
+                    createIntermediateEquipment(roomPos);
+                    break;
+                case 'advanced':
+                    createAdvancedEquipment(roomPos);
+                    break;
+                case 'checkout':
+                    createCheckoutArea(roomPos);
+                    break;
+            }
+        }
+        
+        function createBeginnerEquipment(pos) {
+            // Simple doorway pull-up bar
+            const group = new THREE.Group();
+            const barGeometry = new THREE.CylinderGeometry(0.03, 0.03, 0.8, 8);
+            const barMaterial = new THREE.MeshPhysicalMaterial({ color: 0x666666 });
+            const bar = new THREE.Mesh(barGeometry, barMaterial);
+            bar.rotation.z = Math.PI / 2;
+            group.add(bar);
+            group.position.set(pos.x, pos.y + 1, pos.z);
+            group.userData = { type: 'beginnerBar', price: '$29.99' };
+            products.beginnerBar = group;
+            scene.add(group);
+        }
+        
+        function createIntermediateEquipment(pos) {
+            // Wall-mounted equipment
+            createPullUpBar();
+            products.pullupBar.position.set(pos.x, pos.y + 1, pos.z);
+        }
+        
+        function createAdvancedEquipment(pos) {
+            // Professional power tower
+            const group = new THREE.Group();
+            
+            // Main frame
+            const frameGeometry = new THREE.BoxGeometry(0.1, 2.5, 0.1);
+            const frameMaterial = new THREE.MeshPhysicalMaterial({ color: 0x333333, metalness: 0.8 });
+            
+            for (let i = -1; i <= 1; i += 2) {
+                for (let j = -1; j <= 1; j += 2) {
+                    const frame = new THREE.Mesh(frameGeometry, frameMaterial);
+                    frame.position.set(i * 0.6, 1.25, j * 0.6);
+                    group.add(frame);
+                }
+            }
+            
+            group.position.set(pos.x, pos.y, pos.z);
+            group.userData = { type: 'powerTower', price: '$299.99' };
+            products.powerTower = group;
+            scene.add(group);
+        }
+        
+        function createCheckoutArea(pos) {
+            // Checkout visualization
+            const group = new THREE.Group();
+            
+            // Checkout counter
+            const counterGeometry = new THREE.BoxGeometry(2, 0.1, 1);
+            const counterMaterial = new THREE.MeshPhysicalMaterial({ color: 0x8B5CF6, metalness: 0.3 });
+            const counter = new THREE.Mesh(counterGeometry, counterMaterial);
+            counter.position.y = 1;
+            group.add(counter);
+            
+            group.position.set(pos.x, pos.y, pos.z);
+            scene.add(group);
+        }
+        
+        // Initialize when page loads
+        window.addEventListener('load', init);
+        
+        // Show journey start button after loading
+        setTimeout(() => {
+            if (!isLoading) {
+                document.getElementById('startJourneyBtn').style.display = 'block';
+            }
+        }, 3000);
+        
+        // Setup customization event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Color options
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
+                    option.classList.add('selected');
+                    currentCustomization.color = option.dataset.color;
+                    
+                    if (currentProduct) {
+                        applyCustomizationToProduct(currentProduct);
+                    }
+                });
+            });
+            
+            // Size options
+            document.querySelectorAll('.size-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.size-option').forEach(o => o.classList.remove('selected'));
+                    option.classList.add('selected');
+                    currentCustomization.size = option.dataset.size;
+                    
+                    if (currentProduct) {
+                        applyCustomizationToProduct(currentProduct);
+                    }
+                });
+            });
+        });
+        
+        // Add AR detection for mobile devices
+        function detectARSupport() {
+            if ('xr' in navigator) {
+                navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
+                    if (supported) {
+                        addARButton();
+                    }
+                });
+            }
+        }
+        
+        function addARButton() {
+            const arButton = document.createElement('button');
+            arButton.textContent = 'View in AR';
+            arButton.className = 'cta-button';
+            arButton.style.position = 'absolute';
+            arButton.style.top = '20px';
+            arButton.style.left = '20px';
+            arButton.onclick = startARSession;
+            document.body.appendChild(arButton);
+        }
+        
+        function startARSession() {
+            if (currentProduct && 'xr' in navigator) {
+                navigator.xr.requestSession('immersive-ar').then((session) => {
+                    // AR session implementation would go here
+                    alert('AR feature coming soon! This would place the equipment in your space.');
+                });
+            }
+        }
+        
+        // Initialize AR detection
+        setTimeout(detectARSupport, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalisVerse - Premium 3D Calisthenics Equipment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+        
+        .ui-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .ui-element {
+            pointer-events: auto;
+        }
+        
+        .logo {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #8B5CF6;
+            z-index: 15;
+        }
+        
+        .nav-menu {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            display: flex;
+            gap: 20px;
+            z-index: 15;
+        }
+        
+        .nav-item {
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            color: #8B5CF6;
+        }
+        
+        .welcome-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 30px 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            z-index: 20;
+            opacity: 0;
+            animation: fadeInOut 5s ease-in-out;
+        }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            15%, 85% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+        
+        .control-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            color: #64748b;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .cta-button {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.4);
+        }
+        
+        .product-info {
+            position: absolute;
+            top: 50%;
+            right: 50px;
+            transform: translateY(-50%);
+            width: 300px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        
+        .product-info.visible {
+            opacity: 1;
+        }
+        
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-menu { display: none; }
+            .product-info {
+                position: fixed;
+                bottom: 100px;
+                right: 20px;
+                left: 20px;
+                top: auto;
+                transform: none;
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loader"></div>
+        <h2 style="color: white; font-size: 20px; margin-bottom: 10px;">Loading 3D Experience...</h2>
+        <p style="color: rgba(255,255,255,0.8);">Preparing your immersive journey</p>
+    </div>
+
+    <!-- 3D Canvas Container -->
+    <div id="canvas-container"></div>
+
+    <!-- UI Overlay -->
+    <div class="ui-overlay">
+        <!-- Logo -->
+        <div class="logo ui-element">CalisVerse</div>
+
+        <!-- Navigation -->
+        <nav class="nav-menu ui-element">
+            <a href="#" class="nav-item">Products</a>
+            <a href="#" class="nav-item">About</a>
+            <a href="#" class="nav-item">Support</a>
+            <a href="index.html" class="nav-item">Shop</a>
+        </nav>
+
+        <!-- Welcome Text -->
+        <div id="welcome-text" class="welcome-text">
+            <h1 style="font-size: 2.5rem; font-weight: bold; margin-bottom: 16px; color: #1a202c;">Explore Our 3D Equipment Collection</h1>
+            <p style="font-size: 1.125rem; color: #64748b;">Interact with premium calisthenics gear in stunning 3D</p>
+            <div style="margin-top: 16px; font-size: 14px; color: #8B5CF6; font-weight: 500;">
+                🖱️ Drag to rotate • 🔍 Scroll to zoom • 👆 Click to explore
+            </div>
+        </div>
+
+        <!-- Product Info Panel -->
+        <div id="product-info" class="product-info">
+            <h3 id="info-title" style="font-size: 20px; font-weight: bold; margin-bottom: 12px; color: #1a202c;">Professional Pull-up Bar</h3>
+            <p id="info-description" style="color: #64748b; margin-bottom: 16px;">Heavy-duty steel construction with comfortable grip padding. Perfect for building upper body strength.</p>
+            <div id="info-price" style="font-size: 24px; font-weight: bold; color: #8B5CF6; margin-bottom: 16px;">$79.99</div>
+            <div style="display: flex; gap: 12px;">
+                <button id="add-to-cart" style="background: #8B5CF6; color: white; padding: 8px 16px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; flex: 1;">
+                    Add to Cart
+                </button>
+                <button id="view-details" style="border: 1px solid #8B5CF6; color: #8B5CF6; padding: 8px 16px; border-radius: 8px; font-weight: 600; background: transparent; cursor: pointer;">
+                    Details
+                </button>
+            </div>
+        </div>
+
+        <!-- Controls Hint -->
+        <div class="control-hint ui-element">
+            <div>🖱️ Drag to rotate • 🔍 Scroll to zoom • 👆 Click to focus</div>
+        </div>
+
+        <!-- CTA Button -->
+        <a href="index.html" class="cta-button ui-element">
+            Enter Full Store →
+        </a>
+    </div>
+
+    <script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.158.0/examples/js/controls/OrbitControls.js"></script>
+    <script>
+        class Simple3DLanding {
+            constructor() {
+                this.scene = null;
+                this.camera = null;
+                this.renderer = null;
+                this.controls = null;
+                this.pullupBar = null;
+                
+                this.init();
+            }
+
+            async init() {
+                this.setupScene();
+                this.setupCamera();
+                this.setupRenderer();
+                this.setupLighting();
+                this.createPullUpBar();
+                this.setupControls();
+                this.setupEventListeners();
+                
+                // Hide loading screen
+                setTimeout(() => {
+                    document.getElementById('loading-screen').classList.add('hidden');
+                    document.getElementById('product-info').classList.add('visible');
+                }, 1500);
+                
+                this.animate();
+            }
+
+            setupScene() {
+                this.scene = new THREE.Scene();
+                this.scene.background = new THREE.Color(0xf8fafc);
+            }
+
+            setupCamera() {
+                this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                this.camera.position.set(3, 2, 5);
+            }
+
+            setupRenderer() {
+                this.renderer = new THREE.WebGLRenderer({ antialias: true });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                this.renderer.shadowMap.enabled = true;
+                this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                
+                document.getElementById('canvas-container').appendChild(this.renderer.domElement);
+            }
+
+            setupLighting() {
+                // Ambient light
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+                this.scene.add(ambientLight);
+
+                // Directional light
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(10, 10, 5);
+                directionalLight.castShadow = true;
+                directionalLight.shadow.mapSize.width = 1024;
+                directionalLight.shadow.mapSize.height = 1024;
+                this.scene.add(directionalLight);
+
+                // Ground
+                const groundGeometry = new THREE.PlaneGeometry(20, 20);
+                const groundMaterial = new THREE.MeshLambertMaterial({ 
+                    color: 0xffffff,
+                    transparent: true,
+                    opacity: 0.1
+                });
+                const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+                ground.rotation.x = -Math.PI / 2;
+                ground.position.y = -1;
+                ground.receiveShadow = true;
+                this.scene.add(ground);
+            }
+
+            createPullUpBar() {
+                const group = new THREE.Group();
+
+                // Main bar
+                const barGeometry = new THREE.CylinderGeometry(0.03, 0.03, 1.2, 32);
+                const barMaterial = new THREE.MeshPhongMaterial({ 
+                    color: 0x2d3748,
+                    shininess: 100
+                });
+                const mainBar = new THREE.Mesh(barGeometry, barMaterial);
+                mainBar.rotation.z = Math.PI / 2;
+                mainBar.position.y = 0.8;
+                mainBar.castShadow = true;
+                group.add(mainBar);
+
+                // Support posts
+                const postGeometry = new THREE.CylinderGeometry(0.025, 0.025, 1.0, 16);
+                const postMaterial = new THREE.MeshPhongMaterial({ 
+                    color: 0x4a5568,
+                    shininess: 80
+                });
+                
+                const leftPost = new THREE.Mesh(postGeometry, postMaterial);
+                leftPost.position.set(-0.5, 0.3, 0);
+                leftPost.castShadow = true;
+                group.add(leftPost);
+
+                const rightPost = new THREE.Mesh(postGeometry, postMaterial);
+                rightPost.position.set(0.5, 0.3, 0);
+                rightPost.castShadow = true;
+                group.add(rightPost);
+
+                // Base
+                const baseGeometry = new THREE.BoxGeometry(1.4, 0.05, 0.8);
+                const baseMaterial = new THREE.MeshPhongMaterial({ 
+                    color: 0x1a202c,
+                    shininess: 60
+                });
+                const base = new THREE.Mesh(baseGeometry, baseMaterial);
+                base.position.y = -0.2;
+                base.castShadow = true;
+                group.add(base);
+
+                this.pullupBar = group;
+                this.scene.add(group);
+            }
+
+            setupControls() {
+                if (typeof THREE.OrbitControls !== 'undefined') {
+                    this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+                    this.controls.enableDamping = true;
+                    this.controls.dampingFactor = 0.05;
+                    this.controls.minDistance = 2;
+                    this.controls.maxDistance = 10;
+                    this.controls.autoRotate = true;
+                    this.controls.autoRotateSpeed = 1;
+                }
+            }
+
+            setupEventListeners() {
+                window.addEventListener('resize', () => {
+                    this.camera.aspect = window.innerWidth / window.innerHeight;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+
+                // Stop auto-rotation on interaction
+                this.renderer.domElement.addEventListener('mousedown', () => {
+                    if (this.controls) this.controls.autoRotate = false;
+                });
+
+                this.renderer.domElement.addEventListener('mouseup', () => {
+                    if (this.controls) {
+                        setTimeout(() => {
+                            this.controls.autoRotate = true;
+                        }, 3000);
+                    }
+                });
+
+                // Button events
+                document.getElementById('add-to-cart').addEventListener('click', () => {
+                    alert('Added to cart! 🛒');
+                });
+
+                document.getElementById('view-details').addEventListener('click', () => {
+                    window.location.href = 'index.html';
+                });
+            }
+
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                
+                if (this.controls) {
+                    this.controls.update();
+                }
+                
+                // Gentle floating animation
+                if (this.pullupBar) {
+                    const time = Date.now() * 0.001;
+                    this.pullupBar.position.y = Math.sin(time) * 0.02;
+                }
+                
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', () => {
+            new Simple3DLanding();
+        });
+    </script>
+</body>
+</html>

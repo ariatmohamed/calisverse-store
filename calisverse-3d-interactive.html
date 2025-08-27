@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalisVerse - Interactive 3D Equipment</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #16213e;
+            --accent: #8B5CF6;
+            --text: #ffffff;
+            --text-secondary: #a0aec0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 15px 0;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .main {
+            margin-top: 80px;
+            padding: 40px 0;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 0;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--text), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--accent), #a855f7);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+        }
+
+        /* 3D Product Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .product-3d-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-3d-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(139, 92, 246, 0.2);
+            border-color: var(--accent);
+        }
+
+        .product-3d-viewer {
+            width: 100%;
+            height: 300px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .product-info {
+            text-align: center;
+        }
+
+        .product-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+
+        .product-description {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .add-to-cart {
+            background: linear-gradient(135deg, var(--accent), #a855f7);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .add-to-cart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Controls */
+        .controls-hint {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* Loading */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .products-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="#" class="logo">CalisVerse</a>
+            <ul class="nav-links">
+                <li><a href="#" class="active" onclick="showSection('home')">Home</a></li>
+                <li><a href="#" onclick="showSection('equipment')">Equipment</a></li>
+                <li><a href="#" onclick="showSection('community')">Community</a></li>
+                <li><a href="#" onclick="showSection('training')">Training</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main">
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <div class="container">
+                <div class="hero">
+                    <h1>Professional 3D Calisthenics</h1>
+                    <p>Experience our equipment in stunning 3D. Rotate, zoom, and interact with every product before you buy.</p>
+                    <a href="#" class="cta-button" onclick="showSection('equipment')">Explore 3D Equipment</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Equipment Section -->
+        <section id="equipment" class="section">
+            <div class="container">
+                <h2 style="text-align: center; font-size: 3rem; margin-bottom: 60px;">Interactive 3D Equipment</h2>
+                <div class="products-grid">
+                    <div class="product-3d-card">
+                        <div class="product-3d-viewer" id="pullup-viewer">
+                            <div class="loading">Loading 3D Model...</div>
+                            <div class="controls-hint">Click & Drag to Rotate • Scroll to Zoom</div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">Professional Pull-Up Bar</h3>
+                            <div class="product-price">$79.99</div>
+                            <p class="product-description">Heavy-duty steel construction with ergonomic grip design. Wall-mounted for maximum stability.</p>
+                            <button class="add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-3d-card">
+                        <div class="product-3d-viewer" id="rings-viewer">
+                            <div class="loading">Loading 3D Model...</div>
+                            <div class="controls-hint">Click & Drag to Rotate • Scroll to Zoom</div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">Wooden Gymnastics Rings</h3>
+                            <div class="product-price">$59.99</div>
+                            <p class="product-description">Premium birch wood rings with adjustable straps. Perfect for upper body strength training.</p>
+                            <button class="add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-3d-card">
+                        <div class="product-3d-viewer" id="parallettes-viewer">
+                            <div class="loading">Loading 3D Model...</div>
+                            <div class="controls-hint">Click & Drag to Rotate • Scroll to Zoom</div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">Wooden Parallettes</h3>
+                            <div class="product-price">$39.99</div>
+                            <p class="product-description">Handcrafted wooden parallettes for L-sits, handstands, and push-up variations.</p>
+                            <button class="add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="product-3d-card">
+                        <div class="product-3d-viewer" id="dip-bars-viewer">
+                            <div class="loading">Loading 3D Model...</div>
+                            <div class="controls-hint">Click & Drag to Rotate • Scroll to Zoom</div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">Adjustable Dip Bars</h3>
+                            <div class="product-price">$149.99</div>
+                            <p class="product-description">Professional-grade adjustable dip bars with non-slip base and ergonomic handles.</p>
+                            <button class="add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Section -->
+        <section id="community" class="section">
+            <div class="container">
+                <div class="hero">
+                    <h1>Join Our Community</h1>
+                    <p>Connect with 50,000+ calisthenics athletes worldwide</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Training Section -->
+        <section id="training" class="section">
+            <div class="container">
+                <div class="hero">
+                    <h1>Training Programs</h1>
+                    <p>Professional calisthenics training programs for all levels</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Global variables
+        let scenes = {};
+        let cameras = {};
+        let renderers = {};
+        let controls = {};
+        let animationFrames = {};
+
+        // Navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show target section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update nav links
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Initialize 3D viewers if equipment section
+            if (sectionId === 'equipment') {
+                setTimeout(() => {
+                    init3DViewers();
+                }, 100);
+            }
+        }
+
+        // Initialize 3D viewers
+        function init3DViewers() {
+            const viewers = [
+                { id: 'pullup-viewer', type: 'pullup' },
+                { id: 'rings-viewer', type: 'rings' },
+                { id: 'parallettes-viewer', type: 'parallettes' },
+                { id: 'dip-bars-viewer', type: 'dipbars' }
+            ];
+
+            viewers.forEach(viewer => {
+                if (!renderers[viewer.id]) {
+                    create3DViewer(viewer.id, viewer.type);
+                }
+            });
+        }
+
+        // Create 3D viewer
+        function create3DViewer(containerId, equipmentType) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            // Clear loading text
+            container.innerHTML = '<div class="controls-hint">Click & Drag to Rotate • Scroll to Zoom</div>';
+
+            // Scene setup
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x1a1a2e);
+
+            // Camera
+            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 0, 5);
+
+            // Renderer
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.outputEncoding = THREE.sRGBEncoding;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.2;
+            container.appendChild(renderer.domElement);
+
+            // Controls
+            const orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+            orbitControls.enableDamping = true;
+            orbitControls.dampingFactor = 0.05;
+            orbitControls.autoRotate = true;
+            orbitControls.autoRotateSpeed = 1;
+
+            // Lighting
+            setupLighting(scene);
+
+            // Create equipment model
+            const equipment = createEquipmentModel(equipmentType);
+            scene.add(equipment);
+
+            // Store references
+            scenes[containerId] = scene;
+            cameras[containerId] = camera;
+            renderers[containerId] = renderer;
+            controls[containerId] = orbitControls;
+
+            // Animation loop
+            function animate() {
+                animationFrames[containerId] = requestAnimationFrame(animate);
+                orbitControls.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // Handle resize
+            window.addEventListener('resize', () => {
+                if (container.clientWidth > 0) {
+                    camera.aspect = container.clientWidth / container.clientHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(container.clientWidth, container.clientHeight);
+                }
+            });
+        }
+
+        // Setup lighting
+        function setupLighting(scene) {
+            // Ambient light
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+            scene.add(ambientLight);
+
+            // Main directional light
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(5, 5, 5);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            scene.add(directionalLight);
+
+            // Fill light
+            const fillLight = new THREE.DirectionalLight(0x8B5CF6, 0.3);
+            fillLight.position.set(-3, 2, -3);
+            scene.add(fillLight);
+
+            // Rim light
+            const rimLight = new THREE.DirectionalLight(0xa855f7, 0.4);
+            rimLight.position.set(0, -2, -5);
+            scene.add(rimLight);
+        }
+
+        // Create equipment models
+        function createEquipmentModel(type) {
+            const group = new THREE.Group();
+
+            switch (type) {
+                case 'pullup':
+                    return createPullUpBar();
+                case 'rings':
+                    return createGymnasticsRings();
+                case 'parallettes':
+                    return createParallettes();
+                case 'dipbars':
+                    return createDipBars();
+                default:
+                    return group;
+            }
+        }
+
+        // Create Pull-Up Bar
+        function createPullUpBar() {
+            const group = new THREE.Group();
+
+            // Materials
+            const steelMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0x4a5568,
+                metalness: 0.8,
+                roughness: 0.2,
+                clearcoat: 0.3
+            });
+
+            const barMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0xe2e8f0,
+                metalness: 0.9,
+                roughness: 0.1,
+                clearcoat: 0.5
+            });
+
+            // Wall brackets
+            const bracketGeometry = new THREE.BoxGeometry(0.3, 1.5, 0.2);
+            const leftBracket = new THREE.Mesh(bracketGeometry, steelMaterial);
+            leftBracket.position.set(-2, 0, 0);
+            leftBracket.castShadow = true;
+            group.add(leftBracket);
+
+            const rightBracket = new THREE.Mesh(bracketGeometry, steelMaterial);
+            rightBracket.position.set(2, 0, 0);
+            rightBracket.castShadow = true;
+            group.add(rightBracket);
+
+            // Support arms
+            const armGeometry = new THREE.BoxGeometry(0.8, 0.15, 0.15);
+            const leftArm = new THREE.Mesh(armGeometry, steelMaterial);
+            leftArm.position.set(-1.2, 0.3, 0);
+            leftArm.castShadow = true;
+            group.add(leftArm);
+
+            const rightArm = new THREE.Mesh(armGeometry, steelMaterial);
+            rightArm.position.set(1.2, 0.3, 0);
+            rightArm.castShadow = true;
+            group.add(rightArm);
+
+            // Main bar
+            const barGeometry = new THREE.CylinderGeometry(0.08, 0.08, 3.5, 32);
+            const mainBar = new THREE.Mesh(barGeometry, barMaterial);
+            mainBar.rotation.z = Math.PI / 2;
+            mainBar.position.y = 0.3;
+            mainBar.castShadow = true;
+            group.add(mainBar);
+
+            // Grip texture
+            const gripGeometry = new THREE.RingGeometry(0.08, 0.09, 32);
+            for (let i = 0; i < 20; i++) {
+                const grip = new THREE.Mesh(gripGeometry, steelMaterial);
+                grip.position.set(-1.5 + (i * 0.15), 0.3, 0);
+                grip.rotation.y = Math.PI / 2;
+                group.add(grip);
+            }
+
+            return group;
+        }
+
+        // Create Gymnastics Rings
+        function createGymnasticsRings() {
+            const group = new THREE.Group();
+
+            // Materials
+            const woodMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0x8B4513,
+                roughness: 0.8,
+                metalness: 0.1
+            });
+
+            const strapMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0x2d3748,
+                roughness: 0.9,
+                metalness: 0.0
+            });
+
+            // Straps
+            const strapGeometry = new THREE.BoxGeometry(0.1, 2, 0.05);
+            const leftStrap = new THREE.Mesh(strapGeometry, strapMaterial);
+            leftStrap.position.set(-0.8, 1, 0);
+            group.add(leftStrap);
+
+            const rightStrap = new THREE.Mesh(strapGeometry, strapMaterial);
+            rightStrap.position.set(0.8, 1, 0);
+            group.add(rightStrap);
+
+            // Rings
+            const ringGeometry = new THREE.TorusGeometry(0.4, 0.08, 16, 100);
+            const leftRing = new THREE.Mesh(ringGeometry, woodMaterial);
+            leftRing.position.set(-0.8, 0, 0);
+            leftRing.castShadow = true;
+            group.add(leftRing);
+
+            const rightRing = new THREE.Mesh(ringGeometry, woodMaterial);
+            rightRing.position.set(0.8, 0, 0);
+            rightRing.castShadow = true;
+            group.add(rightRing);
+
+            return group;
+        }
+
+        // Create Parallettes
+        function createParallettes() {
+            const group = new THREE.Group();
+
+            // Materials
+            const woodMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0xDEB887,
+                roughness: 0.7,
+                metalness: 0.1
+            });
+
+            const baseMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0x2d3748,
+                roughness: 0.9,
+                metalness: 0.0
+            });
+
+            // Left parallette
+            const handleGeometry = new THREE.CylinderGeometry(0.06, 0.06, 1, 32);
+            const legGeometry = new THREE.CylinderGeometry(0.04, 0.04, 0.8, 16);
+            const baseGeometry = new THREE.CylinderGeometry(0.08, 0.08, 0.05, 16);
+
+            // Left side
+            const leftHandle = new THREE.Mesh(handleGeometry, woodMaterial);
+            leftHandle.position.set(-0.6, 0.4, 0);
+            leftHandle.rotation.z = Math.PI / 2;
+            leftHandle.castShadow = true;
+            group.add(leftHandle);
+
+            const leftLeg1 = new THREE.Mesh(legGeometry, woodMaterial);
+            leftLeg1.position.set(-1, -0.4, 0);
+            leftLeg1.castShadow = true;
+            group.add(leftLeg1);
+
+            const leftLeg2 = new THREE.Mesh(legGeometry, woodMaterial);
+            leftLeg2.position.set(-0.2, -0.4, 0);
+            leftLeg2.castShadow = true;
+            group.add(leftLeg2);
+
+            const leftBase1 = new THREE.Mesh(baseGeometry, baseMaterial);
+            leftBase1.position.set(-1, -0.8, 0);
+            group.add(leftBase1);
+
+            const leftBase2 = new THREE.Mesh(baseGeometry, baseMaterial);
+            leftBase2.position.set(-0.2, -0.8, 0);
+            group.add(leftBase2);
+
+            // Right side
+            const rightHandle = new THREE.Mesh(handleGeometry, woodMaterial);
+            rightHandle.position.set(0.6, 0.4, 0);
+            rightHandle.rotation.z = Math.PI / 2;
+            rightHandle.castShadow = true;
+            group.add(rightHandle);
+
+            const rightLeg1 = new THREE.Mesh(legGeometry, woodMaterial);
+            rightLeg1.position.set(0.2, -0.4, 0);
+            rightLeg1.castShadow = true;
+            group.add(rightLeg1);
+
+            const rightLeg2 = new THREE.Mesh(legGeometry, woodMaterial);
+            rightLeg2.position.set(1, -0.4, 0);
+            rightLeg2.castShadow = true;
+            group.add(rightLeg2);
+
+            const rightBase1 = new THREE.Mesh(baseGeometry, baseMaterial);
+            rightBase1.position.set(0.2, -0.8, 0);
+            group.add(rightBase1);
+
+            const rightBase2 = new THREE.Mesh(baseGeometry, baseMaterial);
+            rightBase2.position.set(1, -0.8, 0);
+            group.add(rightBase2);
+
+            return group;
+        }
+
+        // Create Dip Bars
+        function createDipBars() {
+            const group = new THREE.Group();
+
+            // Materials
+            const steelMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0x4a5568,
+                metalness: 0.8,
+                roughness: 0.2,
+                clearcoat: 0.3
+            });
+
+            const handleMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0x2d3748,
+                roughness: 0.6,
+                metalness: 0.3
+            });
+
+            // Base frame
+            const baseGeometry = new THREE.BoxGeometry(2, 0.1, 1.5);
+            const base = new THREE.Mesh(baseGeometry, steelMaterial);
+            base.position.y = -0.8;
+            base.castShadow = true;
+            group.add(base);
+
+            // Vertical supports
+            const supportGeometry = new THREE.CylinderGeometry(0.05, 0.05, 1.5, 16);
+            const leftSupport = new THREE.Mesh(supportGeometry, steelMaterial);
+            leftSupport.position.set(-0.8, 0, 0.6);
+            leftSupport.castShadow = true;
+            group.add(leftSupport);
+
+            const rightSupport = new THREE.Mesh(supportGeometry, steelMaterial);
+            rightSupport.position.set(0.8, 0, 0.6);
+            rightSupport.castShadow = true;
+            group.add(rightSupport);
+
+            const leftSupport2 = new THREE.Mesh(supportGeometry, steelMaterial);
+            leftSupport2.position.set(-0.8, 0, -0.6);
+            leftSupport2.castShadow = true;
+            group.add(leftSupport2);
+
+            const rightSupport2 = new THREE.Mesh(supportGeometry, steelMaterial);
+            rightSupport2.position.set(0.8, 0, -0.6);
+            rightSupport2.castShadow = true;
+            group.add(rightSupport2);
+
+            // Handles
+            const handleGeometry = new THREE.CylinderGeometry(0.06, 0.06, 1.2, 32);
+            const leftHandle = new THREE.Mesh(handleGeometry, handleMaterial);
+            leftHandle.position.set(-0.8, 0.7, 0);
+            leftHandle.rotation.x = Math.PI / 2;
+            leftHandle.castShadow = true;
+            group.add(leftHandle);
+
+            const rightHandle = new THREE.Mesh(handleGeometry, handleMaterial);
+            rightHandle.position.set(0.8, 0.7, 0);
+            rightHandle.rotation.x = Math.PI / 2;
+            rightHandle.castShadow = true;
+            group.add(rightHandle);
+
+            return group;
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            // Auto-show equipment section for demo
+            setTimeout(() => {
+                showSection('equipment');
+            }, 1000);
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            Object.values(animationFrames).forEach(frame => {
+                if (frame) cancelAnimationFrame(frame);
+            });
+        });
+    </script>
+</body>
+</html>

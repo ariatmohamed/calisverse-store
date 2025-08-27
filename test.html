@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalisVerse Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #000 0%, #8B5CF6 100%);
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #8B5CF6;
+        }
+        p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        .button {
+            background: linear-gradient(135deg, #8B5CF6, #A855F7);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+        }
+        .status {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CalisVerse</h1>
+        <p>✅ Server Connection Test Successful!</p>
+        <p>Your server is working properly on port 8084</p>
+        
+        <a href="revolutionary-3d.html" class="button">Open 3D Website</a>
+        
+        <div class="status">
+            <h3>Connection Status:</h3>
+            <p>✅ Server: Running</p>
+            <p>✅ Port: 8084</p>
+            <p>✅ Files: Accessible</p>
+            <p id="timestamp"></p>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('timestamp').textContent = 'Last updated: ' + new Date().toLocaleString();
+    </script>
+</body>
+</html>

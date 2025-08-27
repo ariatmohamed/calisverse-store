@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalisVerse - Professional Calisthenics Equipment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8B5CF6;
+            --primary-dark: #7C3AED;
+            --primary-light: #A855F7;
+            --accent: #F59E0B;
+            --dark: #0F0F23;
+            --dark-light: #1A1A2E;
+            --dark-lighter: #16213E;
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --shadow-lg: 0 35px 60px -12px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--dark-light) 40%, var(--dark-lighter) 100%);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 20px 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 1px;
+        }
+
+        .cta-nav {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .cta-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 40px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 32px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-title {
+            font-size: clamp(48px, 8vw, 84px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary-light) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            font-weight: 400;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 18px 36px;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            color: var(--text-primary);
+            padding: 18px 36px;
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .equipment-showcase {
+            padding: 100px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--text-primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .equipment-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .equipment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            border-radius: 24px;
+        }
+
+        .equipment-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .equipment-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .equipment-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .equipment-icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+            display: block;
+        }
+
+        .equipment-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .equipment-price {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+
+        .equipment-description {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .equipment-features {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .equipment-features li {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .equipment-features li::before {
+            content: '✓';
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .equipment-button {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .equipment-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        .stats-section {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 80px 40px;
+            margin: 100px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 60px;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .stat-item {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .loading-content {
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(139, 92, 246, 0.3);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 30px;
+        }
+
+        .loading-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .loading-text {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .loading-bar {
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .loading-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .equipment-gallery {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            z-index: 9999;
+            overflow-y: auto;
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        .gallery-header {
+            padding: 30px 40px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+        }
+
+        .back-btn {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--primary);
+        }
+
+        .gallery-controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        .filter-btn {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .product-image {
+            position: relative;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--dark-light), var(--dark-lighter));
+        }
+
+        .product-3d {
+            width: 120px;
+            height: 120px;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .pullup-bar-3d {
+            width: 100px;
+            height: 80px;
+            position: relative;
+        }
+        
+        .rings-3d {
+            width: 80px;
+            height: 80px;
+            position: relative;
+        }
+        
+        .parallettes-3d {
+            width: 90px;
+            height: 60px;
+            position: relative;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--accent);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .product-info {
+            padding: 25px;
+        }
+
+        .product-info h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .product-rating {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .product-price {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .add-to-cart-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        .product-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 11000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background: var(--dark-light);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--glass);
+            border: none;
+            color: var(--text-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            z-index: 1;
+        }
+
+        .modal-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            padding: 40px;
+        }
+
+        .modal-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--dark), var(--dark-light));
+            border-radius: 20px;
+            min-height: 300px;
+        }
+
+        .product-3d-large {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .product-3d-large .pullup-bar-3d {
+            width: 160px;
+            height: 120px;
+        }
+        
+        .product-3d-large .pullup-bar-3d::before {
+            height: 35px;
+            top: -20px;
+        }
+        
+        .product-3d-large .rings-3d {
+            width: 140px;
+            height: 140px;
+            border-width: 20px;
+        }
+        
+        .product-3d-large .rings-3d::before {
+            width: 8px;
+            height: 60px;
+            top: -35px;
+        }
+        
+        .product-3d-large .parallettes-3d {
+            width: 150px;
+            height: 100px;
+        }
+        
+        .product-3d-large .parallettes-3d::before {
+            width: 150px;
+            height: 25px;
+            top: 20px;
+        }
+        
+        .product-3d-large .parallettes-3d::after {
+            height: 18px;
+        }
+
+        .modal-info h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .modal-price {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .modal-rating {
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+        }
+
+        .modal-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .modal-features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .modal-features li {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .community-section, .training-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            z-index: 9999;
+            overflow-y: auto;
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        .section-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 120px 40px 60px;
+        }
+
+        .community-grid, .training-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .community-card, .training-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .community-card:hover, .training-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .training-card.featured {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, var(--glass), rgba(139, 92, 246, 0.1));
+        }
+
+        .community-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .training-level {
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .community-card h3, .training-card h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .training-duration {
+            font-size: 18px;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .community-stats {
+            color: var(--primary);
+            font-weight: 600;
+            margin: 20px 0;
+        }
+
+        .training-features {
+            list-style: none;
+            text-align: left;
+            margin: 25px 0;
+        }
+
+        .training-features li {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .training-price {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 25px 0;
+        }
+
+        .community-btn, .training-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .community-btn:hover, .training-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 20px;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+
+            .hero {
+                padding: 100px 20px 60px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .equipment-showcase {
+                padding: 60px 20px;
+            }
+
+            .equipment-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .stats-section {
+                padding: 60px 20px;
+            }
+
+            .stats-grid {
+                gap: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">CalisVerse</div>
+            <nav class="nav-links">
+                <a href="#" class="nav-link active" onclick="showHome()">Home</a>
+                <a href="#" class="nav-link" onclick="showEquipment()">Equipment</a>
+                <a href="#" class="nav-link" onclick="showCommunity()">Community</a>
+                <a href="#" class="nav-link" onclick="showTraining()">Training</a>
+                <a href="#" class="nav-link cta-nav" onclick="showEquipment()">Get Started</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span>🏆</span>
+                <span>Trusted by 50,000+ Athletes Worldwide</span>
+            </div>
+            <h1 class="hero-title">Strength Without Limits</h1>
+            <p class="hero-subtitle">
+                Professional-grade calisthenics equipment designed for athletes who demand excellence
+            </p>
+            <div class="hero-buttons">
+                <a href="#" class="btn-primary" onclick="showEquipment()">
+                    <span>🚀</span>
+                    <span>Shop Equipment</span>
+                </a>
+                <a href="#" class="btn-secondary" onclick="showTraining()">
+                    <span>📋</span>
+                    <span>View Training</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Equipment Showcase -->
+    <section class="equipment-showcase">
+        <div class="section-header">
+            <h2 class="section-title">Premium Equipment Collection</h2>
+            <p class="section-subtitle">
+                Engineered for performance, built to last. Each piece is crafted with precision and tested by professional athletes.
+            </p>
+        </div>
+
+        <div class="equipment-grid">
+            <div class="equipment-card" onclick="selectEquipment('pullup')">
+                <div class="equipment-content">
+                    <div class="equipment-icon">🏋️</div>
+                    <h3 class="equipment-name">Professional Pull-Up Bar</h3>
+                    <div class="equipment-price">$79.99</div>
+                    <p class="equipment-description">
+                        Premium stainless steel construction with ergonomic grip design for maximum comfort and durability.
+                    </p>
+                    <ul class="equipment-features">
+                        <li>Stainless steel construction</li>
+                        <li>Ergonomic grip design</li>
+                        <li>Easy wall mounting</li>
+                        <li>500lb weight capacity</li>
+                    </ul>
+                    <button class="equipment-button">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="equipment-card" onclick="selectEquipment('rings')">
+                <div class="equipment-content">
+                    <div class="equipment-icon">⭕</div>
+                    <h3 class="equipment-name">Wooden Gymnastics Rings</h3>
+                    <div class="equipment-price">$59.99</div>
+                    <p class="equipment-description">
+                        Natural birch wood rings with adjustable straps, perfect for developing functional strength and stability.
+                    </p>
+                    <ul class="equipment-features">
+                        <li>Natural birch wood</li>
+                        <li>Adjustable cam buckle straps</li>
+                        <li>Non-slip grip texture</li>
+                        <li>Professional competition grade</li>
+                    </ul>
+                    <button class="equipment-button">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="equipment-card" onclick="selectEquipment('parallettes')">
+                <div class="equipment-content">
+                    <div class="equipment-icon">🤸</div>
+                    <h3 class="equipment-name">Wooden Parallettes</h3>
+                    <div class="equipment-price">$39.99</div>
+                    <p class="equipment-description">
+                        Handcrafted parallettes perfect for handstands, L-sits, and push-up variations. Built for stability and comfort.
+                    </p>
+                    <ul class="equipment-features">
+                        <li>Solid wood construction</li>
+                        <li>Non-slip rubber base</li>
+                        <li>Comfortable grip diameter</li>
+                        <li>Lightweight and portable</li>
+                    </ul>
+                    <button class="equipment-button">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-number">50K+</span>
+                <span class="stat-label">Athletes Worldwide</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">98%</span>
+                <span class="stat-label">Satisfaction Rate</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">5★</span>
+                <span class="stat-label">Average Rating</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">24/7</span>
+                <span class="stat-label">Customer Support</span>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function showHome() {
+            // Hide all sections
+            hideAllSections();
+            // Show home content
+            document.querySelector('.hero').style.display = 'flex';
+            document.querySelector('.equipment-showcase').style.display = 'block';
+            document.querySelector('.stats-section').style.display = 'block';
+            updateActiveNav('Home');
+        }
+
+        function showEquipment() {
+            hideAllSections();
+            showEquipmentGallery();
+            updateActiveNav('Equipment');
+        }
+
+        function showCommunity() {
+            hideAllSections();
+            showCommunitySection();
+            updateActiveNav('Community');
+        }
+
+        function showTraining() {
+            hideAllSections();
+            showTrainingSection();
+            updateActiveNav('Training');
+        }
+
+        function hideAllSections() {
+            document.querySelector('.hero').style.display = 'none';
+            document.querySelector('.equipment-showcase').style.display = 'none';
+            document.querySelector('.stats-section').style.display = 'none';
+            
+            // Remove any existing sections
+            const existingSections = document.querySelectorAll('.equipment-gallery, .community-section, .training-section');
+            existingSections.forEach(section => section.remove());
+        }
+
+        function updateActiveNav(activeSection) {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.textContent.trim() === activeSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        function showCommunitySection() {
+            const communityHTML = `
+                <div class="community-section">
+                    <div class="section-container">
+                        <div class="section-header">
+                            <button class="back-btn" onclick="showHome()">← Back to Home</button>
+                            <h2 class="section-title">CalisVerse Community</h2>
+                            <p class="section-subtitle">Connect with 50,000+ athletes worldwide</p>
+                        </div>
+                        
+                        <div class="community-grid">
+                            <div class="community-card">
+                                <div class="community-icon">👥</div>
+                                <h3>Join Community</h3>
+                                <div class="product-3d">
+                                    <div class="parallettes-3d">
+                                        <svg viewBox="0 0 140 80" width="90" height="52">
+                                            <!-- Left parallette -->
+                                            <g transform="translate(10,0)">
+                                                <!-- Handle -->
+                                                <ellipse cx="25" cy="25" rx="25" ry="4" fill="#DEB887"/>
+                                                <rect x="0" y="21" width="50" height="8" fill="#CD853F" rx="4"/>
+                                                <rect x="0" y="21" width="50" height="4" fill="#F4A460" rx="2"/>
+                                                
+                                                <!-- Wood grain -->
+                                                <line x1="5" y1="23" x2="45" y2="23" stroke="#8B4513" stroke-width="0.3"/>
+                                                <line x1="3" y1="26" x2="47" y2="26" stroke="#8B4513" stroke-width="0.3"/>
+                                                
+                                                <!-- Left leg -->
+                                                <rect x="8" y="29" width="6" height="35" fill="#A0522D" rx="3"/>
+                                                <rect x="8" y="29" width="4" height="35" fill="#CD853F" rx="2"/>
+                                                
+                                                <!-- Right leg -->
+                                                <rect x="36" y="29" width="6" height="35" fill="#A0522D" rx="3"/>
+                                                <rect x="36" y="29" width="4" height="35" fill="#CD853F" rx="2"/>
+                                                
+                                                <!-- Base pads -->
+                                                <ellipse cx="11" cy="64" rx="4" ry="2" fill="#2d3748"/>
+                                                <ellipse cx="39" cy="64" rx="4" ry="2" fill="#2d3748"/>
+                                            </g>
+                                            
+                                            <!-- Right parallette -->
+                                            <g transform="translate(80,0)">
+                                                <!-- Handle -->
+                                                <ellipse cx="25" cy="25" rx="25" ry="4" fill="#DEB887"/>
+                                                <rect x="0" y="21" width="50" height="8" fill="#CD853F" rx="4"/>
+                                                <rect x="0" y="21" width="50" height="4" fill="#F4A460" rx="2"/>
+                                                
+                                                <!-- Wood grain -->
+                                                <line x1="5" y1="23" x2="45" y2="23" stroke="#8B4513" stroke-width="0.3"/>
+                                                <line x1="3" y1="26" x2="47" y2="26" stroke="#8B4513" stroke-width="0.3"/>
+                                                
+                                                <!-- Left leg -->
+                                                <rect x="8" y="29" width="6" height="35" fill="#A0522D" rx="3"/>
+                                                <rect x="8" y="29" width="4" height="35" fill="#CD853F" rx="2"/>
+                                                
+                                                <!-- Right leg -->
+                                                <rect x="36" y="29" width="6" height="35" fill="#A0522D" rx="3"/>
+                                                <rect x="36" y="29" width="4" height="35" fill="#CD853F" rx="2"/>
+                                                
+                                                <!-- Base pads -->
+                                                <ellipse cx="11" cy="64" rx="4" ry="2" fill="#2d3748"/>
+                                                <ellipse cx="39" cy="64" rx="4" ry="2" fill="#2d3748"/>
+                                            </g>
+                                            
+                                            <!-- Shadow -->
+                                            <ellipse cx="70" cy="72" rx="60" ry="4" fill="rgba(0,0,0,0.2)"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <p>Connect with fellow athletes, share progress, and get motivated</p>
+                                <div class="community-stats">12,547 Active Members</div>
+                                <button class="community-btn">Join Now</button>
+                            </div>
+                            
+                            <div class="community-card">
+                                <div class="community-icon">🏆</div>
+                                <h3>Weekly Challenges</h3>
+                                <div class="product-3d">
+                                    <div class="pullup-bar-3d">
+                                        <svg viewBox="0 0 200 150" width="100" height="75">
+                                            <!-- Wall mounting brackets -->
+                                            <rect x="10" y="20" width="15" height="80" fill="#4a5568" rx="3"/>
+                                            <rect x="175" y="20" width="15" height="80" fill="#4a5568" rx="3"/>
+                                            
+                                            <!-- Support arms -->
+                                            <rect x="25" y="25" width="40" height="8" fill="#718096" rx="4"/>
+                                            <rect x="135" y="25" width="40" height="8" fill="#718096" rx="4"/>
+                                            
+                                            <!-- Main pull-up bar -->
+                                            <ellipse cx="100" cy="29" rx="75" ry="6" fill="#e2e8f0"/>
+                                            <ellipse cx="100" cy="27" rx="75" ry="4" fill="#f7fafc"/>
+                                            
+                                            <!-- Grip texture lines -->
+                                            <line x1="40" y1="27" x2="160" y2="27" stroke="#cbd5e0" stroke-width="0.5"/>
+                                            <line x1="45" y1="29" x2="155" y2="29" stroke="#cbd5e0" stroke-width="0.5"/>
+                                            
+                                            <!-- Mounting bolts -->
+                                            <circle cx="17" cy="30" r="2" fill="#2d3748"/>
+                                            <circle cx="17" cy="90" r="2" fill="#2d3748"/>
+                                            <circle cx="183" cy="30" r="2" fill="#2d3748"/>
+                                            <circle cx="183" cy="90" r="2" fill="#2d3748"/>
+                                            
+                                            <!-- Shadow -->
+                                            <ellipse cx="100" cy="120" rx="80" ry="8" fill="rgba(0,0,0,0.2)"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <p>Participate in community challenges and earn exclusive badges</p>
+                                <div class="community-stats">450 Active Challenges</div>
+                                <button class="community-btn">View Challenges</button>
+                            </div>
+                            
+                            <div class="community-card">
+                                <div class="community-icon">📊</div>
+                                <h3>Progress Tracking</h3>
+                                <p>Track your workouts, set goals, and monitor your improvements</p>
+                                <div class="community-stats">2.8M Workouts Logged</div>
+                                <button class="community-btn">Start Tracking</button>
+                            </div>
+                            
+                            <div class="community-card">
+                                <div class="community-icon">🎥</div>
+                                <h3>Video Library</h3>
+                                <p>Access thousands of professional training videos and tutorials</p>
+                                <div class="community-stats">5,000+ Videos</div>
+                                <button class="community-btn">Watch Now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', communityHTML);
+        }
+
+        function showTrainingSection() {
+            const trainingHTML = `
+                <div class="training-section">
+                    <div class="section-container">
+                        <div class="section-header">
+                            <button class="back-btn" onclick="showHome()">← Back to Home</button>
+                            <h2 class="section-title">Professional Training Programs</h2>
+                            <p class="section-subtitle">Expert-designed programs for all skill levels</p>
+                        </div>
+                        
+                        <div class="training-grid">
+                            <div class="training-card">
+                                <div class="training-level">BEGINNER</div>
+                                <h3>Foundation Program</h3>
+                                <div class="training-duration">8 Weeks</div>
+                                <ul class="training-features">
+                                    <li>✓ Basic pull-ups and push-ups</li>
+                                    <li>✓ Core strengthening</li>
+                                    <li>✓ Flexibility training</li>
+                                    <li>✓ Progress tracking</li>
+                                </ul>
+                                <div class="training-price">$29.99</div>
+                                <button class="training-btn">Start Program</button>
+                            </div>
+                            
+                            <div class="training-card featured">
+                                <div class="training-level">INTERMEDIATE</div>
+                                <h3>Strength Builder</h3>
+                                <div class="training-duration">12 Weeks</div>
+                                <ul class="training-features">
+                                    <li>✓ Advanced pull-up variations</li>
+                                    <li>✓ Ring training introduction</li>
+                                    <li>✓ Handstand progression</li>
+                                    <li>✓ Personalized coaching</li>
+                                </ul>
+                                <div class="training-price">$49.99</div>
+                                <button class="training-btn">Start Program</button>
+                            </div>
+                            
+                            <div class="training-card">
+                                <div class="training-level">ADVANCED</div>
+                                <h3>Elite Performance</h3>
+                                <div class="training-duration">16 Weeks</div>
+                                <ul class="training-features">
+                                    <li>✓ Muscle-up mastery</li>
+                                    <li>✓ Advanced ring skills</li>
+                                    <li>✓ Competition preparation</li>
+                                    <li>✓ 1-on-1 coaching sessions</li>
+                                </ul>
+                                <div class="training-price">$99.99</div>
+                                <button class="training-btn">Start Program</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', trainingHTML);
+        }
+
+        function showEquipmentGallery() {
+            
+            const galleryHTML = `
+                <div class="equipment-gallery" id="equipmentGallery">
+                    <div class="gallery-header">
+                        <button class="back-btn" onclick="closeGallery()">← Back</button>
+                        <h2>Professional Equipment Collection</h2>
+                        <div class="gallery-controls">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="bars">Pull-Up Bars</button>
+                            <button class="filter-btn" data-filter="rings">Rings</button>
+                            <button class="filter-btn" data-filter="parallettes">Parallettes</button>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-grid">
+                        <div class="product-card" data-category="bars" onclick="showProductDetail('pullup-pro')">
+                            <div class="product-image">
+                                <div class="product-3d"><div class="pullup-bar-3d"></div></div>
+                                <div class="product-badge">BESTSELLER</div>
+                            </div>
+                            <div class="product-info">
+                                <h3>Professional Pull-Up Bar</h3>
+                                <div class="product-rating">⭐⭐⭐⭐⭐ (4.9)</div>
+                                <div class="product-price">$79.99</div>
+                                <button class="add-to-cart-btn">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card" data-category="rings" onclick="showProductDetail('rings-wood')">
+                            <div class="product-image">
+                                <div class="product-3d">
+                                    <div class="rings-3d">
+                                        <svg viewBox="0 0 120 140" width="80" height="93">
+                                            <!-- Straps -->
+                                            <rect x="56" y="5" width="8" height="60" fill="#2d3748" rx="4"/>
+                                            <rect x="54" y="8" width="12" height="4" fill="#4a5568" rx="2"/>
+                                            <rect x="54" y="15" width="12" height="4" fill="#4a5568" rx="2"/>
+                                            <rect x="54" y="22" width="12" height="4" fill="#4a5568" rx="2"/>
+                                            
+                                            <!-- Ring outer -->
+                                            <circle cx="60" cy="90" r="25" fill="none" stroke="#8B4513" stroke-width="8"/>
+                                            
+                                            <!-- Ring inner wood grain -->
+                                            <circle cx="60" cy="90" r="25" fill="none" stroke="#A0522D" stroke-width="6"/>
+                                            
+                                            <!-- Ring highlight -->
+                                            <circle cx="60" cy="90" r="25" fill="none" stroke="#DEB887" stroke-width="2" stroke-dasharray="5,10" stroke-dashoffset="2"/>
+                                            
+                                            <!-- Wood grain lines -->
+                                            <path d="M 40 75 Q 60 70 80 75" fill="none" stroke="#654321" stroke-width="0.5"/>
+                                            <path d="M 42 85 Q 60 80 78 85" fill="none" stroke="#654321" stroke-width="0.5"/>
+                                            <path d="M 40 95 Q 60 100 80 95" fill="none" stroke="#654321" stroke-width="0.5"/>
+                                            <path d="M 42 105 Q 60 110 78 105" fill="none" stroke="#654321" stroke-width="0.5"/>
+                                            
+                                            <!-- Attachment point -->
+                                            <rect x="56" y="62" width="8" height="6" fill="#2d3748" rx="3"/>
+                                            
+                                            <!-- Shadow -->
+                                            <ellipse cx="60" cy="125" rx="30" ry="6" fill="rgba(0,0,0,0.2)"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="product-badge">PRO GRADE</div>
+                            </div>
+                            <div class="product-info">
+                                <h3>Wooden Gymnastics Rings</h3>
+                                <div class="product-rating">⭐⭐⭐⭐⭐ (4.8)</div>
+                                <div class="product-price">$59.99</div>
+                                <button class="add-to-cart-btn">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card" data-category="parallettes" onclick="showProductDetail('parallettes-wood')">
+                            <div class="product-image">
+                                <div class="product-3d"><div class="parallettes-3d"></div></div>
+                                <div class="product-badge">HANDCRAFTED</div>
+                            </div>
+                            <div class="product-info">
+                                <h3>Wooden Parallettes</h3>
+                                <div class="product-rating">⭐⭐⭐⭐⭐ (4.7)</div>
+                                <div class="product-price">$39.99</div>
+                                <button class="add-to-cart-btn">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card" data-category="bars" onclick="showProductDetail('pullup-deluxe')">
+                            <div class="product-image">
+                                <div class="product-3d">
+                                    <div class="pullup-bar-3d">
+                                        <svg viewBox="0 0 200 150" width="100" height="75">
+                                            <!-- Wall mounting brackets -->
+                                            <rect x="10" y="20" width="15" height="80" fill="#4a5568" rx="3"/>
+                                            <rect x="175" y="20" width="15" height="80" fill="#4a5568" rx="3"/>
+                                            
+                                            <!-- Support arms -->
+                                            <rect x="25" y="25" width="40" height="8" fill="#718096" rx="4"/>
+                                            <rect x="135" y="25" width="40" height="8" fill="#718096" rx="4"/>
+                                            
+                                            <!-- Main pull-up bar -->
+                                            <ellipse cx="100" cy="29" rx="75" ry="6" fill="#e2e8f0"/>
+                                            <ellipse cx="100" cy="27" rx="75" ry="4" fill="#f7fafc"/>
+                                            
+                                            <!-- Grip texture lines -->
+                                            <line x1="40" y1="27" x2="160" y2="27" stroke="#cbd5e0" stroke-width="0.5"/>
+                                            <line x1="45" y1="29" x2="155" y2="29" stroke="#cbd5e0" stroke-width="0.5"/>
+                                            
+                                            <!-- Mounting bolts -->
+                                            <circle cx="17" cy="30" r="2" fill="#2d3748"/>
+                                            <circle cx="17" cy="90" r="2" fill="#2d3748"/>
+                                            <circle cx="183" cy="30" r="2" fill="#2d3748"/>
+                                            <circle cx="183" cy="90" r="2" fill="#2d3748"/>
+                                            
+                                            <!-- Shadow -->
+                                            <ellipse cx="100" cy="120" rx="80" ry="8" fill="rgba(0,0,0,0.2)"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="product-badge">DELUXE</div>
+                            </div>
+                            <div class="product-info">
+                                <h3>Deluxe Pull-Up Station</h3>
+                                <div class="product-rating">⭐⭐⭐⭐⭐ (5.0)</div>
+                                <div class="product-price">$149.99</div>
+                                <button class="add-to-cart-btn">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card" data-category="rings" onclick="showProductDetail('rings-steel')">
+                            <div class="product-image">
+                                <div class="product-3d">
+                                    <div class="rings-3d">
+                                        <svg viewBox="0 0 120 140" width="80" height="93">
+                                            <!-- Straps -->
+                                            <rect x="56" y="5" width="8" height="60" fill="#2d3748" rx="4"/>
+                                            <rect x="54" y="8" width="12" height="4" fill="#4a5568" rx="2"/>
+                                            <rect x="54" y="15" width="12" height="4" fill="#4a5568" rx="2"/>
+                                            <rect x="54" y="22" width="12" height="4" fill="#4a5568" rx="2"/>
+                                            
+                                            <!-- Ring outer - steel version -->
+                                            <circle cx="60" cy="90" r="25" fill="none" stroke="#4a5568" stroke-width="8"/>
+                                            
+                                            <!-- Ring inner metallic -->
+                                            <circle cx="60" cy="90" r="25" fill="none" stroke="#718096" stroke-width="6"/>
+                                            
+                                            <!-- Ring highlight -->
+                                            <circle cx="60" cy="90" r="25" fill="none" stroke="#e2e8f0" stroke-width="2" stroke-dasharray="5,10" stroke-dashoffset="2"/>
+                                            
+                                            <!-- Metal texture lines -->
+                                            <path d="M 40 75 Q 60 70 80 75" fill="none" stroke="#2d3748" stroke-width="0.5"/>
+                                            <path d="M 42 85 Q 60 80 78 85" fill="none" stroke="#2d3748" stroke-width="0.5"/>
+                                            <path d="M 40 95 Q 60 100 80 95" fill="none" stroke="#2d3748" stroke-width="0.5"/>
+                                            <path d="M 42 105 Q 60 110 78 105" fill="none" stroke="#2d3748" stroke-width="0.5"/>
+                                            
+                                            <!-- Attachment point -->
+                                            <rect x="56" y="62" width="8" height="6" fill="#2d3748" rx="3"/>
+                                            
+                                            <!-- Shadow -->
+                                            <ellipse cx="60" cy="125" rx="30" ry="6" fill="rgba(0,0,0,0.2)"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="product-badge">STEEL CORE</div>
+                            </div>
+                            <div class="product-info">
+                                <h3>Steel Core Rings</h3>
+                                <div class="product-rating">⭐⭐⭐⭐⭐ (4.9)</div>
+                                <div class="product-price">$89.99</div>
+                                <button class="add-to-cart-btn">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card" data-category="parallettes" onclick="showProductDetail('parallettes-steel')">
+                            <div class="product-image">
+                                <div class="product-3d">
+                                    <div class="parallettes-3d">
+                                        <svg viewBox="0 0 140 80" width="90" height="52">
+                                            <!-- Left parallette -->
+                                            <g transform="translate(10,0)">
+                                                <!-- Handle - steel version -->
+                                                <ellipse cx="25" cy="25" rx="25" ry="4" fill="#718096"/>
+                                                <rect x="0" y="21" width="50" height="8" fill="#4a5568" rx="4"/>
+                                                <rect x="0" y="21" width="50" height="4" fill="#a0aec0" rx="2"/>
+                                                
+                                                <!-- Metal texture -->
+                                                <line x1="5" y1="23" x2="45" y2="23" stroke="#2d3748" stroke-width="0.3"/>
+                                                <line x1="3" y1="26" x2="47" y2="26" stroke="#2d3748" stroke-width="0.3"/>
+                                                
+                                                <!-- Left leg -->
+                                                <rect x="8" y="29" width="6" height="35" fill="#4a5568" rx="3"/>
+                                                <rect x="8" y="29" width="4" height="35" fill="#718096" rx="2"/>
+                                                
+                                                <!-- Right leg -->
+                                                <rect x="36" y="29" width="6" height="35" fill="#4a5568" rx="3"/>
+                                                <rect x="36" y="29" width="4" height="35" fill="#718096" rx="2"/>
+                                                
+                                                <!-- Base pads -->
+                                                <ellipse cx="11" cy="64" rx="4" ry="2" fill="#2d3748"/>
+                                                <ellipse cx="39" cy="64" rx="4" ry="2" fill="#2d3748"/>
+                                            </g>
+                                            
+                                            <!-- Right parallette -->
+                                            <g transform="translate(80,0)">
+                                                <!-- Handle - steel version -->
+                                                <ellipse cx="25" cy="25" rx="25" ry="4" fill="#718096"/>
+                                                <rect x="0" y="21" width="50" height="8" fill="#4a5568" rx="4"/>
+                                                <rect x="0" y="21" width="50" height="4" fill="#a0aec0" rx="2"/>
+                                                
+                                                <!-- Metal texture -->
+                                                <line x1="5" y1="23" x2="45" y2="23" stroke="#2d3748" stroke-width="0.3"/>
+                                                <line x1="3" y1="26" x2="47" y2="26" stroke="#2d3748" stroke-width="0.3"/>
+                                                
+                                                <!-- Left leg -->
+                                                <rect x="8" y="29" width="6" height="35" fill="#4a5568" rx="3"/>
+                                                <rect x="8" y="29" width="4" height="35" fill="#718096" rx="2"/>
+                                                
+                                                <!-- Right leg -->
+                                                <rect x="36" y="29" width="6" height="35" fill="#4a5568" rx="3"/>
+                                                <rect x="36" y="29" width="4" height="35" fill="#718096" rx="2"/>
+                                                
+                                                <!-- Base pads -->
+                                                <ellipse cx="11" cy="64" rx="4" ry="2" fill="#2d3748"/>
+                                                <ellipse cx="39" cy="64" rx="4" ry="2" fill="#2d3748"/>
+                                            </g>
+                                            
+                                            <!-- Shadow -->
+                                            <ellipse cx="70" cy="72" rx="60" ry="4" fill="rgba(0,0,0,0.2)"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="product-badge">STEEL FRAME</div>
+                            </div>
+                            <div class="product-info">
+                                <h3>Steel Parallettes</h3>
+                                <div class="product-rating">⭐⭐⭐⭐⭐ (4.8)</div>
+                                <div class="product-price">$69.99</div>
+                                <button class="add-to-cart-btn">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', galleryHTML);
+            
+            // Add filter functionality
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const filter = this.dataset.filter;
+                    document.querySelectorAll('.product-card').forEach(card => {
+                        if (filter === 'all' || card.dataset.category === filter) {
+                            card.style.display = 'block';
+                            card.style.animation = 'fadeInUp 0.5s ease-out';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        }
+
+        function closeGallery() {
+            const gallery = document.getElementById('equipmentGallery');
+            gallery.style.animation = 'fadeOut 0.3s ease-out';
+            setTimeout(() => {
+                gallery.remove();
+            }, 300);
+        }
+
+        function showProductDetail(productId) {
+            const products = {
+                'pullup-pro': {
+                    name: 'Professional Pull-Up Bar',
+                    price: '$79.99',
+                    image: '🏋️',
+                    features: ['Stainless Steel Construction', 'Ergonomic Grip Design', '500lb Weight Capacity', 'Easy Wall Mounting'],
+                    description: 'Premium pull-up bar designed for serious athletes. Built to withstand intensive training sessions.'
+                },
+                'rings-wood': {
+                    name: 'Wooden Gymnastics Rings',
+                    price: '$59.99',
+                    image: '⭕',
+                    features: ['Natural Birch Wood', 'Adjustable Straps', 'Competition Grade', 'Non-Slip Texture'],
+                    description: 'Professional gymnastics rings used by Olympic athletes worldwide.'
+                },
+                'parallettes-wood': {
+                    name: 'Wooden Parallettes',
+                    price: '$39.99',
+                    image: '🤸',
+                    features: ['Solid Wood Construction', 'Non-Slip Base', 'Comfortable Grip', 'Lightweight Design'],
+                    description: 'Handcrafted parallettes perfect for handstands and bodyweight exercises.'
+                }
+            };
+            
+            const product = products[productId] || products['pullup-pro'];
+            
+            const modalHTML = `
+                <div class="product-modal" id="productModal">
+                    <div class="modal-content">
+                        <button class="modal-close" onclick="closeProductModal()">×</button>
+                        <div class="modal-body">
+                            <div class="modal-image">
+                                <div class="product-3d-large">
+                                    ${product.image === '🏋️' ? '<div class="pullup-bar-3d"></div>' : 
+                                      product.image === '⭕' ? '<div class="rings-3d"></div>' : 
+                                      '<div class="parallettes-3d"></div>'}
+                                </div>
+                            </div>
+                            <div class="modal-info">
+                                <h2>${product.name}</h2>
+                                <div class="modal-price">${product.price}</div>
+                                <div class="modal-rating">⭐⭐⭐⭐⭐ (4.9) • 1,247 reviews</div>
+                                <p class="modal-description">${product.description}</p>
+                                <ul class="modal-features">
+                                    ${product.features.map(f => `<li>✓ ${f}</li>`).join('')}
+                                </ul>
+                                <div class="modal-actions">
+                                    <button class="btn-primary modal-btn">Add to Cart - ${product.price}</button>
+                                    <button class="btn-secondary modal-btn">View in AR</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        function closeProductModal() {
+            const modal = document.getElementById('productModal');
+            modal.style.animation = 'fadeOut 0.3s ease-out';
+            setTimeout(() => {
+                modal.remove();
+            }, 300);
+        }
+
+        function selectEquipment(type) {
+            const equipment = {
+                pullup: {
+                    name: 'Professional Pull-Up Bar',
+                    price: '$79.99',
+                    details: 'Premium stainless steel construction with lifetime warranty. Used by professional athletes worldwide.'
+                },
+                rings: {
+                    name: 'Wooden Gymnastics Rings',
+                    price: '$59.99',
+                    details: 'Competition-grade birch wood rings. Perfect for developing functional strength and gymnastic skills.'
+                },
+                parallettes: {
+                    name: 'Wooden Parallettes',
+                    price: '$39.99',
+                    details: 'Handcrafted parallettes for handstands and advanced bodyweight exercises. Lightweight yet incredibly stable.'
+                }
+            };
+
+            const item = equipment[type];
+            alert(`✅ ${item.name} Added to Cart!\n\nPrice: ${item.price}\n\n${item.details}\n\n🎉 Free shipping included!\n💳 Secure checkout available`);
+        }
+
+        // Smooth scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const animatedElements = document.querySelectorAll('.equipment-card, .stat-item');
+            
+            animatedElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.8s ease';
+                observer.observe(el);
+            });
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(15, 15, 35, 0.98)';
+                header.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.3)';
+            } else {
+                header.style.background = 'rgba(15, 15, 35, 0.95)';
+                header.style.boxShadow = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

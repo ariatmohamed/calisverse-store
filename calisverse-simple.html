@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalisVerse - Strength Without Limits</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #000 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 64px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .subtitle {
+            font-size: 24px;
+            color: #8B5CF6;
+            margin-bottom: 50px;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+        
+        .equipment-showcase {
+            display: flex;
+            gap: 60px;
+            margin-bottom: 50px;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+        
+        .equipment-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+        
+        .equipment-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+            border-color: #8B5CF6;
+        }
+        
+        .equipment-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .equipment-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .equipment-price {
+            font-size: 20px;
+            color: #8B5CF6;
+            font-weight: 700;
+        }
+        
+        .cta-section {
+            animation: fadeInUp 1s ease-out 0.9s both;
+        }
+        
+        .cta-button {
+            background: linear-gradient(135deg, #8B5CF6, #A855F7);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.4);
+        }
+        
+        .floating-nav {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 15px 25px;
+            animation: slideInFromTop 1s ease-out;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #8B5CF6;
+        }
+        
+        .features {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            text-align: right;
+            animation: slideInFromBottom 1s ease-out 1.2s both;
+        }
+        
+        .feature-item {
+            margin-bottom: 10px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .success-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid #8B5CF6;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            z-index: 1000;
+            display: none;
+            max-width: 500px;
+        }
+        
+        .success-title {
+            font-size: 32px;
+            color: #8B5CF6;
+            margin-bottom: 20px;
+        }
+        
+        .success-text {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInFromTop {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInFromBottom {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 48px;
+            }
+            
+            .subtitle {
+                font-size: 18px;
+            }
+            
+            .equipment-showcase {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .equipment-item {
+                min-width: auto;
+                width: 250px;
+            }
+            
+            .floating-nav {
+                top: 20px;
+                left: 20px;
+                right: 20px;
+            }
+            
+            .features {
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="floating-nav">
+        <div class="nav-links">
+            <div style="font-weight: 700; margin-right: 20px;">CalisVerse</div>
+            <a href="#" class="nav-link">Home</a>
+            <a href="#" class="nav-link">Equipment</a>
+            <a href="#" class="nav-link">Offers</a>
+            <a href="#" class="nav-link">Contact</a>
+        </div>
+    </nav>
+    
+    <!-- Main Container -->
+    <div class="container">
+        <h1 class="logo">CalisVerse</h1>
+        <p class="subtitle">Strength Without Limits</p>
+        
+        <!-- Equipment Showcase -->
+        <div class="equipment-showcase">
+            <div class="equipment-item" onclick="selectProduct('pullup')">
+                <div class="equipment-icon">🏋️</div>
+                <div class="equipment-name">Pull-Up Bar</div>
+                <div class="equipment-price">$79.99</div>
+            </div>
+            
+            <div class="equipment-item" onclick="selectProduct('rings')">
+                <div class="equipment-icon">⭕</div>
+                <div class="equipment-name">Gymnastics Rings</div>
+                <div class="equipment-price">$59.99</div>
+            </div>
+            
+            <div class="equipment-item" onclick="selectProduct('parallettes')">
+                <div class="equipment-icon">🤸</div>
+                <div class="equipment-name">Parallettes</div>
+                <div class="equipment-price">$39.99</div>
+            </div>
+        </div>
+        
+        <!-- Call to Action -->
+        <div class="cta-section">
+            <button class="cta-button" onclick="startJourney()">Start 3D Journey</button>
+            <button class="cta-button" onclick="viewCatalog()">View Catalog</button>
+        </div>
+    </div>
+    
+    <!-- Features -->
+    <div class="features">
+        <div class="feature-item">✅ Interactive 3D Models</div>
+        <div class="feature-item">✅ Real-time Customization</div>
+        <div class="feature-item">✅ AR Ready</div>
+        <div class="feature-item">✅ Professional Quality</div>
+    </div>
+    
+    <!-- Success Popup -->
+    <div class="success-popup" id="successPopup">
+        <div class="success-title">🎉 Welcome to CalisVerse!</div>
+        <div class="success-text">
+            Your revolutionary 3D calisthenics equipment website is now running!<br><br>
+            <strong>Available Features:</strong><br>
+            ✅ Interactive Equipment Selection<br>
+            ✅ Professional Design<br>
+            ✅ Mobile Responsive<br>
+            ✅ Smooth Animations<br><br>
+            Click any equipment above to explore our premium collection.
+        </div>
+        <button class="cta-button" onclick="closePopup()">Start Exploring</button>
+    </div>
+    
+    <script>
+        // Show success popup after page loads
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('successPopup').style.display = 'block';
+            }, 1000);
+        });
+        
+        function closePopup() {
+            document.getElementById('successPopup').style.display = 'none';
+        }
+        
+        function selectProduct(type) {
+            const products = {
+                pullup: {
+                    name: 'Professional Pull-Up Bar',
+                    price: '$79.99',
+                    description: 'Premium stainless steel construction with ergonomic grip design.'
+                },
+                rings: {
+                    name: 'Wooden Gymnastics Rings',
+                    price: '$59.99', 
+                    description: 'Natural wood rings with adjustable straps for versatile training.'
+                },
+                parallettes: {
+                    name: 'Wooden Parallettes',
+                    price: '$39.99',
+                    description: 'Handcrafted parallettes perfect for handstands and push-ups.'
+                }
+            };
+            
+            const product = products[type];
+            alert(`Selected: ${product.name}\nPrice: ${product.price}\n\n${product.description}\n\n✅ Added to cart!`);
+        }
+        
+        function startJourney() {
+            alert('🚀 3D Journey Starting!\n\nYou would now enter our immersive 3D showroom with:\n• Interactive equipment models\n• Real-time customization\n• AR capabilities\n• Guided product tours\n\nThis is a simplified version - the full 3D experience is being prepared!');
+        }
+        
+        function viewCatalog() {
+            alert('📋 Product Catalog\n\n🏋️ Pull-Up Bars: $79.99\n⭕ Gymnastics Rings: $59.99\n🤸 Parallettes: $39.99\n\n✅ All equipment features:\n• Premium materials\n• Professional grade\n• Home & gym use\n• Free shipping');
+        }
+        
+        // Add interactive hover effects
+        document.querySelectorAll('.equipment-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.05)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+        
+        // Add click animations
+        document.querySelectorAll('.cta-button').forEach(button => {
+            button.addEventListener('click', function() {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 150);
+            });
+        });
+    </script>
+</body>
+</html>

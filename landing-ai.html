@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalisVerse - AI-Enhanced 3D Equipment Showcase</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+        
+        .ui-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .ui-element {
+            pointer-events: auto;
+        }
+        
+        .logo {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #8B5CF6;
+            z-index: 15;
+        }
+        
+        .nav-menu {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            display: flex;
+            gap: 20px;
+            z-index: 15;
+        }
+        
+        .nav-item {
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            color: #8B5CF6;
+        }
+        
+        .model-selector {
+            position: absolute;
+            top: 100px;
+            left: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            min-width: 250px;
+        }
+        
+        .model-selector h3 {
+            margin-bottom: 15px;
+            color: #1a202c;
+            font-size: 16px;
+        }
+        
+        .model-button {
+            display: block;
+            width: 100%;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            color: #8B5CF6;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+        
+        .model-button:hover {
+            background: rgba(139, 92, 246, 0.2);
+            transform: translateX(5px);
+        }
+        
+        .model-button.active {
+            background: #8B5CF6;
+            color: white;
+        }
+        
+        .ai-badge {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+        
+        .product-info {
+            position: absolute;
+            top: 50%;
+            right: 50px;
+            transform: translateY(-50%);
+            width: 320px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        
+        .product-info.visible {
+            opacity: 1;
+        }
+        
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 25px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            color: white;
+            text-align: center;
+        }
+        
+        .loading-text h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .loading-text p {
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+        
+        .loading-progress {
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .loading-bar {
+            height: 100%;
+            background: white;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .control-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            color: #64748b;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .cta-button {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-menu { display: none; }
+            .model-selector {
+                position: fixed;
+                bottom: 100px;
+                left: 20px;
+                right: 20px;
+                top: auto;
+                min-width: auto;
+            }
+            .product-info {
+                position: fixed;
+                bottom: 200px;
+                right: 20px;
+                left: 20px;
+                top: auto;
+                transform: none;
+                width: auto;
+            }
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loader"></div>
+        <div class="loading-text">
+            <h2>Loading AI-Enhanced 3D Models</h2>
+            <p>Preparing premium calisthenics equipment showcase</p>
+            <div class="loading-progress">
+                <div id="loading-bar" class="loading-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3D Canvas Container -->
+    <div id="canvas-container"></div>
+
+    <!-- UI Overlay -->
+    <div class="ui-overlay">
+        <!-- Logo -->
+        <div class="logo ui-element">CalisVerse</div>
+
+        <!-- AI Badge -->
+        <div class="ai-badge">✨ AI-Enhanced 3D Models</div>
+
+        <!-- Navigation -->
+        <nav class="nav-menu ui-element">
+            <a href="#" class="nav-item">Products</a>
+            <a href="#" class="nav-item">AI Models</a>
+            <a href="#" class="nav-item">Support</a>
+            <a href="index.html" class="nav-item">Shop</a>
+        </nav>
+
+        <!-- Model Selector -->
+        <div class="model-selector ui-element">
+            <h3>🎯 Equipment Showcase</h3>
+            <button class="model-button active" data-model="wall-mount-pullup">
+                Wall-Mount Pull-Up Bar
+            </button>
+            <button class="model-button" data-model="doorway-pullup">
+                Doorway Pull-Up Bar
+            </button>
+            <button class="model-button" data-model="power-tower">
+                Power Tower Station
+            </button>
+            <button class="model-button" data-model="multi-grip-bar">
+                Multi-Grip Bar
+            </button>
+            <button class="model-button" data-model="portable-pullup">
+                Portable Pull-Up System
+            </button>
+        </div>
+
+        <!-- Product Info Panel -->
+        <div id="product-info" class="product-info">
+            <h3 id="info-title">Professional Wall-Mount Pull-Up Bar</h3>
+            <p id="info-description">Heavy-duty steel construction with comfortable grip padding. Perfect for building upper body strength with multiple grip positions.</p>
+            <div id="info-price" style="font-size: 24px; font-weight: bold; color: #8B5CF6; margin: 16px 0;">$79.99</div>
+            <div id="info-features" style="margin-bottom: 20px;">
+                <div style="font-size: 14px; color: #64748b; margin-bottom: 8px;">✅ AI-Generated 3D Model</div>
+                <div style="font-size: 14px; color: #64748b; margin-bottom: 8px;">🔧 Professional Installation</div>
+                <div style="font-size: 14px; color: #64748b;">💪 300lb Weight Capacity</div>
+            </div>
+            <div style="display: flex; gap: 12px;">
+                <button id="add-to-cart" style="background: #8B5CF6; color: white; padding: 12px 20px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; flex: 1;">
+                    Add to Cart
+                </button>
+                <button id="view-details" style="border: 1px solid #8B5CF6; color: #8B5CF6; padding: 12px 20px; border-radius: 8px; font-weight: 600; background: transparent; cursor: pointer;">
+                    Details
+                </button>
+            </div>
+        </div>
+
+        <!-- Controls Hint -->
+        <div class="control-hint ui-element">
+            <div>🖱️ Drag to rotate • 🔍 Scroll to zoom • 🎯 Click models to focus</div>
+        </div>
+
+        <!-- CTA Button -->
+        <a href="index.html" class="cta-button ui-element">
+            Explore Full Store →
+        </a>
+    </div>
+
+    <script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.158.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="js/model-loader.js"></script>
+    <script>
+        class AIEnhanced3DLanding {
+            constructor() {
+                this.scene = null;
+                this.camera = null;
+                this.renderer = null;
+                this.controls = null;
+                this.modelLoader = null;
+                this.currentModel = null;
+                this.raycaster = new THREE.Raycaster();
+                this.mouse = new THREE.Vector2();
+                
+                this.productData = {
+                    'wall-mount-pullup': {
+                        name: 'Professional Wall-Mount Pull-Up Bar',
+                        price: '$79.99',
+                        description: 'Heavy-duty steel construction with comfortable grip padding. Perfect for building upper body strength with multiple grip positions.',
+                        features: ['AI-Generated 3D Model', 'Professional Installation', '300lb Weight Capacity']
+                    },
+                    'doorway-pullup': {
+                        name: 'Adjustable Doorway Pull-Up Bar',
+                        price: '$49.99',
+                        description: 'No-installation doorway bar with telescopic adjustment. Foam padding protects door frames while providing secure grip.',
+                        features: ['No Installation Required', 'Adjustable Width', 'Door Protection Foam']
+                    },
+                    'power-tower': {
+                        name: 'Multi-Station Power Tower',
+                        price: '$299.99',
+                        description: 'Complete workout station with pull-up bar, dip handles, and knee raise station. Commercial-grade steel construction.',
+                        features: ['Multiple Exercise Stations', 'Commercial Grade Steel', '400lb Weight Capacity']
+                    },
+                    'multi-grip-bar': {
+                        name: 'Multi-Grip Pull-Up Bar',
+                        price: '$89.99',
+                        description: 'Various grip positions including wide, close, and neutral grips. Textured handles for superior grip security.',
+                        features: ['Multiple Grip Positions', 'Textured Handles', 'Wall-Mount Design']
+                    },
+                    'portable-pullup': {
+                        name: 'Portable Pull-Up System',
+                        price: '$159.99',
+                        description: 'Lightweight aluminum construction with quick assembly. Perfect for outdoor workouts and travel.',
+                        features: ['Portable Design', 'Quick Assembly', 'Outdoor Compatible']
+                    }
+                };
+                
+                this.init();
+            }
+
+            async init() {
+                this.setupScene();
+                this.setupCamera();
+                this.setupRenderer();
+                this.setupLighting();
+                this.setupControls();
+                this.setupEventListeners();
+                
+                // Initialize AI model loader
+                this.modelLoader = new AIModelLoader(this.scene);
+                
+                // Load all models with progress tracking
+                await this.loadModelsWithProgress();
+                
+                // Hide loading screen
+                setTimeout(() => {
+                    document.getElementById('loading-screen').classList.add('hidden');
+                    document.getElementById('product-info').classList.add('visible');
+                    this.focusOnModel('wall-mount-pullup');
+                }, 500);
+                
+                this.animate();
+            }
+
+            setupScene() {
+                this.scene = new THREE.Scene();
+                this.scene.background = new THREE.Color(0xf8fafc);
+                this.scene.fog = new THREE.Fog(0xf8fafc, 10, 50);
+            }
+
+            setupCamera() {
+                this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                this.camera.position.set(4, 3, 6);
+            }
+
+            setupRenderer() {
+                this.renderer = new THREE.WebGLRenderer({ antialias: true });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                this.renderer.shadowMap.enabled = true;
+                this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+                this.renderer.toneMappingExposure = 1.2;
+                
+                document.getElementById('canvas-container').appendChild(this.renderer.domElement);
+            }
+
+            setupLighting() {
+                // Ambient light
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+                this.scene.add(ambientLight);
+
+                // Main directional light
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+                directionalLight.position.set(10, 10, 5);
+                directionalLight.castShadow = true;
+                directionalLight.shadow.mapSize.width = 2048;
+                directionalLight.shadow.mapSize.height = 2048;
+                directionalLight.shadow.camera.near = 0.5;
+                directionalLight.shadow.camera.far = 50;
+                this.scene.add(directionalLight);
+
+                // Fill light
+                const fillLight = new THREE.DirectionalLight(0x8B5CF6, 0.3);
+                fillLight.position.set(-5, 5, -5);
+                this.scene.add(fillLight);
+
+                // Ground
+                const groundGeometry = new THREE.PlaneGeometry(30, 30);
+                const groundMaterial = new THREE.MeshLambertMaterial({ 
+                    color: 0xffffff,
+                    transparent: true,
+                    opacity: 0.1
+                });
+                const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+                ground.rotation.x = -Math.PI / 2;
+                ground.position.y = -2;
+                ground.receiveShadow = true;
+                this.scene.add(ground);
+            }
+
+            setupControls() {
+                if (typeof THREE.OrbitControls !== 'undefined') {
+                    this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+                    this.controls.enableDamping = true;
+                    this.controls.dampingFactor = 0.05;
+                    this.controls.minDistance = 3;
+                    this.controls.maxDistance = 15;
+                    this.controls.autoRotate = true;
+                    this.controls.autoRotateSpeed = 0.5;
+                }
+            }
+
+            async loadModelsWithProgress() {
+                const modelTypes = Object.keys(this.productData);
+                const loadingBar = document.getElementById('loading-bar');
+                let loadedCount = 0;
+
+                for (const modelType of modelTypes) {
+                    await this.modelLoader.loadModel(modelType);
+                    loadedCount++;
+                    const progress = (loadedCount / modelTypes.length) * 100;
+                    loadingBar.style.width = `${progress}%`;
+                }
+            }
+
+            setupEventListeners() {
+                window.addEventListener('resize', () => {
+                    this.camera.aspect = window.innerWidth / window.innerHeight;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+
+                // Model selector buttons
+                document.querySelectorAll('.model-button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const modelType = button.dataset.model;
+                        this.selectModel(modelType);
+                        
+                        // Update active button
+                        document.querySelectorAll('.model-button').forEach(b => b.classList.remove('active'));
+                        button.classList.add('active');
+                    });
+                });
+
+                // Product info buttons
+                document.getElementById('add-to-cart').addEventListener('click', () => {
+                    alert('Added to cart! 🛒');
+                });
+
+                document.getElementById('view-details').addEventListener('click', () => {
+                    window.location.href = 'index.html';
+                });
+
+                // Mouse interaction
+                this.renderer.domElement.addEventListener('mousemove', (event) => {
+                    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+                });
+
+                this.renderer.domElement.addEventListener('click', (event) => {
+                    this.raycaster.setFromCamera(this.mouse, this.camera);
+                    const intersects = this.raycaster.intersectObjects(this.scene.children, true);
+                    
+                    if (intersects.length > 0) {
+                        const clickedObject = intersects[0].object;
+                        // Find the root model
+                        let rootModel = clickedObject;
+                        while (rootModel.parent && rootModel.parent !== this.scene) {
+                            rootModel = rootModel.parent;
+                        }
+                        
+                        // Find which model type this belongs to
+                        for (const [modelType, model] of this.modelLoader.loadedModels) {
+                            if (model === rootModel) {
+                                this.selectModel(modelType);
+                                break;
+                            }
+                        }
+                    }
+                });
+
+                // Stop auto-rotation on interaction
+                this.renderer.domElement.addEventListener('mousedown', () => {
+                    if (this.controls) this.controls.autoRotate = false;
+                });
+
+                this.renderer.domElement.addEventListener('mouseup', () => {
+                    if (this.controls) {
+                        setTimeout(() => {
+                            this.controls.autoRotate = true;
+                        }, 3000);
+                    }
+                });
+            }
+
+            selectModel(modelType) {
+                this.currentModel = modelType;
+                this.updateProductInfo(modelType);
+                this.focusOnModel(modelType);
+            }
+
+            focusOnModel(modelType) {
+                const model = this.modelLoader.getModel(modelType);
+                if (model && this.controls) {
+                    // Smooth camera transition to focus on the model
+                    const targetPosition = model.position.clone();
+                    targetPosition.y += 1;
+                    
+                    this.controls.target.copy(model.position);
+                    this.controls.update();
+                }
+            }
+
+            updateProductInfo(modelType) {
+                const product = this.productData[modelType];
+                if (product) {
+                    document.getElementById('info-title').textContent = product.name;
+                    document.getElementById('info-description').textContent = product.description;
+                    document.getElementById('info-price').textContent = product.price;
+                    
+                    const featuresContainer = document.getElementById('info-features');
+                    featuresContainer.innerHTML = product.features.map(feature => 
+                        `<div style="font-size: 14px; color: #64748b; margin-bottom: 8px;">✅ ${feature}</div>`
+                    ).join('');
+                }
+            }
+
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                
+                if (this.controls) {
+                    this.controls.update();
+                }
+                
+                if (this.modelLoader) {
+                    this.modelLoader.update();
+                }
+                
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', () => {
+            new AIEnhanced3DLanding();
+        });
+    </script>
+</body>
+</html>
