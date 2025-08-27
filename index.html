@@ -10,6 +10,7 @@
     <script src="https://threejs.org/examples/js/loaders/DRACOLoader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     
     <!-- Enhanced Cart Styles -->
     <link rel="stylesheet" href="./css/enhanced-cart-styles.css">
@@ -250,6 +251,15 @@
             50% { opacity: 1; transform: translateY(10px); }
         }
 
+        /* Viewer Overlay Styling */
+        .viewer-overlay {
+            pointer-events: none;
+        }
+        
+        .color-swatch {
+            pointer-events: auto;
+        }
+        
         /* Product Specifications Styling */
         .product-specs {
             margin: 25px 0;
@@ -2076,17 +2086,26 @@
     <section class="product-section" id="pullup-section">
         <div class="product-container">
             <div class="product-3d-container" id="pullup-viewer">
-                <div class="loading-text">Loading 3D Model...</div>
-                <div class="color-bar">
+                <model-viewer
+                    src="/models/pullup-bar.glb"
+                    camera-controls
+                    touch-action="pan-y"
+                    interaction-prompt="auto"
+                    shadow-intensity="0.6"
+                    exposure="1.0"
+                    environment-image="neutral"
+                    poster="/images/pullup-bar-poster.jpg"
+                    style="width:100%;height:520px;border-radius:16px;background:#0b0b0f;">
+                </model-viewer>
+                <div class="loading-text viewer-overlay">Loading 3D Model...</div>
+                <div class="color-bar viewer-overlay">
                     <div class="color-swatch matte-black" data-color="0x1A1A1A" title="Matte Black"></div>
                     <div class="color-swatch gunmetal-gray" data-color="0x2C3539" title="Gunmetal Gray"></div>
-                    <div class="color-swatch chrome-silver" data-color="0xE8E8E8" title="Chrome Silver"></div>
-                    <div class="color-swatch purple" data-color="0x8B5CF6" title="Purple"></div>
-                    <div class="color-swatch white" data-color="0xF8F8F8" title="White"></div>
+                    <div class="color-swatch steel-silver" data-color="0xC0C0C0" title="Steel Silver"></div>
+                    <div class="color-swatch walnut-brown" data-color="0x8B4513" title="Walnut Brown"></div>
                     <div class="color-swatch bronze" data-color="0xCD7F32" title="Bronze"></div>
                 </div>
             </div>
-            <div class="loading">Loading 3D Model...</div>
             <div class="controls-hint">Hover to interact • Click & Drag to Rotate • Scroll to Zoom</div>
             <div class="product-info">
                 <div class="product-category">Pull-Up Equipment</div>
@@ -2191,18 +2210,27 @@
                 </div>
             </div>
             <div class="product-3d-container" id="rings-viewer">
-                <div class="loading-text">Loading 3D Model...</div>
-                <div class="color-bar">
+                <model-viewer
+                    src="/models/rings.glb"
+                    camera-controls
+                    touch-action="pan-y"
+                    interaction-prompt="auto"
+                    shadow-intensity="0.6"
+                    exposure="1.0"
+                    environment-image="neutral"
+                    poster="/images/rings-poster.jpg"
+                    style="width:100%;height:520px;border-radius:16px;background:#0b0b0f;">
+                </model-viewer>
+                <div class="loading-text viewer-overlay">Loading 3D Model...</div>
+                <div class="color-bar viewer-overlay">
                     <div class="color-swatch matte-black" data-color="0x1A1A1A" title="Matte Black"></div>
                     <div class="color-swatch gunmetal-gray" data-color="0x2C3539" title="Gunmetal Gray"></div>
-                    <div class="color-swatch chrome-silver" data-color="0xE8E8E8" title="Chrome Silver"></div>
-                    <div class="color-swatch purple" data-color="0x8B5CF6" title="Purple"></div>
-                    <div class="color-swatch white" data-color="0xF8F8F8" title="White"></div>
+                    <div class="color-swatch steel-silver" data-color="0xC0C0C0" title="Steel Silver"></div>
+                    <div class="color-swatch walnut-brown" data-color="0x8B4513" title="Walnut Brown"></div>
                     <div class="color-swatch bronze" data-color="0xCD7F32" title="Bronze"></div>
                 </div>
             </div>
             <div class="scroll-overlay"></div>
-            <div class="loading">Loading 3D Model...</div>
             <div class="controls-hint">Hover to interact • Click & Drag to Rotate • Scroll to Zoom</div>
         </div>
     </section>
@@ -2211,8 +2239,19 @@
     <section class="product-section" id="parallettes-section">
         <div class="product-container">
             <div class="product-3d-container" id="parallettes-viewer">
-                <div class="loading-text">Loading 3D Model...</div>
-                <div class="color-bar">
+                <model-viewer
+                    src="/models/parallettes.glb"
+                    camera-controls
+                    touch-action="pan-y"
+                    interaction-prompt="auto"
+                    shadow-intensity="0.6"
+                    exposure="1.0"
+                    environment-image="neutral"
+                    poster="/images/parallettes-poster.jpg"
+                    style="width:100%;height:520px;border-radius:16px;background:#0b0b0f;">
+                </model-viewer>
+                <div class="loading-text viewer-overlay">Loading 3D Model...</div>
+                <div class="color-bar viewer-overlay">
                     <div class="color-swatch matte-black" data-color="0x1A1A1A" title="Matte Black"></div>
                     <div class="color-swatch gunmetal-gray" data-color="0x2C3539" title="Gunmetal Gray"></div>
                     <div class="color-swatch chrome-silver" data-color="0xE8E8E8" title="Chrome Silver"></div>
@@ -3760,6 +3799,7 @@
     <script src="js/premium-model-viewer.js"></script>
     <script src="js/premium-animated-background.js"></script>
     <script src="js/email-capture.js"></script>
+    <script src="js/model-viewer-handler.js"></script>
     <script src="js/debug-asset-checker.js"></script>
     <script src="./js/3d-models-legacy.js"></script>
     
