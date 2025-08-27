@@ -106,9 +106,21 @@ class PremiumModelViewer {
         modelViewer.setAttribute('auto-rotate', '');
         modelViewer.setAttribute('auto-rotate-delay', '1000');
         
+        // Fix rings rotation issue - force enable auto-rotate
+        if (productName === 'rings') {
+            modelViewer.setAttribute('auto-rotate', '');
+            modelViewer.setAttribute('auto-rotate-delay', '500');
+            modelViewer.setAttribute('rotation-per-second', '45deg');
+        }
+        
         // Performance and UX
         modelViewer.setAttribute('loading', 'lazy');
-        modelViewer.setAttribute('reveal', 'interaction');
+        if (productName === 'rings') {
+            // For rings, reveal immediately to start auto-rotation
+            modelViewer.setAttribute('reveal', 'auto');
+        } else {
+            modelViewer.setAttribute('reveal', 'interaction');
+        }
         modelViewer.setAttribute('seamless-poster', '');
         
         // Zoom and interaction limits
@@ -216,6 +228,12 @@ class PremiumModelViewer {
         // Force camera controls to be enabled
         setTimeout(() => {
             modelViewer.cameraControls = true;
+            // Special handling for rings auto-rotate
+            if (container.id === 'rings-viewer') {
+                modelViewer.autoRotate = true;
+                modelViewer.autoRotateDelay = 500;
+                modelViewer.rotationPerSecond = '45deg';
+            }
             console.log(`🎮 Ensured interactivity for ${container.id}`);
         }, 100);
     }
