@@ -40,8 +40,8 @@ class ModelViewerIntegration {
         const modelViewer = document.createElement('model-viewer');
         
         // Set attributes
-        modelViewer.src = `./models/${productName}-black.glb`;
-        modelViewer.poster = `./images/${productName}-black-poster.jpg`;
+        modelViewer.src = `/models/${productName}-black.glb`;
+        modelViewer.poster = `/images/${productName}-black-poster.jpg`;
         modelViewer.alt = `${productName.replace('-', ' ')} 3D Model`;
         
         // Model-viewer attributes
@@ -127,8 +127,8 @@ class ModelViewerIntegration {
                 }
 
                 // Update model source
-                const newSrc = `./models/${productName}-${variant}.glb`;
-                const newPoster = `./images/${productName}-${variant}-poster.jpg`;
+                const newSrc = `/models/${productName}-${variant}.glb`;
+                const newPoster = `/images/${productName}-${variant}-poster.jpg`;
                 
                 modelViewer.src = newSrc;
                 modelViewer.poster = newPoster;

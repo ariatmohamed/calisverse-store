@@ -471,7 +471,7 @@ function initProfessional3DViewers() {
     const viewers = document.querySelectorAll('.professional-3d-viewer, .viewer-3d');
     viewers.forEach(container => {
         const equipmentType = container.dataset.equipment;
-        const modelPath = container.dataset.model || `/models/${equipmentType}.glb`;
+        const modelPath = container.dataset.model || `/models/${equipmentType}-black.glb`;
         
         if (equipmentType && !container.classList.contains('initialized')) {
             new Professional3DViewer(container.id, equipmentType, modelPath);

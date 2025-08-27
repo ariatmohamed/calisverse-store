@@ -156,9 +156,9 @@ class Performance3DOptimizer {
         
         // Fallback paths in order of preference
         const paths = [
-            `${basePath}${equipmentType}${extension}`,
-            `${basePath}${equipmentType}.glb`,
-            `${basePath}${equipmentType}.gltf`
+            `${basePath}${equipmentType}-black${extension}`,
+            `${basePath}${equipmentType}-black.glb`,
+            `${basePath}${equipmentType}.glb`
         ];
         
         return paths[0]; // Return most optimized path available

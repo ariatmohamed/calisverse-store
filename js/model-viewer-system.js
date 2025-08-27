@@ -62,7 +62,7 @@ class ModelViewerSystem {
 
     createViewer(container) {
         const equipmentType = container.dataset.equipment;
-        const modelPath = `/models/${equipmentType.toLowerCase()}.glb`;
+        const modelPath = `/models/${equipmentType.toLowerCase()}-black.glb`;
         const posterPath = `/images/${equipmentType.toLowerCase()}-poster.jpg`;
 
         // Create model-viewer element
@@ -242,9 +242,9 @@ class ModelViewerSystem {
 
     createVariantControls(container, viewer, equipmentType) {
         const variants = [
-            { id: 'black', name: 'Matte Black', model: `${equipmentType.toLowerCase()}-black.glb` },
-            { id: 'walnut', name: 'Walnut Wood', model: `${equipmentType.toLowerCase()}-walnut.glb` },
-            { id: 'steel', name: 'Brushed Steel', model: `${equipmentType.toLowerCase()}-steel.glb` }
+            { id: 'black', name: 'Matte Black', model: `/models/${equipmentType.toLowerCase()}-black.glb` },
+            { id: 'walnut', name: 'Walnut Wood', model: `/models/${equipmentType.toLowerCase()}-walnut.glb` },
+            { id: 'steel', name: 'Brushed Steel', model: `/models/${equipmentType.toLowerCase()}-steel.glb` }
         ];
 
         const variantControls = document.createElement('div');
@@ -255,7 +255,7 @@ class ModelViewerSystem {
                 ${variants.map(variant => `
                     <button class="variant-btn-mv ${variant.id === 'black' ? 'active' : ''}" 
                             data-variant="${variant.id}"
-                            data-model="/models/${variant.model}">
+                            data-model="${variant.model}">
                         <div class="variant-preview" data-variant="${variant.id}"></div>
                         <span>${variant.name}</span>
                     </button>
