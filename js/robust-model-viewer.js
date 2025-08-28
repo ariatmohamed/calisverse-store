@@ -147,17 +147,24 @@ class RobustModelViewer {
     createModelViewer(productName) {
         const modelViewer = document.createElement('model-viewer');
         
-        // Set exact paths with case-sensitive filenames
-        modelViewer.src = `/models/${productName}.glb`;
-        modelViewer.poster = `/images/${productName}-poster.jpg`;
+        // Set exact paths with case-sensitive filenames and default variants
+        const defaultVariants = {
+            'pullup-bar': 'black',
+            'rings': 'walnut',
+            'parallettes': 'steel'
+        };
+        
+        const defaultVariant = defaultVariants[productName] || 'black';
+        modelViewer.src = `/models/${productName}-${defaultVariant}.glb`;
+        modelViewer.poster = `/images/${productName}-${defaultVariant}-poster.jpg`;
         modelViewer.alt = `${productName.replace('-', ' ')} 3D Model`;
         
         // Essential attributes for consistent experience
         modelViewer.setAttribute('camera-controls', '');
         modelViewer.setAttribute('touch-action', 'pan-y');
-        modelViewer.setAttribute('interaction-prompt', 'when-focused');
+        modelViewer.setAttribute('interaction-prompt', 'auto');
         modelViewer.setAttribute('shadow-intensity', '0.6');
-        modelViewer.setAttribute('exposure', '1.2');
+        modelViewer.setAttribute('exposure', '1.0');
         modelViewer.setAttribute('environment-image', 'neutral');
         
         // Consistent framing and zoom
@@ -169,10 +176,6 @@ class RobustModelViewer {
         modelViewer.setAttribute('loading', 'lazy');
         modelViewer.setAttribute('reveal', 'auto');
         modelViewer.setAttribute('seamless-poster', '');
-        
-        // Immediate render without tap
-        modelViewer.setAttribute('interaction-prompt', 'when-focused');
-        modelViewer.setAttribute('interaction-prompt-threshold', '0');
         
         // Safe defaults to avoid black-until-tap
         modelViewer.setAttribute('auto-rotate', '');
@@ -244,10 +247,12 @@ class RobustModelViewer {
         // Set up color variant system
         this.setupColorVariants(container, modelViewer);
         
-        // Show helper text briefly after a delay
+        // Show helper text after model is visible, then auto-hide
         setTimeout(() => {
-            this.showHelperText(container);
-        }, 3000);
+            if (modelViewer.loaded) {
+                this.showHelperText(container);
+            }
+        }, 1000);
         
         console.log(`✅ Model loaded successfully: ${viewerId}`);
     }
@@ -285,7 +290,7 @@ class RobustModelViewer {
             setTimeout(() => {
                 helperText.remove();
             }, 300);
-        }, 3500);
+        }, 3000);
     }
 
     showErrorFallback(container, productName) {
@@ -360,32 +365,42 @@ class RobustModelViewer {
         console.log('🔍 Running asset integrity check...');
         
         const products = ['pullup-bar', 'rings', 'parallettes'];
-        const variants = ['', '-black', '-steel', '-walnut'];
+        const variants = ['-black', '-steel', '-walnut'];
         
         for (const product of products) {
-            // Check main model
-            const mainModelExists = await this.checkAssetExists(`/models/${product}.glb`);
-            if (!mainModelExists) {
-                console.error(`❌ Missing: /models/${product}.glb`);
+            // Check default variants (the ones we actually use)
+            const defaultVariants = {
+                'pullup-bar': 'black',
+                'rings': 'walnut',
+                'parallettes': 'steel'
+            };
+            
+            const defaultVariant = defaultVariants[product];
+            const defaultModelPath = `/models/${product}-${defaultVariant}.glb`;
+            const defaultPosterPath = `/images/${product}-${defaultVariant}-poster.jpg`;
+            
+            // Check default model
+            const modelExists = await this.checkAssetExists(defaultModelPath);
+            if (!modelExists) {
+                console.error(`❌ Missing default model: ${defaultModelPath}`);
             } else {
-                console.log(`✅ Found: /models/${product}.glb`);
+                console.log(`✅ Found default model: ${defaultModelPath}`);
             }
             
-            // Check poster
-            const posterExists = await this.checkAssetExists(`/images/${product}-poster.jpg`);
+            // Check default poster
+            const posterExists = await this.checkAssetExists(defaultPosterPath);
             if (!posterExists) {
-                console.warn(`⚠️ Missing poster: /images/${product}-poster.jpg`);
+                console.warn(`⚠️ Missing default poster: ${defaultPosterPath}`);
             } else {
-                console.log(`✅ Found: /images/${product}-poster.jpg`);
+                console.log(`✅ Found default poster: ${defaultPosterPath}`);
             }
             
-            // Check variants
+            // Check other variants
             for (const variant of variants) {
-                if (variant) {
-                    const variantExists = await this.checkAssetExists(`/models/${product}${variant}.glb`);
-                    if (!variantExists) {
-                        console.warn(`⚠️ Missing variant: /models/${product}${variant}.glb`);
-                    }
+                const variantPath = `/models/${product}${variant}.glb`;
+                const variantExists = await this.checkAssetExists(variantPath);
+                if (!variantExists) {
+                    console.warn(`⚠️ Missing variant: ${variantPath}`);
                 }
             }
         }
