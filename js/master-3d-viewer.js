@@ -6,11 +6,18 @@ class Master3DViewer {
         this.loadingStates = new Map();
         this.devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
         
-        // Exact file paths from inventory
-        this.modelPaths = {
-            'pullup-bar': '/models/pullup-bar.glb',
-            'rings': '/models/rings.glb', 
-            'parallettes': '/models/parallettes.glb'
+        // Set exact case-sensitive paths based on deployed files
+        const modelPaths = {
+            'pullup-bar': '/models/pullup-bar-black.glb',
+            'rings': '/models/rings-walnut.glb', 
+            'parallettes': '/models/parallettes-steel.glb'
+        };
+        
+        // Poster images matching default colors
+        const posterPaths = {
+            'pullup-bar': '/images/pullup-bar-black-poster.jpg',
+            'rings': '/images/rings-walnut-poster.jpg',
+            'parallettes': '/images/parallettes-steel-poster.jpg'
         };
         
         // Default variants

@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CalisVerse - Professional Equipment Store | Auto-Deploy Test</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://threejs.org/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://threejs.org/examples/js/loaders/DRACOLoader.js"></script>
+    <!-- Single model-viewer import -->
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    
+    <!-- Essential libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     
     <!-- Enhanced Cart Styles -->
     <link rel="stylesheet" href="./css/enhanced-cart-styles.css">
@@ -563,9 +562,53 @@
             font-size: 0.85rem;
         }
         
+        /* Specs Grid Styling */
+        .specs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 24px 0;
+            padding: 20px;
+            background: rgba(139, 92, 246, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(139, 92, 246, 0.1);
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .spec-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .spec-value {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 14px;
+        }
+
         /* Product Features Styling */
         .product-features {
             margin: 24px 0;
+        }
+
+        .product-features .feature {
+            padding: 8px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Color Pills Styling */
+        .color-pills {
+            display: flex;
+            gap: 12px;
+            margin: 24px 0;
+            flex-wrap: wrap;
         }
         
         .feature-list {
@@ -1879,45 +1922,128 @@
             font-size: 1.2rem;
         }
         
-        .mini-cart-details {
-            flex: 1;
-        }
-        
-        .mini-cart-name {
-            font-size: 0.9rem;
-            color: white;
-            margin-bottom: 2px;
-        }
-        
-        .mini-cart-price {
-            font-size: 0.8rem;
-            color: var(--accent);
-            font-weight: 600;
-        }
-        
-        .mini-cart-footer {
-            padding: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .mini-cart-total {
+        /* Professional Loader Styles */
+        .professional-loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(168, 85, 247, 0.05));
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            font-weight: 600;
-            color: white;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 10;
         }
-        
-        .mini-cart-btn {
-            width: 100%;
-            background: linear-gradient(135deg, var(--accent), #a855f7);
+
+        .loader-content {
+            text-align: center;
+            max-width: 200px;
+        }
+
+        .poster-preview img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 12px;
+            opacity: 0.8;
+        }
+
+        .skeleton-shimmer {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .shimmer-bar {
+            height: 8px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.1) 100%);
+            background-size: 400px 100%;
+            border-radius: 4px;
+            animation: shimmer 2s infinite;
+        }
+
+        .shimmer-bar:nth-child(1) { width: 80%; }
+        .shimmer-bar:nth-child(2) { width: 60%; }
+        .shimmer-bar:nth-child(3) { width: 90%; }
+
+        @keyframes shimmer {
+            0% { background-position: -200px 0; }
+            100% { background-position: 200px 0; }
+        }
+
+        .loading-pill {
+            background: rgba(139, 92, 246, 0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        /* Error Fallback Styles */
+        .error-fallback {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            z-index: 10;
+        }
+
+        .fallback-content {
+            text-align: center;
+        }
+
+        .fallback-content img {
+            max-width: 200px;
+            max-height: 200px;
+            object-fit: contain;
+            margin-bottom: 16px;
+        }
+
+        .view-photos-btn {
+            background: var(--accent);
             color: white;
             border: none;
-            padding: 12px;
+            padding: 12px 24px;
             border-radius: 8px;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: background 0.2s ease;
+        }
+
+        .view-photos-btn:hover {
+            background: var(--accent-light);
+        }
+
+        /* Interaction Helper Styles */
+        .interaction-helper {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            z-index: 5;
+            pointer-events: none;
+            opacity: 1;
+            transition: opacity 0.3s ease;
         }
         
         .mini-cart-btn:hover {
@@ -2861,23 +2987,15 @@
     <section class="product-section" id="pullup-section">
         <div class="product-container">
             <div class="product-3d-container" id="pullup-bar-viewer">
-                <model-viewer
-                    src="/models/pullup-bar.glb"
-                    camera-controls
-                    touch-action="pan-y"
-                    interaction-prompt="auto"
-                    shadow-intensity="0.6"
-                    exposure="1.0"
-                    environment-image="neutral"
-                    poster="/images/pullup-bar-poster.jpg"
-                    style="width:100%;height:520px;border-radius:16px;background:#0b0b0f;">
-                </model-viewer>
-                <div class="color-bar viewer-overlay">
-                    <button class="color-pill matte-black active" data-variant="black" aria-pressed="true" title="Matte Black"></button>
-                    <button class="color-pill gunmetal-gray" data-variant="black" aria-pressed="false" title="Gunmetal Gray"></button>
-                    <button class="color-pill steel-silver" data-variant="steel" aria-pressed="false" title="Steel Silver"></button>
-                    <button class="color-pill walnut-brown" data-variant="walnut" aria-pressed="false" title="Walnut Brown"></button>
-                    <button class="color-pill bronze" data-variant="steel" aria-pressed="false" title="Bronze"></button>
+                <div class="model-viewer-container" data-product="pullup-bar">
+                    <!-- Standardized model viewer loads here -->
+                </div>
+                <div class="color-bar viewer-overlay" style="pointer-events: none;">
+                    <button class="color-pill matte-black active" data-variant="black" aria-pressed="true" title="Matte Black" style="pointer-events: auto;" onclick="handleColorPillClick('pullup-bar', 'black', this)"></button>
+                    <button class="color-pill gunmetal-gray" data-variant="black" aria-pressed="false" title="Gunmetal Gray" style="pointer-events: auto;" onclick="handleColorPillClick('pullup-bar', 'black', this)"></button>
+                    <button class="color-pill steel-silver" data-variant="steel" aria-pressed="false" title="Steel Silver" style="pointer-events: auto;" onclick="handleColorPillClick('pullup-bar', 'steel', this)"></button>
+                    <button class="color-pill walnut-brown" data-variant="walnut" aria-pressed="false" title="Walnut Brown" style="pointer-events: auto;" onclick="handleColorPillClick('pullup-bar', 'walnut', this)"></button>
+                    <button class="color-pill bronze" data-variant="steel" aria-pressed="false" title="Bronze" style="pointer-events: auto;" onclick="handleColorPillClick('pullup-bar', 'steel', this)"></button>
                 </div>
             </div>
             <div class="controls-hint">Hover to interact • Click & Drag to Rotate • Scroll to Zoom</div>
@@ -2912,24 +3030,23 @@
                 
                 <!-- Key Features -->
                 <div class="product-features">
-                    <ul class="feature-list">
-                        <li class="feature-item">
-                            <span class="feature-icon">✔️</span>
-                            Multiple grip positions for varied workouts
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">⭐</span>
-                            500+ hours salt spray tested finish
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✔️</span>
-                            Easy wall-mount installation included
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">⭐</span>
-                            Used by Olympic training facilities
-                        </li>
-                    </ul>
+                    <div class="feature-item">
+                        <span class="feature-icon">✔️</span>
+                        Multiple grip positions for varied workouts
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">⭐</span>
+                        500+ hours salt spray tested finish
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✔️</span>
+                        Easy wall-mount installation included
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">⭐</span>
+                        Used by Olympic training facilities
+                    </div>
+                </div>
                 <div class="product-testimonial">
                     <div class="testimonial-content">
                         <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
@@ -2958,23 +3075,48 @@
                     Premium birch wood rings with competition-grade specifications. Adjustable straps with cam buckles 
                     for quick height changes. Natural wood provides superior grip even when hands are sweaty.
                 </p>
+                <!-- Specs Grid -->
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <span class="spec-label">Weight</span>
+                        <span class="spec-value">2.5 lbs</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Dimensions</span>
+                        <span class="spec-value">9" diameter</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Material</span>
+                        <span class="spec-value">Birch Wood</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Warranty</span>
+                        <span class="spec-value">2 Years</span>
+                    </div>
+                </div>
+                
+                <!-- Key Features -->
                 <div class="product-features">
-                    <div class="feature">
-                        <div class="feature-icon">✓</div>
-                        <span>Premium birch wood construction</span>
-                    </div>
-                    <div class="feature">
-                        <div class="feature-icon">✓</div>
-                        <span>Adjustable 15ft straps included</span>
-                    </div>
-                    <div class="feature">
-                        <div class="feature-icon">✓</div>
-                        <span>Competition regulation size</span>
-                    </div>
-                    <div class="feature">
-                        <div class="feature-icon">✓</div>
-                        <span>Natural anti-slip surface</span>
-                    </div>
+                    <div class="feature">✓ Premium birch wood construction</div>
+                    <div class="feature">✓ Competition-grade specifications</div>
+                    <div class="feature">✓ Adjustable straps with cam buckles</div>
+                    <div class="feature">✓ Superior grip even when wet</div>
+                </div>
+                
+                <!-- Color Pills -->
+                <div class="color-pills">
+                    <button class="color-pill" data-variant="black" aria-pressed="false" onclick="handleColorPillClick('rings', 'black', this)">
+                        <div class="pill-color" style="background: linear-gradient(135deg, #2d2d2d, #1a1a1a);"></div>
+                        <span>Matte Black</span>
+                    </button>
+                    <button class="color-pill" data-variant="steel" aria-pressed="false" onclick="handleColorPillClick('rings', 'steel', this)">
+                        <div class="pill-color" style="background: linear-gradient(135deg, #c0c0c0, #a8a8a8);"></div>
+                        <span>Steel</span>
+                    </button>
+                    <button class="color-pill active" data-variant="walnut" aria-pressed="true" onclick="handleColorPillClick('rings', 'walnut', this)">
+                        <div class="pill-color" style="background: linear-gradient(135deg, #8b4513, #654321);"></div>
+                        <span>Walnut</span>
+                    </button>
                 </div>
                 <div class="product-price">$149.99</div>
                 <div class="product-actions">
@@ -2982,15 +3124,15 @@
                 </div>
             </div>
             <div class="product-3d-container" id="rings-viewer">
-                <div class="model-viewer-container">
-                    <!-- Model viewer will be loaded lazily by robust-model-viewer.js -->
+                <div class="model-viewer-container" data-product="rings">
+                    <!-- Standardized model viewer loads here -->
                 </div>
-                <div class="color-bar viewer-overlay">
-                    <button class="color-pill matte-black" data-variant="black" aria-pressed="false" title="Matte Black"></button>
-                    <button class="color-pill gunmetal-gray" data-variant="black" aria-pressed="false" title="Gunmetal Gray"></button>
-                    <button class="color-pill steel-silver" data-variant="steel" aria-pressed="false" title="Steel Silver"></button>
-                    <button class="color-pill walnut-brown active" data-variant="walnut" aria-pressed="true" title="Walnut Brown"></button>
-                    <button class="color-pill bronze" data-variant="steel" aria-pressed="false" title="Bronze"></button>
+                <div class="color-bar viewer-overlay" style="pointer-events: none;">
+                    <button class="color-pill matte-black" data-variant="black" aria-pressed="false" title="Matte Black" style="pointer-events: auto;"></button>
+                    <button class="color-pill gunmetal-gray" data-variant="black" aria-pressed="false" title="Gunmetal Gray" style="pointer-events: auto;"></button>
+                    <button class="color-pill steel-silver" data-variant="steel" aria-pressed="false" title="Steel Silver" style="pointer-events: auto;"></button>
+                    <button class="color-pill walnut-brown active" data-variant="walnut" aria-pressed="true" title="Walnut Brown" style="pointer-events: auto;"></button>
+                    <button class="color-pill bronze" data-variant="steel" aria-pressed="false" title="Bronze" style="pointer-events: auto;"></button>
                 </div>
             </div>
             <div class="scroll-overlay"></div>
@@ -3002,23 +3144,15 @@
     <section class="product-section" id="parallettes-section">
         <div class="product-container">
             <div class="product-3d-container" id="parallettes-viewer">
-                <model-viewer
-                    src="/models/parallettes.glb"
-                    camera-controls
-                    touch-action="pan-y"
-                    interaction-prompt="auto"
-                    shadow-intensity="0.6"
-                    exposure="1.0"
-                    environment-image="neutral"
-                    poster="/images/parallettes-poster.jpg"
-                    style="width:100%;height:520px;border-radius:16px;background:#0b0b0f;">
-                </model-viewer>
-                <div class="color-bar viewer-overlay">
-                    <button class="color-pill matte-black" data-variant="black" aria-pressed="false" title="Matte Black"></button>
-                    <button class="color-pill gunmetal-gray" data-variant="black" aria-pressed="false" title="Gunmetal Gray"></button>
-                    <button class="color-pill steel-silver active" data-variant="steel" aria-pressed="true" title="Steel Silver"></button>
-                    <button class="color-pill walnut-brown" data-variant="walnut" aria-pressed="false" title="Walnut Brown"></button>
-                    <button class="color-pill bronze" data-variant="steel" aria-pressed="false" title="Bronze"></button>
+                <div class="model-viewer-container" data-product="parallettes">
+                    <!-- Standardized model viewer loads here -->
+                </div>
+                <div class="color-bar viewer-overlay" style="pointer-events: none;">
+                    <button class="color-pill matte-black" data-variant="black" aria-pressed="false" title="Matte Black" style="pointer-events: auto;" onclick="handleColorPillClick('parallettes', 'black', this)"></button>
+                    <button class="color-pill gunmetal-gray" data-variant="black" aria-pressed="false" title="Gunmetal Gray" style="pointer-events: auto;" onclick="handleColorPillClick('parallettes', 'black', this)"></button>
+                    <button class="color-pill steel-silver active" data-variant="steel" aria-pressed="true" title="Steel Silver" style="pointer-events: auto;" onclick="handleColorPillClick('parallettes', 'steel', this)"></button>
+                    <button class="color-pill walnut-brown" data-variant="walnut" aria-pressed="false" title="Walnut Brown" style="pointer-events: auto;" onclick="handleColorPillClick('parallettes', 'walnut', this)"></button>
+                    <button class="color-pill bronze" data-variant="steel" aria-pressed="false" title="Bronze" style="pointer-events: auto;" onclick="handleColorPillClick('parallettes', 'steel', this)"></button>
                 </div>
             </div>
             <div class="product-info">
@@ -4554,24 +4688,12 @@
     
     </script>
     
-    <!-- Load new premium components -->
-    <script src="./js/debug-asset-checker.js"></script>
-    <script src="./js/igloo-animated-background.js"></script>
-    <script src="js/premium-model-viewer.js"></script>
+    <!-- Essential scripts only -->
+    <script src="js/standardized-3d-viewer.js"></script>
+    <script src="js/professional-nav.js"></script>
     <script src="js/premium-animated-background.js"></script>
     <script src="js/email-capture.js"></script>
-    <script src="js/master-3d-viewer.js"></script>
-    <script src="js/professional-nav.js"></script>
-    <script src="js/debug-asset-checker.js"></script>
-    <script src="./js/3d-models-legacy.js"></script>
-    
-    <!-- Load existing scripts -->
     <script src="./js/fixed-cart-system.js"></script>
-    <script src="./js/color-picker.js"></script>
     <script src="./js/scroll-animations.js"></script>
-    <script src="./js/cart-override.js"></script>
-    <script src="./js/checkout-system.js"></script>
-    <script src="./js/form-handler.js"></script>
-    <script src="./js/mobile-optimizer.js"></script>
 </body>
 </html>
