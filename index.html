@@ -260,6 +260,69 @@
             pointer-events: auto;
         }
         
+        /* Brand-Centered Hero Styling */
+        .brand-name {
+            font-size: 4rem;
+            font-weight: 900;
+            color: white;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+        
+        .brand-motivation {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            margin-bottom: 2rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        
+        .brand-tagline {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            margin-bottom: 3rem;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+        
+        .hero-actions {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .hero-actions .btn-primary {
+            opacity: 0.9;
+            transform: scale(0.95);
+            transition: all 0.3s ease;
+        }
+        
+        .hero-actions .btn-primary:hover {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        @media (max-width: 768px) {
+            .brand-name {
+                font-size: 2.5rem;
+            }
+            
+            .brand-motivation {
+                font-size: 1.2rem;
+            }
+            
+            .brand-tagline {
+                font-size: 1rem;
+            }
+        }
+        
         /* Product Specifications Styling */
         .product-specs {
             margin: 25px 0;
@@ -2053,19 +2116,12 @@
     <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="hero-content">
-            <h1>Elite Calisthenics Gear for Home Training</h1>
-            <p>Durable, competition-grade equipment designed to elevate your workouts. Trusted by athletes, built for everyone.</p>
+            <div class="brand-name">CalisVerse</div>
+            <div class="brand-motivation">Strength. Discipline. Progress.</div>
+            <p class="brand-tagline">Premium calisthenics gear for every athlete, built to last.</p>
             
-            <!-- Trust Signals -->
-            <div class="hero-trust-signals">
-                <div class="trust-item">
-                    <span class="trust-icon">⭐</span>
-                    <span>4.9/5 from 2,847 athletes</span>
-                </div>
-                <div class="trust-item">
-                    <span class="trust-icon">🏆</span>
-                    <span>Used by Olympic teams</span>
-                </div>
+            <div class="hero-actions">
+                <button class="btn-primary" onclick="scrollToSection('equipment')">Shop Now</button>
             </div>
         </div>
         <div class="scroll-indicator">
