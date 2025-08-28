@@ -155,9 +155,9 @@ class RobustModelViewer {
         // Essential attributes for consistent experience
         modelViewer.setAttribute('camera-controls', '');
         modelViewer.setAttribute('touch-action', 'pan-y');
-        modelViewer.setAttribute('interaction-prompt', 'auto');
+        modelViewer.setAttribute('interaction-prompt', 'when-focused');
         modelViewer.setAttribute('shadow-intensity', '0.6');
-        modelViewer.setAttribute('exposure', '1.0');
+        modelViewer.setAttribute('exposure', '1.2');
         modelViewer.setAttribute('environment-image', 'neutral');
         
         // Consistent framing and zoom
@@ -170,10 +170,17 @@ class RobustModelViewer {
         modelViewer.setAttribute('reveal', 'auto');
         modelViewer.setAttribute('seamless-poster', '');
         
+        // Immediate render without tap
+        modelViewer.setAttribute('interaction-prompt', 'when-focused');
+        modelViewer.setAttribute('interaction-prompt-threshold', '0');
+        
         // Safe defaults to avoid black-until-tap
         modelViewer.setAttribute('auto-rotate', '');
-        modelViewer.setAttribute('auto-rotate-delay', '2000');
+        modelViewer.setAttribute('auto-rotate-delay', '3000');
         modelViewer.setAttribute('rotation-per-second', '20deg');
+        
+        // Set default variant based on product
+        this.setDefaultVariant(modelViewer, productName);
         
         // Styling
         modelViewer.style.cssText = `
@@ -234,8 +241,13 @@ class RobustModelViewer {
             }, 300);
         }
 
-        // Show helper text briefly
-        this.showHelperText(container);
+        // Set up color variant system
+        this.setupColorVariants(container, modelViewer);
+        
+        // Show helper text briefly after a delay
+        setTimeout(() => {
+            this.showHelperText(container);
+        }, 3000);
         
         console.log(`✅ Model loaded successfully: ${viewerId}`);
     }
