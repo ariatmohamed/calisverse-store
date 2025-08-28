@@ -325,36 +325,104 @@
         
         /* Product Specifications Styling */
         .product-specs {
-            margin: 25px 0;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            border: 1px solid rgba(139, 92, 246, 0.2);
+            margin: 24px 0;
+            padding: 0;
+            background: transparent;
         }
         
         .spec-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px 32px;
+            margin-bottom: 24px;
         }
         
         .spec-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0;
+            padding: 0;
         }
         
         .spec-label {
             color: rgba(255, 255, 255, 0.7);
-            font-weight: 500;
-            font-size: 0.9rem;
+            font-weight: 600;
+            font-size: 0.85rem;
         }
         
         .spec-value {
             color: white;
+            font-weight: 400;
+            font-size: 0.85rem;
+        }
+        
+        /* Product Features Styling */
+        .product-features {
+            margin: 24px 0;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .feature-icon {
+            margin-right: 8px;
+            font-size: 0.8rem;
+        }
+        
+        /* Price and Actions Styling */
+        .product-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin: 24px 0 16px 0;
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .btn-primary, .btn-secondary {
+            padding: 12px 24px;
+            border-radius: 8px;
             font-weight: 600;
             font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
         }
         
         /* Customer Testimonial Styling */
@@ -1462,7 +1530,10 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             align-items: center;
-            gap: 0;
+            gap: 80px;
+            max-width: 1400px;
+            width: 100%;
+            z-index: 2;
         }
 
         .product-3d-container {
@@ -1504,73 +1575,49 @@
         }
 
         .product-info {
-            width: 100%;
-            height: 100vh;
-            padding: 80px 60px;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(20px);
-            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0;
+            color: white;
+            z-index: 3;
+            position: relative;
+            max-width: 600px;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             display: flex;
-            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            z-index: 10;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
 
         .product-category {
-            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
             font-weight: 600;
-            color: var(--accent);
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 20px;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
         }
 
         .product-title {
             font-size: clamp(2.5rem, 5vw, 4rem);
             font-weight: 900;
-            margin-bottom: 30px;
-            line-height: 1.1;
+            margin-bottom: 16px;
+            color: white;
+            line-height: 1.2;
         }
 
         .product-description {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            margin-bottom: 40px;
-            line-height: 1.7;
-        }
-
-        .product-features {
-            margin-bottom: 50px;
-        }
-
-        .feature {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
             font-size: 1rem;
-            color: var(--text-secondary);
-        }
-
-        .feature-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: var(--accent);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: bold;
-            margin-right: 12px;
-            flex-shrink: 0;
-        }
-
-        .product-price {
-            font-size: 3rem;
-            font-weight: 900;
-            color: var(--accent);
-            margin-bottom: 30px;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 24px;
         }
 
         .product-actions {
@@ -2159,9 +2206,7 @@
                 <div class="product-category">Pull-Up Equipment</div>
                 <h2 class="product-title">Elite Wall-Mounted Pull-Up Bar</h2>
                 <p class="product-description">
-                    Transform your home gym with professional-grade equipment trusted by Olympic training facilities. 
-                    Military-spec steel construction with powder-coated finish resists 500+ hours of salt spray testing. 
-                    Ergonomic multi-grip design targets different muscle groups while reducing joint stress.
+                    Professional-grade equipment trusted by Olympic training facilities. Military-spec steel construction with ergonomic multi-grip design for comprehensive upper body training.
                 </p>
                 
                 <!-- Technical Specifications -->
@@ -2177,7 +2222,7 @@
                         </div>
                         <div class="spec-item">
                             <span class="spec-label">Material:</span>
-                            <span class="spec-value">14-gauge steel, powder-coated</span>
+                            <span class="spec-value">14-gauge steel, coated</span>
                         </div>
                         <div class="spec-item">
                             <span class="spec-label">Warranty:</span>
@@ -2185,26 +2230,27 @@
                         </div>
                     </div>
                 </div>
-                <div class="product-features">
-                    <div class="feature">
-                        <div class="feature-icon">🏆</div>
-                        <span>Used by 12+ Olympic training centers</span>
-                    </div>
-                    <div class="feature">
-                        <div class="feature-icon">💪</div>
-                        <span>Multi-grip design: wide, narrow, neutral</span>
-                    </div>
-                    <div class="feature">
-                        <div class="feature-icon">🔧</div>
-                        <span>15-minute installation with included hardware</span>
-                    </div>
-                    <div class="feature">
-                        <div class="feature-icon">🛡️</div>
-                        <span>Lifetime warranty + 30-day trial</span>
-                    </div>
-                </div>
                 
-                <!-- Customer Testimonial -->
+                <!-- Key Features -->
+                <div class="product-features">
+                    <ul class="feature-list">
+                        <li class="feature-item">
+                            <span class="feature-icon">✔️</span>
+                            Multiple grip positions for varied workouts
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">⭐</span>
+                            500+ hours salt spray tested finish
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✔️</span>
+                            Easy wall-mount installation included
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">⭐</span>
+                            Used by Olympic training facilities
+                        </li>
+                    </ul>
                 <div class="product-testimonial">
                     <div class="testimonial-content">
                         <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
@@ -2253,7 +2299,7 @@
                 </div>
                 <div class="product-price">$149.99</div>
                 <div class="product-actions">
-                    <button class="btn-primary" onclick="addToCart('rings')">Add to Cart</button>
+                    <button class="btn-primary" onclick="addToCart('pullup-bar')">Add to Cart</button>
                     <button class="btn-secondary">Learn More</button>
                 </div>
             </div>
