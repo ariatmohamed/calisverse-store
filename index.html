@@ -337,21 +337,134 @@
             overflow: hidden;
         }
         
-        /* Color Swatch Active State */
-        .color-swatch {
-            opacity: 0.7;
+        /* Professional Loader Styles */
+        .professional-loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(248, 249, 250, 0.95);
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+            z-index: 5;
+            pointer-events: none;
+        }
+        
+        .poster-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        .poster-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+        
+        .skeleton-loader {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .shimmer-pill {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 50px;
+            overflow: hidden;
+        }
+        
+        .shimmer-animation {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .loading-text {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        /* Color Pills (Professional Buttons) */
+        .color-pill {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
             transition: all 0.3s ease;
+            opacity: 0.7;
+            position: relative;
+            background: none;
+            padding: 0;
+            min-width: 40px;
+            min-height: 40px;
         }
         
-        .color-swatch.active {
-            opacity: 1;
-            transform: scale(1.1);
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.5);
-        }
-        
-        .color-swatch:hover {
+        .color-pill:hover {
             opacity: 1;
             transform: scale(1.05);
+            border-color: rgba(139, 92, 246, 0.5);
+        }
+        
+        .color-pill.active {
+            opacity: 1;
+            transform: scale(1.1);
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+        }
+        
+        .color-pill:focus {
+            outline: 2px solid #8b5cf6;
+            outline-offset: 2px;
+        }
+        
+        /* Color Pill Variants */
+        .color-pill.matte-black { background: #1a1a1a; }
+        .color-pill.steel-silver { background: #c0c0c0; }
+        .color-pill.walnut-brown { background: #8b4513; }
+        .color-pill.gunmetal-gray { background: #2c3539; }
+        .color-pill.bronze { background: #cd7f32; }
+        
+        /* Interaction Hint */
+        .interaction-hint {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        /* Error Fallback */
+        .model-error-fallback {
+            border: 2px dashed #e5e7eb;
+        }
+        
+        .view-photos-btn:hover {
+            background: var(--accent-light) !important;
+            transform: translateY(-2px);
         }
         
         /* Brand-Centered Hero Styling */
@@ -2760,11 +2873,11 @@
                     style="width:100%;height:520px;border-radius:16px;background:#0b0b0f;">
                 </model-viewer>
                 <div class="color-bar viewer-overlay">
-                    <div class="color-swatch matte-black active" data-color="0x1A1A1A" title="Matte Black"></div>
-                    <div class="color-swatch gunmetal-gray" data-color="0x2C3539" title="Gunmetal Gray"></div>
-                    <div class="color-swatch steel-silver" data-color="0xC0C0C0" title="Steel Silver"></div>
-                    <div class="color-swatch walnut-brown" data-color="0x8B4513" title="Walnut Brown"></div>
-                    <div class="color-swatch bronze" data-color="0xCD7F32" title="Bronze"></div>
+                    <button class="color-pill matte-black active" data-variant="black" aria-pressed="true" title="Matte Black"></button>
+                    <button class="color-pill gunmetal-gray" data-variant="black" aria-pressed="false" title="Gunmetal Gray"></button>
+                    <button class="color-pill steel-silver" data-variant="steel" aria-pressed="false" title="Steel Silver"></button>
+                    <button class="color-pill walnut-brown" data-variant="walnut" aria-pressed="false" title="Walnut Brown"></button>
+                    <button class="color-pill bronze" data-variant="steel" aria-pressed="false" title="Bronze"></button>
                 </div>
             </div>
             <div class="controls-hint">Hover to interact • Click & Drag to Rotate • Scroll to Zoom</div>
@@ -2873,11 +2986,11 @@
                     <!-- Model viewer will be loaded lazily by robust-model-viewer.js -->
                 </div>
                 <div class="color-bar viewer-overlay">
-                    <div class="color-swatch matte-black" data-color="0x1A1A1A" title="Matte Black"></div>
-                    <div class="color-swatch gunmetal-gray" data-color="0x2C3539" title="Gunmetal Gray"></div>
-                    <div class="color-swatch steel-silver" data-color="0xC0C0C0" title="Steel Silver"></div>
-                    <div class="color-swatch walnut-brown active" data-color="0x8B4513" title="Walnut Brown"></div>
-                    <div class="color-swatch bronze" data-color="0xCD7F32" title="Bronze"></div>
+                    <button class="color-pill matte-black" data-variant="black" aria-pressed="false" title="Matte Black"></button>
+                    <button class="color-pill gunmetal-gray" data-variant="black" aria-pressed="false" title="Gunmetal Gray"></button>
+                    <button class="color-pill steel-silver" data-variant="steel" aria-pressed="false" title="Steel Silver"></button>
+                    <button class="color-pill walnut-brown active" data-variant="walnut" aria-pressed="true" title="Walnut Brown"></button>
+                    <button class="color-pill bronze" data-variant="steel" aria-pressed="false" title="Bronze"></button>
                 </div>
             </div>
             <div class="scroll-overlay"></div>
@@ -2901,12 +3014,11 @@
                     style="width:100%;height:520px;border-radius:16px;background:#0b0b0f;">
                 </model-viewer>
                 <div class="color-bar viewer-overlay">
-                    <div class="color-swatch matte-black" data-color="0x1A1A1A" title="Matte Black"></div>
-                    <div class="color-swatch gunmetal-gray" data-color="0x2C3539" title="Gunmetal Gray"></div>
-                    <div class="color-swatch steel-silver active" data-color="0xC0C0C0" title="Steel Silver"></div>
-                    <div class="color-swatch purple" data-color="0x8B5CF6" title="Purple"></div>
-                    <div class="color-swatch white" data-color="0xF8F8F8" title="White"></div>
-                    <div class="color-swatch bronze" data-color="0xCD7F32" title="Bronze"></div>
+                    <button class="color-pill matte-black" data-variant="black" aria-pressed="false" title="Matte Black"></button>
+                    <button class="color-pill gunmetal-gray" data-variant="black" aria-pressed="false" title="Gunmetal Gray"></button>
+                    <button class="color-pill steel-silver active" data-variant="steel" aria-pressed="true" title="Steel Silver"></button>
+                    <button class="color-pill walnut-brown" data-variant="walnut" aria-pressed="false" title="Walnut Brown"></button>
+                    <button class="color-pill bronze" data-variant="steel" aria-pressed="false" title="Bronze"></button>
                 </div>
             </div>
             <div class="product-info">
@@ -4448,7 +4560,7 @@
     <script src="js/premium-model-viewer.js"></script>
     <script src="js/premium-animated-background.js"></script>
     <script src="js/email-capture.js"></script>
-    <script src="js/robust-model-viewer.js"></script>
+    <script src="js/master-3d-viewer.js"></script>
     <script src="js/professional-nav.js"></script>
     <script src="js/debug-asset-checker.js"></script>
     <script src="./js/3d-models-legacy.js"></script>
