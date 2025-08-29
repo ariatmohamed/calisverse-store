@@ -562,7 +562,7 @@
             font-size: 0.85rem;
         }
         
-        /* Specs Grid Styling */
+        /* Specs Grid Styling - 2x2 Layout */
         .specs-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -578,18 +578,20 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            min-height: 24px;
         }
 
         .spec-label {
-            font-weight: 500;
+            font-weight: 600;
             color: var(--text-secondary);
             font-size: 14px;
         }
 
         .spec-value {
-            font-weight: 600;
+            font-weight: 400;
             color: var(--text);
             font-size: 14px;
+            text-align: right;
         }
 
         /* Product Features Styling */
@@ -609,6 +611,50 @@
             gap: 12px;
             margin: 24px 0;
             flex-wrap: wrap;
+        }
+        
+        .color-pill {
+            min-width: 40px;
+            min-height: 40px;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+        }
+        
+        .color-pill:hover {
+            border-color: rgba(139, 92, 246, 0.5);
+            transform: scale(1.05);
+        }
+        
+        .color-pill.active {
+            border-color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.1);
+            transform: scale(1.05);
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+        }
+        
+        .color-pill:focus {
+            outline: 2px solid #8b5cf6;
+            outline-offset: 2px;
+        }
+        
+        .pill-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .color-pill span {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text);
         }
         
         .feature-list {
@@ -640,8 +686,45 @@
         
         .product-actions {
             display: flex;
-            gap: 12px;
+            gap: 16px;
+            margin-top: 24px;
             align-items: center;
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 48px;
+        }
+        
+        .btn-primary:hover {
+            background: var(--accent-light);
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            padding: 12px 26px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 48px;
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            background: rgba(139, 92, 246, 0.1);
         }
         
         .btn-primary, .btn-secondary {
@@ -1388,6 +1471,7 @@
             justify-content: center;
             background: rgba(139, 92, 246, 0.2);
             border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         .item-details {
@@ -2916,7 +3000,7 @@
             </div>
             
             <!-- Right: Cart & CTA -->
-            <div class="nav-right">
+            <nav class="navbar" role="navigation" aria-label="Main navigation">
                 <button class="cart-button" id="cart-button" onclick="showCartModal()" aria-label="Shopping cart">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="9" cy="21" r="1"></circle>
@@ -2926,7 +3010,7 @@
                     <span class="cart-badge" id="cart-badge">0</span>
                 </button>
                 <a href="#equipment" class="nav-cta">Shop Now</a>
-            </div>
+            </nav>
             
             <!-- Mobile Menu Toggle -->
             <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
@@ -3058,8 +3142,8 @@
                 </div>
                 <div class="product-price">$299.99</div>
                 <div class="product-actions">
-                    <button class="btn-primary" onclick="addToCart('pullup')">Add to Cart</button>
-                    <button class="btn-secondary">Learn More</button>
+                    <button class="btn-primary" onclick="addToCart('pullup-bar')">Add to Cart</button>
+                    <button class="btn-secondary" onclick="learnMore('pullup-bar')">Learn More</button>
                 </div>
             </div>
         </div>
@@ -3075,11 +3159,11 @@
                     Premium birch wood rings with competition-grade specifications. Adjustable straps with cam buckles 
                     for quick height changes. Natural wood provides superior grip even when hands are sweaty.
                 </p>
-                <!-- Specs Grid -->
+                <!-- Specs Grid 2x2 -->
                 <div class="specs-grid">
                     <div class="spec-item">
-                        <span class="spec-label">Weight</span>
-                        <span class="spec-value">2.5 lbs</span>
+                        <span class="spec-label">Weight Capacity</span>
+                        <span class="spec-value">300 lbs</span>
                     </div>
                     <div class="spec-item">
                         <span class="spec-label">Dimensions</span>
@@ -3121,6 +3205,7 @@
                 <div class="product-price">$149.99</div>
                 <div class="product-actions">
                     <button class="btn-primary" onclick="addToCart('rings')">Add to Cart</button>
+                    <button class="btn-secondary" onclick="learnMore('rings')">Learn More</button>
                 </div>
             </div>
             <div class="product-3d-container" id="rings-viewer">
@@ -4689,7 +4774,7 @@
     </script>
     
     <!-- Essential scripts only -->
-    <script src="js/standardized-3d-viewer.js"></script>
+    <script src="js/production-3d-viewer.js"></script>
     <script src="js/professional-nav.js"></script>
     <script src="js/premium-animated-background.js"></script>
     <script src="js/email-capture.js"></script>
