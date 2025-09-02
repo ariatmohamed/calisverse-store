@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalisVerse - Premium Calisthenics Equipment | Strengthen. Discipline. Progress.</title>
+    <meta name="description" content="Premium calisthenics equipment for serious athletes. Professional pull-up bars, gymnastic rings, parallel bars, resistance bands, and ab wheels. Strengthen. Discipline. Progress.">
+    <meta name="keywords" content="calisthenics equipment, pull-up bars, gymnastic rings, parallel bars, resistance bands, ab wheel, fitness equipment, bodyweight training">
+    <meta name="author" content="CalisVerse">
+    <meta property="og:title" content="CalisVerse - Premium Calisthenics Equipment">
+    <meta property="og:description" content="Transform your training with professional-grade calisthenics equipment. Interactive 3D models, premium quality, fast shipping.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://calisverse.com">
+    <meta property="og:image" content="https://calisverse.com/assets/og-image.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CalisVerse - Premium Calisthenics Equipment">
+    <meta name="twitter:description" content="Professional calisthenics equipment with interactive 3D visualization. Strengthen. Discipline. Progress.">
+    <link rel="canonical" href="https://calisverse.com">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="enhanced-styles.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-background">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">CalisVerse</div>
+            <div class="nav-links">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#products" class="nav-link">Products</a>
+                <a href="#about" class="nav-link" onclick="showAboutSection()">About</a>
+                <div class="auth-container"></div>
+                <button class="cart-btn" onclick="toggleCart()">
+                    <span class="cart-icon">🛒</span>
+                    <span class="cart-count">0</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">CalisVerse</h1>
+            <p class="hero-tagline">Strengthen. Discipline. Progress.</p>
+            <p class="hero-subtitle">Elevate your training with premium-grade equipment</p>
+            <button class="cta-btn" onclick="scrollToProducts()">Explore Products</button>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="products-section">
+        <div class="container">
+            <h2 class="section-title">Explore Our Collection</h2>
+            
+            <!-- Product 1: Pull-Up Bar -->
+            <div class="product-card" data-product-id="pullup-bar">
+                <div class="product-layout">
+                    <div class="product-details">
+                        <h3 class="product-name">Professional Pull-Up Bar</h3>
+                        <p class="product-description">Heavy-duty steel construction with ergonomic grip design. Perfect for home and gym use.</p>
+                        <div class="product-features">
+                            <ul>
+                                <li>Maximum weight capacity: 300kg</li>
+                                <li>Powder-coated finish</li>
+                                <li>Easy installation</li>
+                                <li>Multiple grip positions</li>
+                            </ul>
+                        </div>
+                        <div class="product-price">$299.99</div>
+                        <button class="add-to-cart-btn" onclick="addToCart('pullup-bar', 'Professional Pull-Up Bar', 299.99)">
+                            Add to Cart
+                        </button>
+                    </div>
+                    <div class="product-visual">
+                        <model-viewer
+                            id="pullup-model"
+                            src="models/pullup-bar-realistic.glb"
+                            alt="Professional Wall-Mounted Pull-Up Bar"
+                            camera-controls
+                            auto-rotate
+                            auto-rotate-delay="3000"
+                            rotation-per-second="20deg"
+                            environment-image="neutral"
+                            shadow-intensity="1.8"
+                            shadow-softness="0.6"
+                            exposure="1.3"
+                            class="model-viewer"
+                            style="--poster-color: #1a1a2e;"
+                            camera-orbit="15deg 75deg 3m"
+                            field-of-view="30deg"
+                            min-camera-orbit="auto auto 2m"
+                            max-camera-orbit="auto auto 5m"
+                            interaction-prompt="auto"
+                            loading="lazy"
+                            data-colorable-parts="main_bar,brackets,support_arms">
+                            <div class="progress-bar" slot="progress-bar">
+                                <div class="update-bar"></div>
+                            </div>
+                        </model-viewer>
+                        <div class="color-customization">
+                            <div class="color-label">Choose Color:</div>
+                            <div class="color-options">
+                                <div class="color-swatch active" data-color="black" data-name="Matte Black" onclick="instantColorChange('pullup-model', 'black')"></div>
+                                <div class="color-swatch" data-color="silver" data-name="Chrome Silver" onclick="instantColorChange('pullup-model', 'silver')"></div>
+                                <div class="color-swatch" data-color="luxury-purple" data-name="Luxury Purple" onclick="instantColorChange('pullup-model', 'luxury-purple')"></div>
+                                <div class="color-swatch" data-color="gray" data-name="Steel Gray" onclick="instantColorChange('pullup-model', 'gray')"></div>
+                                <div class="color-swatch" data-color="white" data-name="Pearl White" onclick="instantColorChange('pullup-model', 'white')"></div>
+                                <div class="color-swatch" data-color="red" data-name="Fire Red" onclick="instantColorChange('pullup-model', 'red')"></div>
+                                <div class="color-swatch custom-color" data-name="Custom Color" onclick="openColorPicker('pullup-model')">
+                                    <i class="fas fa-palette"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 2: Gymnastic Rings -->
+            <div class="product-card" data-product-id="gymnastic-rings">
+                <div class="product-layout">
+                    <div class="product-details">
+                        <h3 class="product-name">Professional Gymnastic Rings</h3>
+                        <p class="product-description">Olympic-grade gymnastic rings with adjustable straps. Perfect for muscle-ups, ring dips, and advanced movements.</p>
+                        <div class="product-features">
+                            <ul>
+                                <li>Premium birch wood construction</li>
+                                <li>Adjustable straps up to 5 meters</li>
+                                <li>Cam buckle system</li>
+                                <li>32mm diameter rings</li>
+                            </ul>
+                        </div>
+                        <div class="product-price">$149.99</div>
+                        <button class="add-to-cart-btn" onclick="addToCart('gymnastic-rings', 'Professional Gymnastic Rings', 149.99)">
+                            Add to Cart
+                        </button>
+                    </div>
+                    <div class="product-visual">
+                        <model-viewer
+                            id="rings-model"
+                            src="models/gymnastic-rings-realistic.glb"
+                            alt="Professional Gymnastic Rings"
+                            camera-controls
+                            auto-rotate
+                            auto-rotate-delay="3000"
+                            rotation-per-second="25deg"
+                            environment-image="neutral"
+                            shadow-intensity="1.3"
+                            shadow-softness="0.7"
+                            exposure="1.1"
+                            class="model-viewer"
+                            style="--poster-color: #1a1a2e;"
+                            camera-orbit="0deg 75deg 2m"
+                            field-of-view="28deg"
+                            min-camera-orbit="auto auto 1.2m"
+                            max-camera-orbit="auto auto 3.5m"
+                            interaction-prompt="auto"
+                            loading="lazy"
+                            data-colorable-parts="rings,straps">
+                            <div class="progress-bar" slot="progress-bar">
+                                <div class="update-bar"></div>
+                            </div>
+                        </model-viewer>
+                        <div class="color-customization">
+                            <div class="color-label">Choose Wood Finish:</div>
+                            <div class="color-options">
+                                <div class="color-swatch active" data-color="natural" data-name="Natural Wood" onclick="instantColorChange('rings-model', 'natural')"></div>
+                                <div class="color-swatch" data-color="dark" data-name="Dark Walnut" onclick="instantColorChange('rings-model', 'dark')"></div>
+                                <div class="color-swatch" data-color="cherry" data-name="Cherry Wood" onclick="instantColorChange('rings-model', 'cherry')"></div>
+                                <div class="color-swatch" data-color="oak" data-name="Golden Oak" onclick="instantColorChange('rings-model', 'oak')"></div>
+                                <div class="color-swatch" data-color="walnut" data-name="Rich Walnut" onclick="instantColorChange('rings-model', 'walnut')"></div>
+                                <div class="color-swatch" data-color="birch" data-name="Light Birch" onclick="instantColorChange('rings-model', 'birch')"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3: Parallel Bars -->
+            <div class="product-card" data-product-id="parallel-bars">
+                <div class="product-layout">
+                    <div class="product-details">
+                        <h3 class="product-name">Parallel Bars Set</h3>
+                        <p class="product-description">Professional-grade parallel bars for dips, L-sits, and advanced calisthenics movements.</p>
+                        <div class="product-features">
+                            <ul>
+                                <li>Adjustable height: 70-100cm</li>
+                                <li>Non-slip rubber base</li>
+                                <li>Ergonomic grip design</li>
+                                <li>Portable and stable</li>
+                            </ul>
+                        </div>
+                        <div class="product-price">$199.99</div>
+                        <button class="add-to-cart-btn" onclick="addToCart('parallel-bars', 'Parallel Bars Set', 199.99)">
+                            Add to Cart
+                        </button>
+                    </div>
+                    <div class="product-visual">
+                        <model-viewer
+                            id="parallel-model"
+                            src="models/parallettes-realistic.glb"
+                            alt="Professional Parallel Bars Set"
+                            camera-controls
+                            auto-rotate
+                            auto-rotate-delay="3000"
+                            rotation-per-second="20deg"
+                            environment-image="neutral"
+                            shadow-intensity="1.4"
+                            shadow-softness="0.6"
+                            exposure="1.0"
+                            class="model-viewer"
+                            style="--poster-color: #1a1a2e;"
+                            camera-orbit="45deg 75deg 3m"
+                            field-of-view="32deg"
+                            min-camera-orbit="auto auto 2m"
+                            max-camera-orbit="auto auto 5m"
+                            interaction-prompt="auto"
+                            loading="lazy"
+                            data-colorable-parts="bars,base,grips">
+                            <div class="progress-bar" slot="progress-bar">
+                                <div class="update-bar"></div>
+                            </div>
+                        </model-viewer>
+                        <div class="color-customization">
+                            <div class="color-label">Choose Color:</div>
+                            <div class="color-options">
+                                <div class="color-swatch active" data-color="black" data-name="Matte Black" onclick="instantColorChange('parallel-model', 'black')"></div>
+                                <div class="color-swatch" data-color="silver" data-name="Chrome Silver" onclick="instantColorChange('parallel-model', 'silver')"></div>
+                                <div class="color-swatch" data-color="luxury-purple" data-name="Luxury Purple" onclick="instantColorChange('parallel-model', 'luxury-purple')"></div>
+                                <div class="color-swatch" data-color="gray" data-name="Steel Gray" onclick="instantColorChange('parallel-model', 'gray')"></div>
+                                <div class="color-swatch" data-color="white" data-name="Pearl White" onclick="instantColorChange('parallel-model', 'white')"></div>
+                                <div class="color-swatch" data-color="green" data-name="Forest Green" onclick="instantColorChange('parallel-model', 'green')"></div>
+                                <div class="color-swatch custom-color" data-name="Custom Color" onclick="openColorPicker('parallel-model')">
+                                    <i class="fas fa-palette"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4: Resistance Bands -->
+            <div class="product-card" data-product-id="resistance-bands">
+                <div class="product-layout">
+                    <div class="product-details">
+                        <h3 class="product-name">Premium Resistance Bands Set</h3>
+                        <p class="product-description">Complete resistance training system with multiple resistance levels and accessories for full-body workouts.</p>
+                        <div class="product-features">
+                            <ul>
+                                <li>5 resistance levels (10-150 lbs)</li>
+                                <li>Door anchor and handles included</li>
+                                <li>Ankle straps and protective sleeves</li>
+                                <li>Portable carrying case</li>
+                            </ul>
+                        </div>
+                        <div class="product-price">$89.99</div>
+                        <button class="add-to-cart-btn" onclick="addToCart('resistance-bands', 'Premium Resistance Bands Set', 89.99)">
+                            Add to Cart
+                        </button>
+                    </div>
+                    <div class="product-visual">
+                        <model-viewer
+                            id="bands-model"
+                            src="models/resistance-bands-realistic.glb"
+                            alt="Premium Resistance Bands Set"
+                            camera-controls
+                            auto-rotate
+                            auto-rotate-delay="3000"
+                            rotation-per-second="35deg"
+                            environment-image="neutral"
+                            shadow-intensity="1.2"
+                            shadow-softness="0.9"
+                            exposure="1.3"
+                            class="model-viewer"
+                            style="--poster-color: #1a1a2e;"
+                            camera-orbit="0deg 75deg 2m"
+                            field-of-view="26deg"
+                            min-camera-orbit="auto auto 1.3m"
+                            max-camera-orbit="auto auto 3.2m"
+                            interaction-prompt="auto"
+                            loading="lazy"
+                            data-colorable-parts="bands,handles,carabiners">
+                            <div class="progress-bar" slot="progress-bar">
+                                <div class="update-bar"></div>
+                            </div>
+                        </model-viewer>
+                        <div class="color-customization">
+                            <div class="color-label">Choose Set Color:</div>
+                            <div class="color-options">
+                                <div class="color-swatch active" data-color="rainbow" data-name="Rainbow Set" onclick="instantColorChange('bands-model', 'rainbow')"></div>
+                                <div class="color-swatch" data-color="black" data-name="All Black" onclick="instantColorChange('bands-model', 'black')"></div>
+                                <div class="color-swatch" data-color="gray" data-name="Steel Gray" onclick="instantColorChange('bands-model', 'gray')"></div>
+                                <div class="color-swatch" data-color="blue" data-name="Ocean Blue" onclick="instantColorChange('bands-model', 'blue')"></div>
+                                <div class="color-swatch" data-color="red" data-name="Fire Red" onclick="instantColorChange('bands-model', 'red')"></div>
+                                <div class="color-swatch" data-color="purple" data-name="Royal Purple" onclick="instantColorChange('bands-model', 'purple')"></div>
+                                <div class="color-swatch custom-color" data-name="Custom Color" onclick="openColorPicker('bands-model')">
+                                    <i class="fas fa-palette"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 5: Weighted Vest -->
+            <div class="product-card" data-product-id="weighted-vest">
+                <div class="product-layout">
+                    <div class="product-details">
+                        <h3 class="product-name">Professional Weighted Vest</h3>
+                        <p class="product-description">Adjustable weighted vest with removable weight plates for progressive resistance training and enhanced workout intensity.</p>
+                        <div class="product-features">
+                            <ul>
+                                <li>Adjustable weight: 10-50 lbs</li>
+                                <li>Removable steel plates</li>
+                                <li>Breathable mesh design</li>
+                                <li>Secure buckle system</li>
+                                <li>One size fits most</li>
+                            </ul>
+                        </div>
+                        <div class="product-price">$179.99</div>
+                        <button class="add-to-cart-btn" onclick="addToCart('weighted-vest', 'Professional Weighted Vest', 179.99)">
+                            Add to Cart
+                        </button>
+                    </div>
+                    <div class="product-visual">
+                        <model-viewer
+                            id="vest-model"
+                            src="models/weighted-vest-realistic.glb"
+                            alt="Professional Weighted Vest"
+                            camera-controls
+                            auto-rotate
+                            auto-rotate-delay="3000"
+                            rotation-per-second="15deg"
+                            environment-image="neutral"
+                            shadow-intensity="1.6"
+                            shadow-softness="0.4"
+                            exposure="1.2"
+                            class="model-viewer"
+                            style="--poster-color: #1a1a2e;"
+                            camera-orbit="0deg 75deg 2.5m"
+                            field-of-view="35deg"
+                            min-camera-orbit="auto auto 1.8m"
+                            max-camera-orbit="auto auto 4m"
+                            interaction-prompt="auto"
+                            loading="lazy"
+                            data-colorable-parts="vest,straps,buckles">
+                            <div class="progress-bar" slot="progress-bar">
+                                <div class="update-bar"></div>
+                            </div>
+                        </model-viewer>
+                        <div class="color-customization">
+                            <div class="color-label">Choose Color:</div>
+                            <div class="color-options">
+                                <div class="color-swatch active" data-color="black" data-name="Tactical Black" onclick="instantColorChange('vest-model', 'black')"></div>
+                                <div class="color-swatch" data-color="gray" data-name="Combat Gray" onclick="instantColorChange('vest-model', 'gray')"></div>
+                                <div class="color-swatch" data-color="green" data-name="Military Green" onclick="instantColorChange('vest-model', 'green')"></div>
+                                <div class="color-swatch" data-color="blue" data-name="Navy Blue" onclick="instantColorChange('vest-model', 'blue')"></div>
+                                <div class="color-swatch" data-color="white" data-name="Arctic White" onclick="instantColorChange('vest-model', 'white')"></div>
+                                <div class="color-swatch" data-color="red" data-name="Fire Red" onclick="instantColorChange('vest-model', 'red')"></div>
+                                <div class="color-swatch custom-color" data-name="Custom Color" onclick="openColorPicker('vest-model')">
+                                    <i class="fas fa-palette"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 6: Ab Wheel -->
+            <div class="product-card" data-product-id="ab-wheel">
+                <div class="product-layout">
+                    <div class="product-details">
+                        <h3 class="product-name">Professional Ab Wheel</h3>
+                        <p class="product-description">Heavy-duty ab wheel with dual wheels for stability and ergonomic handles for maximum core engagement.</p>
+                        <div class="product-features">
+                            <ul>
+                                <li>Dual-wheel design for stability</li>
+                                <li>Non-slip rubber handles</li>
+                                <li>Supports up to 250kg</li>
+                                <li>Knee pad included</li>
+                            </ul>
+                        </div>
+                        <div class="product-price">$59.99</div>
+                        <button class="add-to-cart-btn" onclick="addToCart('ab-wheel', 'Professional Ab Wheel', 59.99)">
+                            Add to Cart
+                        </button>
+                    </div>
+                    <div class="product-visual">
+                        <model-viewer
+                            id="wheel-model"
+                            src="https://modelviewer.dev/shared-assets/models/glTF-Sample-Models/2.0/Sphere/glTF/Sphere.gltf"
+                            alt="Professional Ab Wheel"
+                            camera-controls
+                            auto-rotate
+                            auto-rotate-delay="3000"
+                            rotation-per-second="40deg"
+                            environment-image="neutral"
+                            shadow-intensity="1.6"
+                            shadow-softness="0.5"
+                            exposure="1.4"
+                            class="model-viewer"
+                            style="--poster-color: #1a1a2e;"
+                            camera-orbit="0deg 75deg 1.5m"
+                            field-of-view="24deg"
+                            min-camera-orbit="auto auto 1m"
+                            max-camera-orbit="auto auto 2.5m"
+                            interaction-prompt="auto"
+                            loading="lazy"
+                            data-colorable-parts="sphere">
+                            <div class="progress-bar" slot="progress-bar">
+                                <div class="update-bar"></div>
+                            </div>
+                        </model-viewer>
+                        <div class="color-customization">
+                            <div class="color-label">Choose Color:</div>
+                            <div class="color-options">
+                                <div class="color-swatch active" data-color="black" data-name="Matte Black" onclick="changeColor('wheel-model', 'black')"></div>
+                                <div class="color-swatch" data-color="red" data-name="Racing Red" onclick="changeColor('wheel-model', 'red')"></div>
+                                <div class="color-swatch" data-color="blue" data-name="Ocean Blue" onclick="changeColor('parallel-model', 'blue')"></div>
+                                <div class="color-swatch custom-color" data-name="Custom Color" onclick="openColorPicker('parallel-model')">
+                                    <i class="fas fa-palette"></i>
+                                </div>
+                            </div>
+                            <div class="color-swatch" data-color="silver" data-name="Chrome Silver" onclick="changeColor('wheel-model', 'silver')"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shopping Cart -->
+    <div id="cart-overlay" class="cart-overlay" onclick="closeCart()"></div>
+    <div id="shopping-cart" class="shopping-cart">
+        <div class="cart-header">
+            <h3>Shopping Cart</h3>
+            <button class="close-cart" onclick="closeCart()">×</button>
+        </div>
+        <div id="cart-items" class="cart-items"></div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total: $<span id="cart-total">0.00</span></span>
+            </div>
+            <button class="checkout-btn" onclick="proceedToCheckout()">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="payment-modal">
+        <div class="payment-container">
+            <div class="payment-header">
+                <h2>Secure Checkout</h2>
+                <button class="close-payment" onclick="closePayment()">×</button>
+            </div>
+            <div class="payment-content">
+                <div class="order-summary">
+                    <h3>Order Summary</h3>
+                    <div id="order-items"></div>
+                    <div class="order-total">
+                        <strong>Total: $<span id="order-total">0.00</span></strong>
+                    </div>
+                </div>
+                <div class="payment-form">
+                    <h3>Payment Information</h3>
+                    <div class="payment-methods">
+                        <div class="payment-method active" onclick="selectPaymentMethod('card')">
+                            <div>💳</div>
+                            <div>Credit Card</div>
+                        </div>
+                        <div class="payment-method" onclick="selectPaymentMethod('paypal')">
+                            <div>🅿️</div>
+                            <div>PayPal</div>
+                        </div>
+                    </div>
+                    <form id="checkout-form">
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" name="name" required>
+                        </div>
+                        <div id="card-payment" class="payment-section">
+                            <div class="form-group">
+                                <label>Card Information</label>
+                                <div id="card-element">
+                                    <!-- Stripe Elements will create form elements here -->
+                                </div>
+                                <div id="card-errors" role="alert"></div>
+                            </div>
+                        </div>
+                        <div id="paypal-payment" class="payment-section" style="display: none;">
+                            <div id="paypal-button-container"></div>
+                        </div>
+                        <button type="submit" class="pay-btn" id="card-pay-btn">Complete Payment</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Section Modal -->
+    <div id="about-modal" class="about-modal">
+        <div class="about-overlay" onclick="closeAboutSection()"></div>
+        <div class="about-container">
+            <div class="about-header">
+                <h2>About CalisVerse</h2>
+                <button class="close-about" onclick="closeAboutSection()">×</button>
+            </div>
+            <div class="about-content">
+                <div class="about-story">
+                    <h3>Our Story</h3>
+                    <p>CalisVerse was born from a passion for calisthenics and the belief that everyone deserves access to premium-quality equipment that enhances their fitness journey. Founded by athletes who understand the demands of bodyweight training, we've dedicated ourselves to creating equipment that meets the highest standards of durability, functionality, and design.</p>
+                </div>
+                
+                <div class="about-mission">
+                    <h3>Our Mission</h3>
+                    <p><strong>Strengthen. Discipline. Progress.</strong></p>
+                    <p>We empower individuals to unlock their physical potential through calisthenics. Our carefully curated equipment is designed to support every stage of your journey—from your first pull-up to mastering advanced movements like muscle-ups and human flags.</p>
+                </div>
+                
+                <div class="about-values">
+                    <h3>What Sets Us Apart</h3>
+                    <div class="values-grid">
+                        <div class="value-item">
+                            <h4>🏆 Premium Quality</h4>
+                            <p>Every product undergoes rigorous testing to ensure it meets professional-grade standards used by elite athletes worldwide.</p>
+                        </div>
+                        <div class="value-item">
+                            <h4>🔧 Innovative Design</h4>
+                            <p>Our equipment combines traditional calisthenics principles with modern engineering for optimal performance and safety.</p>
+                        </div>
+                        <div class="value-item">
+                            <h4>🌟 Community Focus</h4>
+                            <p>We're not just selling equipment—we're building a community of dedicated athletes who support each other's growth.</p>
+                        </div>
+                        <div class="value-item">
+                            <h4>🚀 Continuous Innovation</h4>
+                            <p>We constantly evolve our products based on athlete feedback and the latest developments in fitness science.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about-commitment">
+                    <h3>Our Commitment</h3>
+                    <p>Whether you're a beginner taking your first steps into calisthenics or a seasoned athlete pushing the boundaries of human movement, CalisVerse is your trusted partner. We believe that with the right equipment, proper technique, and unwavering dedication, there are no limits to what you can achieve.</p>
+                    <p class="commitment-tagline"><em>Join thousands of athletes who have chosen CalisVerse to elevate their training and transform their lives.</em></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="enhanced-functionality.js"></script>
+    <script src="enhanced-3d-functionality.js"></script>
+    <script src="reviews-system.js"></script>
+    <script src="inventory-system.js"></script>
+    <script src="payment-integration.js"></script>
+    <script src="user-dashboard.js"></script>
+    <script src="search-system.js"></script>
+    <script src="inventory-system.js"></script>
+    
+    <!-- Analytics Integration -->
+    <script>
+        // Google Analytics 4 (Replace GA_MEASUREMENT_ID with actual ID)
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GA_MEASUREMENT_ID');
+        
+        // Custom analytics for e-commerce tracking
+        function trackPurchase(transactionId, value, items) {
+            gtag('event', 'purchase', {
+                transaction_id: transactionId,
+                value: value,
+                currency: 'USD',
+                items: items
+            });
+        }
+        
+        function trackAddToCart(itemId, itemName, price) {
+            gtag('event', 'add_to_cart', {
+                currency: 'USD',
+                value: price,
+                items: [{
+                    item_id: itemId,
+                    item_name: itemName,
+                    price: price,
+                    quantity: 1
+                }]
+            });
+        }
+    </script>
+    
+    <!-- Performance Monitoring -->
+    <script>
+        // Performance optimization and monitoring
+        window.addEventListener('load', function() {
+            // Report Core Web Vitals
+            if ('web-vital' in window) {
+                getCLS(console.log);
+                getFID(console.log);
+                getLCP(console.log);
+            }
+        });
+    </script>
+</body>
+</html>

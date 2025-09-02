@@ -205,7 +205,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             color: rgba(255, 255, 255, 0.8);
             font-weight: 500;
         }
@@ -349,9 +349,6 @@
             justify-content: center;
             background: rgba(248, 249, 250, 0.95);
             backdrop-filter: blur(8px);
-            border-radius: 12px;
-            z-index: 5;
-            pointer-events: none;
         }
         
         .poster-container {
@@ -605,38 +602,64 @@
             font-size: 14px;
         }
 
-        /* Color Pills Styling */
-        .color-pills {
+        /* Color Pills Styling - Below 3D Viewer */
+        .color-pills-3d {
             display: flex;
             gap: 12px;
-            margin: 24px 0;
+            margin: 20px 0 0 0;
             flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .color-pill {
-            min-width: 40px;
-            min-height: 40px;
+            min-width: 48px;
+            min-height: 48px;
             border: 2px solid transparent;
-            border-radius: 8px;
+            border-radius: 14px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.08);
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
+            gap: 10px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            position: relative;
+            overflow: hidden;
         }
         
         .color-pill:hover {
-            border-color: rgba(139, 92, 246, 0.5);
-            transform: scale(1.05);
+            border-color: rgba(139, 92, 246, 0.7);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+            background: rgba(255, 255, 255, 0.15);
         }
         
         .color-pill.active {
             border-color: #8b5cf6;
-            background: rgba(139, 92, 246, 0.1);
-            transform: scale(1.05);
-            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+            background: rgba(139, 92, 246, 0.2);
+            transform: translateY(-3px) scale(1.08);
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
+            color: #fff;
+        }
+        
+        .color-pill.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(168, 85, 247, 0.1));
+            border-radius: inherit;
+            z-index: -1;
         }
         
         .color-pill:focus {
@@ -645,10 +668,23 @@
         }
         
         .pill-color {
-            width: 16px;
-            height: 16px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .color-pill:hover .pill-color {
+            transform: scale(1.1);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .color-pill.active .pill-color {
+            transform: scale(1.15);
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2);
         }
         
         .color-pill span {
@@ -1192,26 +1228,7 @@
             margin-top: 12px;
         }
         
-        .testimonial-author strong {
-            color: white;
-        }
-        
-        /* Product Sections */
-        .product-section {
-            width: 100vw;
-            min-height: 100vh;
-            background: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            padding: 80px 0;
-            backdrop-filter: blur(0.5px);
-        }
-        
-        /* Section Content */
-        .section-content {
-            max-width: 1200px;
+        .equipment-container {
             width: 100%;
             padding: 0 40px;
         }
@@ -1794,29 +1811,15 @@
         
         .cart-close {
             position: absolute;
-            top: 30px;
-            right: 30px;
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-        }
         
-        .cart-close:hover {
-            color: white;
-            background: rgba(255, 255, 255, 0.1);
-        }
+.cart-close:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+}
         
-        .cart-content {
-            padding: 0;
+.cart-content {
+    padding: 0;
+}
         }
         
         .cart-success {
@@ -2347,32 +2350,19 @@
             align-items: center;
         }
 
-        .product-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            align-items: center;
-            gap: 80px;
-            max-width: 1400px;
-            width: 100%;
-            z-index: 2;
-        }
 
         .product-3d-container {
+            position: relative;
             width: 100%;
             height: 100vh;
-            position: relative;
-            overflow: hidden;
-            cursor: grab;
-            background: #ffffff;
-            border: 2px solid rgba(139, 92, 246, 0.2);
-            box-shadow: inset 0 0 50px rgba(139, 92, 246, 0.05);
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 60px;
+            padding: 40px;
+            contain: layout style paint;
+            isolation: isolate;
         }
 
         .product-3d-container:active {
@@ -2399,11 +2389,18 @@
         }
 
         .product-info {
-            padding: 0;
+            background: linear-gradient(135deg, #0f0f23 0%, #16213e 100%);
             color: white;
-            z-index: 3;
+            padding: 60px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             position: relative;
-            max-width: 600px;
+            border-right: 3px solid #8b5cf6;
+            overflow: hidden;
+            contain: layout style paint;
+            isolation: isolate;
         }
 
         .step-number {
@@ -3070,80 +3067,74 @@
     <!-- Pull-Up Bar Section -->
     <section class="product-section" id="pullup-section">
         <div class="product-container">
-            <div class="product-3d-container" id="pullup-bar-viewer">
-                <div class="model-viewer-container" data-product="pullup-bar">
-                    <!-- Standardized model viewer loads here -->
-                </div>
-                <div class="color-bar viewer-overlay" style="pointer-events: none;">
-                    <button class="color-pill matte-black active" data-variant="black" aria-pressed="true" title="Matte Black" style="pointer-events: auto;" onclick="handleColorPillClick('pullup-bar', 'black', this)"></button>
-                    <button class="color-pill gunmetal-gray" data-variant="black" aria-pressed="false" title="Gunmetal Gray" style="pointer-events: auto;" onclick="handleColorPillClick('pullup-bar', 'black', this)"></button>
-                    <button class="color-pill steel-silver" data-variant="steel" aria-pressed="false" title="Steel Silver" style="pointer-events: auto;" onclick="handleColorPillClick('pullup-bar', 'steel', this)"></button>
-                    <button class="color-pill walnut-brown" data-variant="walnut" aria-pressed="false" title="Walnut Brown" style="pointer-events: auto;" onclick="handleColorPillClick('pullup-bar', 'walnut', this)"></button>
-                    <button class="color-pill bronze" data-variant="steel" aria-pressed="false" title="Bronze" style="pointer-events: auto;" onclick="handleColorPillClick('pullup-bar', 'steel', this)"></button>
-                </div>
-            </div>
-            <div class="controls-hint">Hover to interact • Click & Drag to Rotate • Scroll to Zoom</div>
             <div class="product-info">
-                <div class="product-category">Pull-Up Equipment</div>
-                <h2 class="product-title">Elite Wall-Mounted Pull-Up Bar</h2>
+                <div class="product-category">Wall Mount</div>
+                <h2 class="product-title">Professional Pull-Up Bar</h2>
                 <p class="product-description">
-                    Professional-grade equipment trusted by Olympic training facilities. Military-spec steel construction with ergonomic multi-grip design for comprehensive upper body training.
+                    Heavy-duty wall-mounted pull-up bar with military-grade steel construction. 
+                    Supports up to 400lbs with secure mounting hardware included. Perfect for home gyms and professional training facilities.
                 </p>
                 
-                <!-- Technical Specifications -->
-                <div class="product-specs">
-                    <div class="spec-grid">
-                        <div class="spec-item">
-                            <span class="spec-label">Weight Capacity:</span>
-                            <span class="spec-value">350 lbs (159 kg)</span>
-                        </div>
-                        <div class="spec-item">
-                            <span class="spec-label">Dimensions:</span>
-                            <span class="spec-value">48" W × 12" D × 8" H</span>
-                        </div>
-                        <div class="spec-item">
-                            <span class="spec-label">Material:</span>
-                            <span class="spec-value">14-gauge steel, coated</span>
-                        </div>
-                        <div class="spec-item">
-                            <span class="spec-label">Warranty:</span>
-                            <span class="spec-value">Lifetime structural guarantee</span>
-                        </div>
+                <!-- Specs Grid 2x2 -->
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <span class="spec-label">Weight Capacity</span>
+                        <span class="spec-value">400 lbs</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Dimensions</span>
+                        <span class="spec-value">48" × 12"</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Material</span>
+                        <span class="spec-value">Military Steel</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Warranty</span>
+                        <span class="spec-value">Lifetime</span>
                     </div>
                 </div>
                 
                 <!-- Key Features -->
                 <div class="product-features">
-                    <div class="feature-item">
-                        <span class="feature-icon">✔️</span>
-                        Multiple grip positions for varied workouts
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">⭐</span>
-                        500+ hours salt spray tested finish
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">✔️</span>
-                        Easy wall-mount installation included
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">⭐</span>
-                        Used by Olympic training facilities
-                    </div>
+                    <div class="feature">✓ Military-grade steel construction</div>
+                    <div class="feature">✓ 400lb weight capacity</div>
+                    <div class="feature">✓ Secure wall mounting system</div>
+                    <div class="feature">✓ Non-slip grip surface</div>
                 </div>
-                <div class="product-testimonial">
-                    <div class="testimonial-content">
-                        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-                        <p>"Installed this 6 months ago - still rock solid. My max pull-ups went from 8 to 15. Worth every penny."</p>
-                        <div class="testimonial-author">
-                            <strong>Marcus Chen</strong> - CrossFit Level 2 Trainer
-                        </div>
-                    </div>
-                </div>
+                
+                
                 <div class="product-price">$299.99</div>
                 <div class="product-actions">
                     <button class="btn-primary" onclick="addToCart('pullup-bar')">Add to Cart</button>
                     <button class="btn-secondary" onclick="learnMore('pullup-bar')">Learn More</button>
+                </div>
+            </div>
+            
+            <div class="product-3d-container" id="pullup-bar-viewer">
+                <div class="model-viewer-container" data-product="pullup-bar" style="width: 100%; height: 500px; position: relative;">
+                    <!-- Bulletproof 3D viewer loads here -->
+                </div>
+                <div class="controls-hint">Drag to rotate • Scroll to zoom</div>
+                
+                <!-- Color Pills Below 3D Viewer -->
+                <div class="color-pills-3d">
+                    <button class="color-pill active" data-variant="black" aria-pressed="true" onclick="handleColorPillClick('pullup-bar', 'black', this)">
+                        <div class="pill-color" style="background: linear-gradient(135deg, #2c2c2c, #1a1a1a);"></div>
+                        <span>Black</span>
+                    </button>
+                    <button class="color-pill" data-variant="steel" aria-pressed="false" onclick="handleColorPillClick('pullup-bar', 'steel', this)">
+                        <div class="pill-color" style="background: linear-gradient(135deg, #8a9ba8, #6b7c89);"></div>
+                        <span>Steel</span>
+                    </button>
+                    <button class="color-pill" data-variant="walnut" aria-pressed="false" onclick="handleColorPillClick('pullup-bar', 'walnut', this)">
+                        <div class="pill-color" style="background: linear-gradient(135deg, #8b4513, #654321);"></div>
+                        <span>Walnut</span>
+                    </button>
+                    <button class="color-pill" data-variant="purple" aria-pressed="false" onclick="handleColorPillClick('pullup-bar', 'purple', this)">
+                        <div class="pill-color" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);"></div>
+                        <span>Purple</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -3159,6 +3150,7 @@
                     Premium birch wood rings with competition-grade specifications. Adjustable straps with cam buckles 
                     for quick height changes. Natural wood provides superior grip even when hands are sweaty.
                 </p>
+                
                 <!-- Specs Grid 2x2 -->
                 <div class="specs-grid">
                     <div class="spec-item">
@@ -3189,57 +3181,63 @@
                 
                 <!-- Color Pills -->
                 <div class="color-pills">
-                    <button class="color-pill" data-variant="black" aria-pressed="false" onclick="handleColorPillClick('rings', 'black', this)">
-                        <div class="pill-color" style="background: linear-gradient(135deg, #2d2d2d, #1a1a1a);"></div>
-                        <span>Matte Black</span>
+                    <button class="color-pill" data-variant="black" aria-pressed="false">
+                        <div class="pill-color" style="background: linear-gradient(135deg, #2c2c2c, #1a1a1a);"></div>
+                        <span>Black</span>
                     </button>
-                    <button class="color-pill" data-variant="steel" aria-pressed="false" onclick="handleColorPillClick('rings', 'steel', this)">
-                        <div class="pill-color" style="background: linear-gradient(135deg, #c0c0c0, #a8a8a8);"></div>
+                    <button class="color-pill" data-variant="steel" aria-pressed="false">
+                        <div class="pill-color" style="background: linear-gradient(135deg, #8a9ba8, #6b7c89);"></div>
                         <span>Steel</span>
                     </button>
-                    <button class="color-pill active" data-variant="walnut" aria-pressed="true" onclick="handleColorPillClick('rings', 'walnut', this)">
+                    <button class="color-pill active" data-variant="walnut" aria-pressed="true">
                         <div class="pill-color" style="background: linear-gradient(135deg, #8b4513, #654321);"></div>
                         <span>Walnut</span>
                     </button>
+                    <button class="color-pill" data-variant="purple" aria-pressed="false">
+                        <div class="pill-color" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);"></div>
+                        <span>Purple</span>
+                    </button>
                 </div>
+                
                 <div class="product-price">$149.99</div>
                 <div class="product-actions">
                     <button class="btn-primary" onclick="addToCart('rings')">Add to Cart</button>
                     <button class="btn-secondary" onclick="learnMore('rings')">Learn More</button>
                 </div>
             </div>
+            
             <div class="product-3d-container" id="rings-viewer">
-                <div class="model-viewer-container" data-product="rings">
-                    <!-- Standardized model viewer loads here -->
+                <div class="model-viewer-container" data-product="rings" style="width: 100%; height: 500px; position: relative;">
+                    <!-- Bulletproof 3D viewer loads here -->
                 </div>
-                <div class="color-bar viewer-overlay" style="pointer-events: none;">
-                    <button class="color-pill matte-black" data-variant="black" aria-pressed="false" title="Matte Black" style="pointer-events: auto;"></button>
-                    <button class="color-pill gunmetal-gray" data-variant="black" aria-pressed="false" title="Gunmetal Gray" style="pointer-events: auto;"></button>
-                    <button class="color-pill steel-silver" data-variant="steel" aria-pressed="false" title="Steel Silver" style="pointer-events: auto;"></button>
-                    <button class="color-pill walnut-brown active" data-variant="walnut" aria-pressed="true" title="Walnut Brown" style="pointer-events: auto;"></button>
-                    <button class="color-pill bronze" data-variant="steel" aria-pressed="false" title="Bronze" style="pointer-events: auto;"></button>
+                <div class="controls-hint">Drag to rotate • Scroll to zoom</div>
+                
+                <!-- Color Pills Below 3D Viewer -->
+                <div class="color-pills-3d">
+                    <button class="color-pill" data-variant="black" aria-pressed="false" onclick="handleColorPillClick('rings', 'black', this)">
+                        <div class="pill-color" style="background: linear-gradient(135deg, #2c2c2c, #1a1a1a);"></div>
+                        <span>Black</span>
+                    </button>
+                    <button class="color-pill" data-variant="steel" aria-pressed="false" onclick="handleColorPillClick('rings', 'steel', this)">
+                        <div class="pill-color" style="background: linear-gradient(135deg, #8a9ba8, #6b7c89);"></div>
+                        <span>Steel</span>
+                    </button>
+                    <button class="color-pill active" data-variant="walnut" aria-pressed="true" onclick="handleColorPillClick('rings', 'walnut', this)">
+                        <div class="pill-color" style="background: linear-gradient(135deg, #8b4513, #654321);"></div>
+                        <span>Walnut</span>
+                    </button>
+                    <button class="color-pill" data-variant="purple" aria-pressed="false" onclick="handleColorPillClick('rings', 'purple', this)">
+                        <div class="pill-color" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);"></div>
+                        <span>Purple</span>
+                    </button>
                 </div>
             </div>
-            <div class="scroll-overlay"></div>
-            <div class="controls-hint">Hover to interact • Click & Drag to Rotate • Scroll to Zoom</div>
         </div>
     </section>
 
     <!-- Parallettes Section -->
     <section class="product-section" id="parallettes-section">
         <div class="product-container">
-            <div class="product-3d-container" id="parallettes-viewer">
-                <div class="model-viewer-container" data-product="parallettes">
-                    <!-- Standardized model viewer loads here -->
-                </div>
-                <div class="color-bar viewer-overlay" style="pointer-events: none;">
-                    <button class="color-pill matte-black" data-variant="black" aria-pressed="false" title="Matte Black" style="pointer-events: auto;" onclick="handleColorPillClick('parallettes', 'black', this)"></button>
-                    <button class="color-pill gunmetal-gray" data-variant="black" aria-pressed="false" title="Gunmetal Gray" style="pointer-events: auto;" onclick="handleColorPillClick('parallettes', 'black', this)"></button>
-                    <button class="color-pill steel-silver active" data-variant="steel" aria-pressed="true" title="Steel Silver" style="pointer-events: auto;" onclick="handleColorPillClick('parallettes', 'steel', this)"></button>
-                    <button class="color-pill walnut-brown" data-variant="walnut" aria-pressed="false" title="Walnut Brown" style="pointer-events: auto;" onclick="handleColorPillClick('parallettes', 'walnut', this)"></button>
-                    <button class="color-pill bronze" data-variant="steel" aria-pressed="false" title="Bronze" style="pointer-events: auto;" onclick="handleColorPillClick('parallettes', 'steel', this)"></button>
-                </div>
-            </div>
             <div class="product-info">
                 <div class="product-category">Floor Training</div>
                 <h2 class="product-title">Wooden Parallettes</h2>
@@ -3247,24 +3245,67 @@
                     Handcrafted wooden parallettes perfect for L-sits, handstands, and push-up variations. 
                     Premium birch wood construction with ergonomic grip design for maximum comfort during extended training sessions.
                 </p>
-                <div class="product-features">
-                    <div class="feature">
-                        <span>Premium birch wood construction</span>
+                
+                <!-- Specs Grid 2x2 -->
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <span class="spec-label">Weight Capacity</span>
+                        <span class="spec-value">250 lbs</span>
                     </div>
-                    <div class="feature">
-                        <span>Ergonomic grip design</span>
+                    <div class="spec-item">
+                        <span class="spec-label">Dimensions</span>
+                        <span class="spec-value">12" × 6"</span>
                     </div>
-                    <div class="feature">
-                        <span>Non-slip rubber base</span>
+                    <div class="spec-item">
+                        <span class="spec-label">Material</span>
+                        <span class="spec-value">Birch Wood</span>
                     </div>
-                    <div class="feature">
-                        <span>Supports up to 300lbs</span>
+                    <div class="spec-item">
+                        <span class="spec-label">Warranty</span>
+                        <span class="spec-value">1 Year</span>
                     </div>
                 </div>
+                
+                <!-- Key Features -->
+                <div class="product-features">
+                    <div class="feature">✓ Premium birch wood construction</div>
+                    <div class="feature">✓ Ergonomic grip design</div>
+                    <div class="feature">✓ Non-slip rubber base</div>
+                    <div class="feature">✓ Supports up to 250lbs</div>
+                </div>
+                
+                
                 <div class="product-price">$89.99</div>
                 <div class="product-actions">
                     <button class="btn-primary" onclick="addToCart('parallettes')">Add to Cart</button>
-                    <button class="btn-secondary">Learn More</button>
+                    <button class="btn-secondary" onclick="learnMore('parallettes')">Learn More</button>
+                </div>
+            </div>
+            
+            <div class="product-3d-container" id="parallettes-viewer">
+                <div class="model-viewer-container" data-product="parallettes" style="width: 100%; height: 500px; position: relative;">
+                    <!-- Bulletproof 3D viewer loads here -->
+                </div>
+                <div class="controls-hint">Drag to rotate • Scroll to zoom</div>
+                
+                <!-- Color Pills Below 3D Viewer -->
+                <div class="color-pills-3d">
+                    <button class="color-pill" data-variant="black" aria-pressed="false" onclick="handleColorPillClick('parallettes', 'black', this)">
+                        <div class="pill-color" style="background: linear-gradient(135deg, #2c2c2c, #1a1a1a);"></div>
+                        <span>Black</span>
+                    </button>
+                    <button class="color-pill active" data-variant="steel" aria-pressed="true" onclick="handleColorPillClick('parallettes', 'steel', this)">
+                        <div class="pill-color" style="background: linear-gradient(135deg, #8a9ba8, #6b7c89);"></div>
+                        <span>Steel</span>
+                    </button>
+                    <button class="color-pill" data-variant="walnut" aria-pressed="false" onclick="handleColorPillClick('parallettes', 'walnut', this)">
+                        <div class="pill-color" style="background: linear-gradient(135deg, #8b4513, #654321);"></div>
+                        <span>Walnut</span>
+                    </button>
+                    <button class="color-pill" data-variant="purple" aria-pressed="false" onclick="handleColorPillClick('parallettes', 'purple', this)">
+                        <div class="pill-color" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);"></div>
+                        <span>Purple</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -4774,7 +4815,9 @@
     </script>
     
     <!-- Essential scripts only -->
-    <script src="js/production-3d-viewer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="js/bulletproof-3d-system.js"></script>
     <script src="js/professional-nav.js"></script>
     <script src="js/premium-animated-background.js"></script>
     <script src="js/email-capture.js"></script>

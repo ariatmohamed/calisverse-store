@@ -60,3 +60,6 @@ models/textures/*.png
 
 # Local development
 .cache/
+
+# Local Netlify folder
+.netlify
