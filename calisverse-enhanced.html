@@ -10,17 +10,34 @@
     <meta property="og:title" content="CalisVerse - Premium Calisthenics Equipment">
     <meta property="og:description" content="Transform your training with professional-grade calisthenics equipment. Interactive 3D models, premium quality, fast shipping.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://calisverse.com">
-    <meta property="og:image" content="https://calisverse.com/assets/og-image.jpg">
+    <meta property="og:url" content="https://ariatmohamed.github.io/calisverse-store/calisverse-enhanced.html">
+    <meta property="og:image" content="https://ariatmohamed.github.io/calisverse-store/assets/og-image.jpg">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="CalisVerse - Premium Calisthenics Equipment">
+    <meta name="twitter:title" content="CalisVerse - Premium 3D Fitness Equipment">
     <meta name="twitter:description" content="Professional calisthenics equipment with interactive 3D visualization. Strengthen. Discipline. Progress.">
-    <link rel="canonical" href="https://calisverse.com">
+    <link rel="canonical" href="https://ariatmohamed.github.io/calisverse-store/calisverse-enhanced.html">
+    <meta name="theme-color" content="#8B5CF6">
+    <meta name="robots" content="index, follow">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js" as="script">
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="enhanced-styles.css">
+    <link rel="stylesheet" href="enhanced-styles-accessibility.css">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "CalisVerse",
+      "description": "Premium calisthenics equipment for serious athletes. Professional pull-up bars, gymnastic rings, parallel bars, resistance bands, and ab wheels.",
+      "url": "https://ariatmohamed.github.io/calisverse-store/calisverse-enhanced.html"
+    }
+    </script>
 </head>
 <body>
     <!-- Animated Background -->
@@ -32,37 +49,43 @@
         <div class="particle"></div>
     </div>
 
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
     <!-- Header -->
-    <header class="header">
-        <nav class="nav-container">
-            <div class="logo">CalisVerse</div>
+    <header class="header" role="banner">
+        <nav class="nav-container" role="navigation" aria-label="Main navigation">
+            <div class="logo" role="img" aria-label="CalisVerse Logo">CalisVerse</div>
             <div class="nav-links">
                 <a href="#home" class="nav-link">Home</a>
                 <a href="#products" class="nav-link">Products</a>
                 <a href="#about" class="nav-link" onclick="showAboutSection()">About</a>
                 <div class="auth-container"></div>
-                <button class="cart-btn" onclick="toggleCart()">
-                    <span class="cart-icon">🛒</span>
-                    <span class="cart-count">0</span>
+                <button class="cart-btn" onclick="toggleCart()" aria-label="Shopping cart with 0 items" aria-expanded="false">
+                    <span class="cart-icon" aria-hidden="true">🛒</span>
+                    <span class="cart-count" aria-live="polite">0</span>
                 </button>
             </div>
         </nav>
     </header>
 
     <!-- Hero Section -->
-    <section id="home" class="hero">
+    <main id="main-content">
+    <section id="home" class="hero" role="banner">
         <div class="hero-content">
             <h1 class="hero-title">CalisVerse</h1>
             <p class="hero-tagline">Strengthen. Discipline. Progress.</p>
             <p class="hero-subtitle">Elevate your training with premium-grade equipment</p>
-            <button class="cta-btn" onclick="scrollToProducts()">Explore Products</button>
+            <button class="cta-btn" onclick="scrollToProducts()" aria-describedby="hero-subtitle">Explore Products</button>
         </div>
     </section>
 
+    </section>
+    
     <!-- Products Section -->
-    <section id="products" class="products-section">
+    <section id="products" class="products-section" role="main" aria-labelledby="products-title">
         <div class="container">
-            <h2 class="section-title">Explore Our Collection</h2>
+            <h2 id="products-title" class="section-title">Explore Our Collection</h2>
             
             <!-- Product 1: Pull-Up Bar -->
             <div class="product-card" data-product-id="pullup-bar">
@@ -79,7 +102,7 @@
                             </ul>
                         </div>
                         <div class="product-price">$299.99</div>
-                        <button class="add-to-cart-btn" onclick="addToCart('pullup-bar', 'Professional Pull-Up Bar', 299.99)">
+                        <button class="add-to-cart-btn" onclick="addToCart('pullup-bar', 'Professional Pull-Up Bar', 299.99)" aria-label="Add Professional Pull-Up Bar to cart for $299.99">
                             Add to Cart
                         </button>
                     </div>
@@ -112,15 +135,15 @@
                         <div class="color-customization">
                             <div class="color-label">Choose Color:</div>
                             <div class="color-options">
-                                <div class="color-swatch active" data-color="black" data-name="Matte Black" onclick="instantColorChange('pullup-model', 'black')"></div>
-                                <div class="color-swatch" data-color="silver" data-name="Chrome Silver" onclick="instantColorChange('pullup-model', 'silver')"></div>
-                                <div class="color-swatch" data-color="luxury-purple" data-name="Luxury Purple" onclick="instantColorChange('pullup-model', 'luxury-purple')"></div>
-                                <div class="color-swatch" data-color="gray" data-name="Steel Gray" onclick="instantColorChange('pullup-model', 'gray')"></div>
-                                <div class="color-swatch" data-color="white" data-name="Pearl White" onclick="instantColorChange('pullup-model', 'white')"></div>
-                                <div class="color-swatch" data-color="red" data-name="Fire Red" onclick="instantColorChange('pullup-model', 'red')"></div>
-                                <div class="color-swatch custom-color" data-name="Custom Color" onclick="openColorPicker('pullup-model')">
-                                    <i class="fas fa-palette"></i>
-                                </div>
+                                <button class="color-swatch active" data-color="black" data-name="Matte Black" onclick="instantColorChange('pullup-model', 'black')" aria-label="Select Matte Black color" aria-pressed="true"></button>
+                                <button class="color-swatch" data-color="silver" data-name="Chrome Silver" onclick="instantColorChange('pullup-model', 'silver')" aria-label="Select Chrome Silver color" aria-pressed="false"></button>
+                                <button class="color-swatch" data-color="luxury-purple" data-name="Luxury Purple" onclick="instantColorChange('pullup-model', 'luxury-purple')" aria-label="Select Luxury Purple color" aria-pressed="false"></button>
+                                <button class="color-swatch" data-color="gray" data-name="Steel Gray" onclick="instantColorChange('pullup-model', 'gray')" aria-label="Select Steel Gray color" aria-pressed="false"></button>
+                                <button class="color-swatch" data-color="white" data-name="Pearl White" onclick="instantColorChange('pullup-model', 'white')" aria-label="Select Pearl White color" aria-pressed="false"></button>
+                                <button class="color-swatch" data-color="red" data-name="Fire Red" onclick="instantColorChange('pullup-model', 'red')" aria-label="Select Fire Red color" aria-pressed="false"></button>
+                                <button class="color-swatch custom-color" data-name="Custom Color" onclick="openColorPicker('pullup-model')" aria-label="Open custom color picker">
+                                    <i class="fas fa-palette" aria-hidden="true"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -427,12 +450,12 @@
                             <div class="color-options">
                                 <div class="color-swatch active" data-color="black" data-name="Matte Black" onclick="changeColor('wheel-model', 'black')"></div>
                                 <div class="color-swatch" data-color="red" data-name="Racing Red" onclick="changeColor('wheel-model', 'red')"></div>
-                                <div class="color-swatch" data-color="blue" data-name="Ocean Blue" onclick="changeColor('parallel-model', 'blue')"></div>
+                                <button class="color-swatch" data-color="blue" data-name="Ocean Blue" onclick="instantColorChange('wheel-model', 'blue')" aria-label="Select Ocean Blue color" aria-pressed="false"></button>
                                 <div class="color-swatch custom-color" data-name="Custom Color" onclick="openColorPicker('parallel-model')">
                                     <i class="fas fa-palette"></i>
                                 </div>
                             </div>
-                            <div class="color-swatch" data-color="silver" data-name="Chrome Silver" onclick="changeColor('wheel-model', 'silver')"></div>
+                            <button class="color-swatch" data-color="silver" data-name="Chrome Silver" onclick="instantColorChange('wheel-model', 'silver')" aria-label="Select Chrome Silver color" aria-pressed="false"></button>
                         </div>
                     </div>
                 </div>
@@ -570,6 +593,7 @@
     <script src="payment-integration.js"></script>
     <script src="user-dashboard.js"></script>
     <script src="search-system.js"></script>
+    <script src="performance-optimizations.js"></script>
     <script src="inventory-system.js"></script>
     
     <!-- Analytics Integration -->

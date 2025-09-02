@@ -1,0 +1,135 @@
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "CalisVerse",
+  "description": "Premium calisthenics equipment for serious athletes. Professional pull-up bars, gymnastic rings, parallel bars, resistance bands, and ab wheels.",
+  "url": "https://ariatmohamed.github.io/calisverse-store/calisverse-enhanced.html",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://ariatmohamed.github.io/calisverse-store/search?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "CalisVerse",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ariatmohamed.github.io/calisverse-store/assets/logo.png"
+    }
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "Product",
+        "position": 1,
+        "name": "Professional Pull-Up Bar",
+        "description": "Heavy-duty steel construction with ergonomic grip design. Perfect for home and gym use.",
+        "image": "https://ariatmohamed.github.io/calisverse-store/models/pullup-bar-realistic.glb",
+        "offers": {
+          "@type": "Offer",
+          "price": "299.99",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "seller": {
+            "@type": "Organization",
+            "name": "CalisVerse"
+          }
+        },
+        "brand": {
+          "@type": "Brand",
+          "name": "CalisVerse"
+        },
+        "category": "Fitness Equipment"
+      },
+      {
+        "@type": "Product",
+        "position": 2,
+        "name": "Professional Gymnastic Rings",
+        "description": "Olympic-grade gymnastic rings with adjustable straps. Perfect for muscle-ups, ring dips, and advanced movements.",
+        "image": "https://ariatmohamed.github.io/calisverse-store/models/gymnastic-rings-realistic.glb",
+        "offers": {
+          "@type": "Offer",
+          "price": "149.99",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "seller": {
+            "@type": "Organization",
+            "name": "CalisVerse"
+          }
+        },
+        "brand": {
+          "@type": "Brand",
+          "name": "CalisVerse"
+        },
+        "category": "Fitness Equipment"
+      },
+      {
+        "@type": "Product",
+        "position": 3,
+        "name": "Parallel Bars Set",
+        "description": "Professional-grade parallel bars for dips, L-sits, and advanced calisthenics movements.",
+        "image": "https://ariatmohamed.github.io/calisverse-store/models/parallettes-realistic.glb",
+        "offers": {
+          "@type": "Offer",
+          "price": "199.99",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "seller": {
+            "@type": "Organization",
+            "name": "CalisVerse"
+          }
+        },
+        "brand": {
+          "@type": "Brand",
+          "name": "CalisVerse"
+        },
+        "category": "Fitness Equipment"
+      },
+      {
+        "@type": "Product",
+        "position": 4,
+        "name": "Premium Resistance Bands Set",
+        "description": "Complete resistance training system with multiple resistance levels and accessories for full-body workouts.",
+        "image": "https://ariatmohamed.github.io/calisverse-store/models/resistance-bands-realistic.glb",
+        "offers": {
+          "@type": "Offer",
+          "price": "89.99",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "seller": {
+            "@type": "Organization",
+            "name": "CalisVerse"
+          }
+        },
+        "brand": {
+          "@type": "Brand",
+          "name": "CalisVerse"
+        },
+        "category": "Fitness Equipment"
+      },
+      {
+        "@type": "Product",
+        "position": 5,
+        "name": "Professional Weighted Vest",
+        "description": "Adjustable weighted vest with removable weight plates for progressive resistance training and enhanced workout intensity.",
+        "image": "https://ariatmohamed.github.io/calisverse-store/models/weighted-vest-realistic.glb",
+        "offers": {
+          "@type": "Offer",
+          "price": "179.99",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "seller": {
+            "@type": "Organization",
+            "name": "CalisVerse"
+          }
+        },
+        "brand": {
+          "@type": "Brand",
+          "name": "CalisVerse"
+        },
+        "category": "Fitness Equipment"
+      }
+    ]
+  }
+}

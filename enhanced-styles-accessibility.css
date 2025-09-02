@@ -1,0 +1,180 @@
+/* Accessibility Enhancements for CalisVerse */
+
+/* Skip link for keyboard navigation */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: var(--primary);
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+    border-radius: 4px;
+    z-index: 1000;
+    font-weight: 500;
+    transition: top 0.3s ease;
+}
+
+.skip-link:focus {
+    top: 6px;
+}
+
+/* Focus indicators */
+button:focus,
+.nav-link:focus,
+.color-swatch:focus,
+.add-to-cart-btn:focus,
+.cta-btn:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
+}
+
+/* Color swatch accessibility improvements */
+.color-swatch {
+    border: none;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.color-swatch:focus {
+    transform: scale(1.1);
+}
+
+.color-swatch[aria-pressed="true"]::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --primary: #6D28D9;
+        --accent: #D97706;
+        --text-primary: #FFFFFF;
+        --glass-border: rgba(255, 255, 255, 0.4);
+    }
+    
+    .color-swatch {
+        border: 2px solid white;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .particle {
+        animation: none;
+    }
+    
+    model-viewer {
+        auto-rotate: false;
+    }
+}
+
+/* Screen reader improvements */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Loading states with better accessibility */
+.model-viewer[loading] {
+    background: var(--dark-light);
+    position: relative;
+}
+
+.model-viewer[loading]::after {
+    content: 'Loading 3D model...';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+/* Better error states */
+.model-viewer[error] {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.model-viewer[error]::after {
+    content: 'Failed to load 3D model';
+    color: #EF4444;
+}
+
+/* Keyboard navigation for cart */
+.cart-btn[aria-expanded="true"] {
+    background: var(--primary-dark);
+}
+
+/* Form accessibility improvements */
+.form-group label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.form-group input:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-color: var(--accent);
+}
+
+.form-group input[aria-invalid="true"] {
+    border-color: #EF4444;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+/* Color contrast improvements */
+.product-price {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.hero-tagline {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+/* Touch target improvements for mobile */
+@media (max-width: 768px) {
+    .color-swatch {
+        min-width: 44px;
+        min-height: 44px;
+    }
+    
+    .nav-link {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .cart-btn {
+        min-width: 44px;
+        min-height: 44px;
+    }
+}
