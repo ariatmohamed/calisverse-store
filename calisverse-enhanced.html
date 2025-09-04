@@ -107,31 +107,22 @@
                         </button>
                     </div>
                     <div class="product-visual">
-                        <model-viewer
-                            id="pullup-model"
-                            src="models/pullup-bar-realistic.glb"
-                            alt="Professional Wall-Mounted Pull-Up Bar"
-                            camera-controls
-                            auto-rotate
-                            auto-rotate-delay="3000"
-                            rotation-per-second="20deg"
-                            environment-image="neutral"
-                            shadow-intensity="1.8"
-                            shadow-softness="0.6"
-                            exposure="1.3"
-                            class="model-viewer"
-                            style="--poster-color: #1a1a2e;"
-                            camera-orbit="15deg 75deg 3m"
-                            field-of-view="30deg"
-                            min-camera-orbit="auto auto 2m"
-                            max-camera-orbit="auto auto 5m"
-                            interaction-prompt="auto"
-                            loading="lazy"
-                            data-colorable-parts="main_bar,brackets,support_arms">
-                            <div class="progress-bar" slot="progress-bar">
-                                <div class="update-bar"></div>
+                        <div class="simple-3d-model" id="pullup-model" data-model="pullup">
+                            <div class="model-container">
+                                <svg width="300" height="200" viewBox="0 0 300 200" class="pullup-svg">
+                                    <!-- Pull-up bar structure -->
+                                    <rect x="50" y="80" width="200" height="8" rx="4" class="bar-main" fill="#333"/>
+                                    <rect x="40" y="75" width="20" height="18" rx="2" class="bar-mount" fill="#333"/>
+                                    <rect x="240" y="75" width="20" height="18" rx="2" class="bar-mount" fill="#333"/>
+                                    <rect x="80" y="78" width="140" height="12" rx="6" class="bar-grip" fill="#444"/>
+                                    <!-- Mounting brackets -->
+                                    <rect x="35" y="70" width="30" height="28" rx="3" class="bracket" fill="#333"/>
+                                    <rect x="235" y="70" width="30" height="28" rx="3" class="bracket" fill="#333"/>
+                                    <circle cx="45" cy="84" r="3" class="screw" fill="#666"/>
+                                    <circle cx="255" cy="84" r="3" class="screw" fill="#666"/>
+                                </svg>
                             </div>
-                        </model-viewer>
+                        </div>
                         <div class="color-customization">
                             <div class="color-label">Choose Color:</div>
                             <div class="color-options">
@@ -170,31 +161,24 @@
                         </button>
                     </div>
                     <div class="product-visual">
-                        <model-viewer
-                            id="rings-model"
-                            src="models/gymnastic-rings-realistic.glb"
-                            alt="Professional Gymnastic Rings"
-                            camera-controls
-                            auto-rotate
-                            auto-rotate-delay="3000"
-                            rotation-per-second="25deg"
-                            environment-image="neutral"
-                            shadow-intensity="1.3"
-                            shadow-softness="0.7"
-                            exposure="1.1"
-                            class="model-viewer"
-                            style="--poster-color: #1a1a2e;"
-                            camera-orbit="0deg 75deg 2m"
-                            field-of-view="28deg"
-                            min-camera-orbit="auto auto 1.2m"
-                            max-camera-orbit="auto auto 3.5m"
-                            interaction-prompt="auto"
-                            loading="lazy"
-                            data-colorable-parts="rings,straps">
-                            <div class="progress-bar" slot="progress-bar">
-                                <div class="update-bar"></div>
+                        <div class="simple-3d-model" id="rings-model" data-model="rings">
+                            <div class="model-container">
+                                <svg width="300" height="250" viewBox="0 0 300 250" class="rings-svg">
+                                    <!-- Straps -->
+                                    <rect x="80" y="20" width="8" height="120" class="strap-left" fill="#8B4513"/>
+                                    <rect x="212" y="20" width="8" height="120" class="strap-right" fill="#8B4513"/>
+                                    <!-- Rings -->
+                                    <circle cx="84" cy="180" r="35" fill="none" stroke="#D2691E" stroke-width="12" class="ring-left"/>
+                                    <circle cx="216" cy="180" r="35" fill="none" stroke="#D2691E" stroke-width="12" class="ring-right"/>
+                                    <!-- Connection points -->
+                                    <rect x="82" y="140" width="4" height="15" class="connection-left" fill="#654321"/>
+                                    <rect x="214" y="140" width="4" height="15" class="connection-right" fill="#654321"/>
+                                    <!-- Mounting points -->
+                                    <circle cx="84" cy="25" r="8" class="mount-left" fill="#333"/>
+                                    <circle cx="216" cy="25" r="8" class="mount-right" fill="#333"/>
+                                </svg>
                             </div>
-                        </model-viewer>
+                        </div>
                         <div class="color-customization">
                             <div class="color-label">Choose Wood Finish:</div>
                             <div class="color-options">
@@ -230,31 +214,28 @@
                         </button>
                     </div>
                     <div class="product-visual">
-                        <model-viewer
-                            id="parallel-model"
-                            src="models/parallettes-realistic.glb"
-                            alt="Professional Parallel Bars Set"
-                            camera-controls
-                            auto-rotate
-                            auto-rotate-delay="3000"
-                            rotation-per-second="20deg"
-                            environment-image="neutral"
-                            shadow-intensity="1.4"
-                            shadow-softness="0.6"
-                            exposure="1.0"
-                            class="model-viewer"
-                            style="--poster-color: #1a1a2e;"
-                            camera-orbit="45deg 75deg 3m"
-                            field-of-view="32deg"
-                            min-camera-orbit="auto auto 2m"
-                            max-camera-orbit="auto auto 5m"
-                            interaction-prompt="auto"
-                            loading="lazy"
-                            data-colorable-parts="bars,base,grips">
-                            <div class="progress-bar" slot="progress-bar">
-                                <div class="update-bar"></div>
+                        <div class="simple-3d-model" id="parallel-model" data-model="parallel">
+                            <div class="model-container">
+                                <svg width="300" height="200" viewBox="0 0 300 200" class="parallel-svg">
+                                    <!-- Base legs -->
+                                    <rect x="50" y="160" width="8" height="30" class="leg-1" fill="#333"/>
+                                    <rect x="90" y="160" width="8" height="30" class="leg-2" fill="#333"/>
+                                    <rect x="202" y="160" width="8" height="30" class="leg-3" fill="#333"/>
+                                    <rect x="242" y="160" width="8" height="30" class="leg-4" fill="#333"/>
+                                    <!-- Base frames -->
+                                    <rect x="50" y="155" width="48" height="6" class="base-left" fill="#333"/>
+                                    <rect x="202" y="155" width="48" height="6" class="base-right" fill="#333"/>
+                                    <!-- Parallel bars -->
+                                    <rect x="50" y="80" width="200" height="8" rx="4" class="bar-left" fill="#444"/>
+                                    <rect x="50" y="120" width="200" height="8" rx="4" class="bar-right" fill="#444"/>
+                                    <!-- Support posts -->
+                                    <rect x="52" y="88" width="4" height="67" class="post-1" fill="#333"/>
+                                    <rect x="94" y="88" width="4" height="67" class="post-2" fill="#333"/>
+                                    <rect x="202" y="88" width="4" height="67" class="post-3" fill="#333"/>
+                                    <rect x="244" y="88" width="4" height="67" class="post-4" fill="#333"/>
+                                </svg>
                             </div>
-                        </model-viewer>
+                        </div>
                         <div class="color-customization">
                             <div class="color-label">Choose Color:</div>
                             <div class="color-options">
@@ -587,7 +568,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="enhanced-functionality.js"></script>
-    <script src="enhanced-3d-functionality.js"></script>
+    <script src="simple-color-system.js"></script>
     <script src="reviews-system.js"></script>
     <script src="inventory-system.js"></script>
     <script src="payment-integration.js"></script>
