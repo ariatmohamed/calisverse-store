@@ -2,39 +2,84 @@
 class Enhanced3DModelManager {
     constructor() {
         this.modelViewers = new Map();
+        this.activeColors = new Map();
         this.colorMappings = {
-            // Metal finishes - enhanced for better visibility
-            black: { color: [0.15, 0.15, 0.15], metallic: 0.2, roughness: 0.7 },
-            silver: { color: [0.95, 0.95, 0.95], metallic: 0.9, roughness: 0.1 },
-            white: { color: [0.98, 0.98, 0.98], metallic: 0.05, roughness: 0.3 }, // Fixed white color
-            gray: { color: [0.6, 0.6, 0.6], metallic: 0.3, roughness: 0.6 },
+            // Enhanced color mappings with better visibility
+            black: { color: [0.05, 0.05, 0.05], metallic: 0.8, roughness: 0.2 },
+            white: { color: [0.98, 0.98, 0.98], metallic: 0.1, roughness: 0.3 }, // Fixed white color
+            silver: { color: [0.8, 0.8, 0.85], metallic: 0.9, roughness: 0.1 },
+            gray: { color: [0.4, 0.4, 0.45], metallic: 0.6, roughness: 0.3 },
+            red: { color: [0.8, 0.1, 0.1], metallic: 0.3, roughness: 0.4 },
+            blue: { color: [0.1, 0.3, 0.8], metallic: 0.4, roughness: 0.3 },
+            green: { color: [0.1, 0.6, 0.2], metallic: 0.2, roughness: 0.5 },
+            purple: { color: [0.5, 0.2, 0.8], metallic: 0.4, roughness: 0.3 },
+            'luxury-purple': { color: [0.4, 0.1, 0.6], metallic: 0.7, roughness: 0.2 },
             
-            // Colored finishes
-            red: { color: [0.85, 0.15, 0.15], metallic: 0.2, roughness: 0.5 },
-            blue: { color: [0.15, 0.4, 0.85], metallic: 0.2, roughness: 0.5 },
-            green: { color: [0.15, 0.7, 0.15], metallic: 0.2, roughness: 0.5 },
-            purple: { color: [0.6, 0.2, 0.8], metallic: 0.3, roughness: 0.4 },
-            'luxury-purple': { color: [0.45, 0.15, 0.65], metallic: 0.4, roughness: 0.3 },
+            // Wood finishes for rings
+            natural: { color: [0.8, 0.6, 0.4], metallic: 0.0, roughness: 0.8 },
+            dark: { color: [0.3, 0.2, 0.1], metallic: 0.0, roughness: 0.9 },
+            cherry: { color: [0.6, 0.3, 0.2], metallic: 0.0, roughness: 0.7 },
+            oak: { color: [0.7, 0.5, 0.3], metallic: 0.0, roughness: 0.8 },
+            walnut: { color: [0.4, 0.3, 0.2], metallic: 0.0, roughness: 0.9 },
+            birch: { color: [0.9, 0.8, 0.7], metallic: 0.0, roughness: 0.6 },
             
-            // Wood finishes for rings - enhanced contrast
-            natural: { color: [0.85, 0.65, 0.45], metallic: 0.0, roughness: 0.85 },
-            dark: { color: [0.25, 0.18, 0.12], metallic: 0.0, roughness: 0.8 },
-            cherry: { color: [0.65, 0.35, 0.25], metallic: 0.0, roughness: 0.75 },
-            oak: { color: [0.75, 0.55, 0.35], metallic: 0.0, roughness: 0.85 },
-            walnut: { color: [0.35, 0.25, 0.18], metallic: 0.0, roughness: 0.8 },
-            birch: { color: [0.92, 0.85, 0.65], metallic: 0.0, roughness: 0.9 },
-            
-            // Special finishes
-            rainbow: { color: [0.6, 0.4, 0.8], metallic: 0.3, roughness: 0.4 }
+            // Special colors
+            rainbow: { color: [0.5, 0.5, 0.5], metallic: 0.3, roughness: 0.4 }
         };
-        this.activeColors = new Map(); // Track active colors per model
-        this.init();
+        
+        // Initialize immediately and set up observers
+        this.initializeModelViewers();
+        this.setupMutationObserver();
     }
 
-    init() {
-        this.setupModelViewers();
+    initializeModelViewers() {
+        // Find all model-viewer elements immediately
+        const modelViewers = document.querySelectorAll('model-viewer');
+        console.log(`Found ${modelViewers.length} model-viewer elements`);
+        
+        modelViewers.forEach(viewer => {
+            const modelId = viewer.id;
+            if (modelId) {
+                this.modelViewers.set(modelId, viewer);
+                console.log(`Registered model viewer: ${modelId}`);
+                
+                // Set up event listeners
+                viewer.addEventListener('load', () => {
+                    console.log(`Model loaded: ${modelId}`);
+                    this.ensureColorableModel(modelId);
+                });
+                
+                viewer.addEventListener('error', (error) => {
+                    console.error(`Model error for ${modelId}:`, error);
+                });
+            }
+        });
+        
+        // Initialize other components
         this.setupPerformanceOptimization();
         this.setupColorCustomization();
+    }
+
+    setupMutationObserver() {
+        // Watch for dynamically added model-viewer elements
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.tagName === 'MODEL-VIEWER') {
+                        const modelId = node.id;
+                        if (modelId && !this.modelViewers.has(modelId)) {
+                            this.modelViewers.set(modelId, node);
+                            console.log(`Dynamically registered model viewer: ${modelId}`);
+                        }
+                    }
+                });
+            });
+        });
+        
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
     }
 
     setupModelViewers() {
@@ -759,27 +804,52 @@ class Enhanced3DModelManager {
     }
 }
 
-// Initialize enhanced 3D functionality
+// Initialize enhanced 3D functionality immediately
 let enhanced3DManager;
 
-document.addEventListener('DOMContentLoaded', () => {
-    enhanced3DManager = new Enhanced3DModelManager();
-    window.enhanced3DManager = enhanced3DManager; // Make globally accessible
-    
-    // Force initialization of all model viewers
-    setTimeout(() => {
-        enhanced3DManager.setupModelFallbacks();
-        console.log('Enhanced 3D Model Manager initialized with all models');
-    }, 1000);
-});
+// Initialize as soon as the script loads
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeManager);
+} else {
+    // DOM is already loaded
+    initializeManager();
+}
 
-// Also initialize on window load as fallback
-window.addEventListener('load', () => {
+function initializeManager() {
     if (!enhanced3DManager) {
         enhanced3DManager = new Enhanced3DModelManager();
-        window.enhanced3DManager = enhanced3DManager;
+        window.enhanced3DManager = enhanced3DManager; // Make globally accessible
+        
+        console.log('Enhanced 3D Model Manager initialized');
+        
+        // Set up periodic checks for model viewers
+        const checkInterval = setInterval(() => {
+            const modelViewers = document.querySelectorAll('model-viewer');
+            if (modelViewers.length > 0) {
+                enhanced3DManager.initializeModelViewers();
+                clearInterval(checkInterval);
+            }
+        }, 100);
+        
+        // Clear interval after 10 seconds to avoid infinite checking
+        setTimeout(() => clearInterval(checkInterval), 10000);
+    }
+}
+
+// Also initialize on window load as additional fallback
+window.addEventListener('load', () => {
+    if (!enhanced3DManager) {
+        initializeManager();
     }
 });
+
+// Global function to ensure manager is available
+window.getEnhanced3DManager = () => {
+    if (!enhanced3DManager) {
+        initializeManager();
+    }
+    return enhanced3DManager;
+};
 
 // Export for module usage
 if (typeof module !== 'undefined' && module.exports) {

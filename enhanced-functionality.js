@@ -399,8 +399,23 @@ function changeColor(modelId, color) {
 
 // Global function for instant color changes
 function instantColorChange(modelId, color) {
-    if (window.enhanced3DManager) {
-        window.enhanced3DManager.instantColorChange(modelId, color);
+    console.log(`instantColorChange called: ${modelId} -> ${color}`);
+    
+    // Ensure manager is available
+    const manager = window.enhanced3DManager || window.getEnhanced3DManager();
+    
+    if (manager) {
+        console.log('Manager found, calling instantColorChange');
+        manager.instantColorChange(modelId, color);
+    } else {
+        console.error('Enhanced 3D Manager not available');
+        // Fallback: try to initialize and retry
+        setTimeout(() => {
+            const retryManager = window.getEnhanced3DManager();
+            if (retryManager) {
+                retryManager.instantColorChange(modelId, color);
+            }
+        }, 500);
     }
 }
 
