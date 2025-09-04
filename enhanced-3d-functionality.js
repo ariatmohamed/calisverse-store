@@ -3,24 +3,31 @@ class Enhanced3DModelManager {
     constructor() {
         this.modelViewers = new Map();
         this.colorMappings = {
-            black: { color: [0.1, 0.1, 0.1], metallic: 0.1, roughness: 0.8 },
-            silver: { color: [0.9, 0.9, 0.9], metallic: 0.9, roughness: 0.1 },
-            red: { color: [0.8, 0.2, 0.2], metallic: 0.2, roughness: 0.6 },
-            blue: { color: [0.2, 0.4, 0.8], metallic: 0.2, roughness: 0.6 },
-            purple: { color: [0.6, 0.2, 0.8], metallic: 0.3, roughness: 0.5 },
-            'luxury-purple': { color: [0.4, 0.1, 0.6], metallic: 0.4, roughness: 0.3 },
-            gray: { color: [0.5, 0.5, 0.5], metallic: 0.2, roughness: 0.7 },
-            white: { color: [0.95, 0.95, 0.95], metallic: 0.1, roughness: 0.4 },
-            green: { color: [0.2, 0.6, 0.2], metallic: 0.2, roughness: 0.6 },
-            natural: { color: [0.8, 0.6, 0.4], metallic: 0.0, roughness: 0.9 },
-            dark: { color: [0.3, 0.2, 0.1], metallic: 0.0, roughness: 0.8 },
-            cherry: { color: [0.6, 0.3, 0.2], metallic: 0.0, roughness: 0.7 },
-            rainbow: { color: [0.5, 0.5, 0.5], metallic: 0.3, roughness: 0.5 },
-            // Wood finishes for rings
-            oak: { color: [0.7, 0.5, 0.3], metallic: 0.0, roughness: 0.9 },
-            walnut: { color: [0.4, 0.3, 0.2], metallic: 0.0, roughness: 0.8 },
-            birch: { color: [0.9, 0.8, 0.6], metallic: 0.0, roughness: 0.9 }
+            // Metal finishes - enhanced for better visibility
+            black: { color: [0.15, 0.15, 0.15], metallic: 0.2, roughness: 0.7 },
+            silver: { color: [0.95, 0.95, 0.95], metallic: 0.9, roughness: 0.1 },
+            white: { color: [0.98, 0.98, 0.98], metallic: 0.05, roughness: 0.3 }, // Fixed white color
+            gray: { color: [0.6, 0.6, 0.6], metallic: 0.3, roughness: 0.6 },
+            
+            // Colored finishes
+            red: { color: [0.85, 0.15, 0.15], metallic: 0.2, roughness: 0.5 },
+            blue: { color: [0.15, 0.4, 0.85], metallic: 0.2, roughness: 0.5 },
+            green: { color: [0.15, 0.7, 0.15], metallic: 0.2, roughness: 0.5 },
+            purple: { color: [0.6, 0.2, 0.8], metallic: 0.3, roughness: 0.4 },
+            'luxury-purple': { color: [0.45, 0.15, 0.65], metallic: 0.4, roughness: 0.3 },
+            
+            // Wood finishes for rings - enhanced contrast
+            natural: { color: [0.85, 0.65, 0.45], metallic: 0.0, roughness: 0.85 },
+            dark: { color: [0.25, 0.18, 0.12], metallic: 0.0, roughness: 0.8 },
+            cherry: { color: [0.65, 0.35, 0.25], metallic: 0.0, roughness: 0.75 },
+            oak: { color: [0.75, 0.55, 0.35], metallic: 0.0, roughness: 0.85 },
+            walnut: { color: [0.35, 0.25, 0.18], metallic: 0.0, roughness: 0.8 },
+            birch: { color: [0.92, 0.85, 0.65], metallic: 0.0, roughness: 0.9 },
+            
+            // Special finishes
+            rainbow: { color: [0.6, 0.4, 0.8], metallic: 0.3, roughness: 0.4 }
         };
+        this.activeColors = new Map(); // Track active colors per model
         this.init();
     }
 
@@ -70,10 +77,50 @@ class Enhanced3DModelManager {
             progressBar.style.display = 'none';
         }
         
-        // Initialize PBR materials if available
+        // Initialize PBR materials and ensure all parts are colorable
         this.initializePBRMaterials(viewer);
+        this.ensureColorableModel(viewer);
         
         console.log(`Model loaded: ${viewer.id}`);
+    }
+
+    ensureColorableModel(viewer) {
+        // Ensure the model is fully colorable by removing any white-only restrictions
+        setTimeout(async () => {
+            try {
+                await viewer.updateComplete;
+                const model = viewer.model;
+                if (model) {
+                    model.traverse((child) => {
+                        if (child.isMesh && child.material) {
+                            const materials = Array.isArray(child.material) ? child.material : [child.material];
+                            
+                            materials.forEach(material => {
+                                // Remove any color restrictions
+                                if (material.color) {
+                                    // Ensure material can accept any color
+                                    material.transparent = false;
+                                    material.opacity = 1.0;
+                                    
+                                    // Set default properties for better color visibility
+                                    if (material.metalness !== undefined) {
+                                        material.metalness = 0.2;
+                                    }
+                                    if (material.roughness !== undefined) {
+                                        material.roughness = 0.6;
+                                    }
+                                    
+                                    material.needsUpdate = true;
+                                }
+                            });
+                        }
+                    });
+                    console.log(`Model ${viewer.id} made fully colorable`);
+                }
+            } catch (error) {
+                console.error(`Error making model ${viewer.id} colorable:`, error);
+            }
+        }, 100);
     }
 
     updateLoadingProgress(viewer, event) {
@@ -188,15 +235,38 @@ class Enhanced3DModelManager {
     }
 
     setupColorCustomization() {
-        // Enhanced color change functionality
+        // Enhanced color change functionality - make globally accessible
         window.changeColor = (modelId, color) => {
-            this.changeModelColor(modelId, color);
+            this.instantColorChange(modelId, color);
+        };
+        
+        // Override instantColorChange globally
+        window.instantColorChange = (modelId, color) => {
+            this.instantColorChange(modelId, color);
         };
         
         // Custom color picker functionality
         window.openColorPicker = (modelId) => {
             this.openCustomColorPicker(modelId);
         };
+        
+        // Add fallback for missing models
+        this.setupModelFallbacks();
+    }
+
+    setupModelFallbacks() {
+        // Ensure all models are properly initialized
+        const expectedModels = ['pullup-model', 'rings-model', 'parallel-model', 'bands-model', 'vest-model', 'wheel-model'];
+        
+        expectedModels.forEach(modelId => {
+            if (!this.modelViewers.has(modelId)) {
+                const element = document.getElementById(modelId);
+                if (element) {
+                    this.modelViewers.set(modelId, element);
+                    console.log(`Added fallback for model: ${modelId}`);
+                }
+            }
+        });
     }
 
     openCustomColorPicker(modelId) {
@@ -399,61 +469,91 @@ class Enhanced3DModelManager {
         }
     }
 
-    // Enhanced color change with instant response
+    // Enhanced color change with instant response - FIXED for all colors including white
     async instantColorChange(modelId, color) {
         const modelViewer = this.modelViewers.get(modelId);
-        if (!modelViewer) return;
+        if (!modelViewer) {
+            console.warn(`Model viewer not found: ${modelId}`);
+            return;
+        }
+
+        // Store active color
+        this.activeColors.set(modelId, color);
 
         // Immediate UI feedback
         this.updateColorSwatches(modelId, color);
         
         try {
+            // Wait for model to be ready
             await modelViewer.updateComplete;
             const model = modelViewer.model;
-            if (!model) return;
+            if (!model) {
+                console.warn(`Model not loaded yet: ${modelId}`);
+                return;
+            }
 
             const colorablePartsAttr = modelViewer.getAttribute('data-colorable-parts');
-            const colorableParts = colorablePartsAttr ? colorablePartsAttr.split(',') : [];
+            const colorableParts = colorablePartsAttr ? colorablePartsAttr.split(',').map(p => p.trim()) : ['all'];
             
             const colorConfig = this.colorMappings[color] || this.colorMappings.black;
+            console.log(`Applying color ${color} to ${modelId}:`, colorConfig);
 
-            // Direct material property updates for instant response
+            // Enhanced material traversal with better part matching
+            const materialsUpdated = [];
+            
             model.traverse((child) => {
                 if (child.isMesh && child.material) {
-                    const materialName = child.material.name ? child.material.name.toLowerCase() : '';
-                    const meshName = child.name ? child.name.toLowerCase() : '';
+                    const materials = Array.isArray(child.material) ? child.material : [child.material];
                     
-                    const shouldColor = colorableParts.some(part => 
-                        materialName.includes(part.toLowerCase()) || 
-                        meshName.includes(part.toLowerCase())
-                    );
-                    
-                    if (shouldColor) {
-                        // Instant color update
-                        if (child.material.color) {
-                            child.material.color.setRGB(colorConfig.color[0], colorConfig.color[1], colorConfig.color[2]);
-                        }
+                    materials.forEach(material => {
+                        const materialName = material.name ? material.name.toLowerCase() : '';
+                        const meshName = child.name ? child.name.toLowerCase() : '';
                         
-                        // Preserve PBR properties for realistic materials
-                        if (child.material.metalness !== undefined) {
-                            child.material.metalness = colorConfig.metallic;
-                        }
-                        if (child.material.roughness !== undefined) {
-                            child.material.roughness = colorConfig.roughness;
-                        }
+                        // Enhanced part matching - more flexible
+                        const shouldColor = colorableParts.includes('all') || 
+                            colorableParts.some(part => {
+                                const partLower = part.toLowerCase();
+                                return materialName.includes(partLower) || 
+                                       meshName.includes(partLower) ||
+                                       materialName.includes('material') ||
+                                       meshName.includes('mesh');
+                            });
                         
-                        child.material.needsUpdate = true;
-                    }
+                        if (shouldColor && material.color) {
+                            // Force color update with enhanced visibility
+                            material.color.setRGB(colorConfig.color[0], colorConfig.color[1], colorConfig.color[2]);
+                            
+                            // Enhanced PBR properties
+                            if (material.metalness !== undefined) {
+                                material.metalness = colorConfig.metallic;
+                            }
+                            if (material.roughness !== undefined) {
+                                material.roughness = colorConfig.roughness;
+                            }
+                            
+                            // Force material update
+                            material.needsUpdate = true;
+                            materialsUpdated.push(material.name || 'unnamed');
+                        }
+                    });
                 }
             });
             
+            console.log(`Updated materials for ${modelId}:`, materialsUpdated);
+            
+            // Force scene update
+            if (modelViewer.scene) {
+                modelViewer.scene.needsUpdate = true;
+            }
+            
             // Store current color
             if (typeof store !== 'undefined') {
+                if (!store.currentColors) store.currentColors = {};
                 store.currentColors[modelId] = color;
             }
             
         } catch (error) {
-            console.error('Error in instant color change:', error);
+            console.error(`Error in instant color change for ${modelId}:`, error);
         }
     }
 
@@ -526,15 +626,89 @@ class Enhanced3DModelManager {
     }
 
     setupPerformanceOptimization() {
-        // Implement level-of-detail (LOD) based on distance
+        // Enhanced performance optimization for mobile and desktop
         this.modelViewers.forEach(viewer => {
+            // Throttled camera change handler for better performance
+            let cameraChangeTimeout;
             viewer.addEventListener('camera-change', () => {
-                this.adjustLOD(viewer);
+                clearTimeout(cameraChangeTimeout);
+                cameraChangeTimeout = setTimeout(() => {
+                    this.adjustLOD(viewer);
+                }, 100); // Throttle to 10fps
             });
+            
+            // Mobile-specific optimizations
+            if (this.isMobileDevice()) {
+                this.applyMobileOptimizations(viewer);
+            }
         });
         
         // Memory management
         this.setupMemoryManagement();
+        
+        // Performance monitoring
+        this.setupPerformanceMonitoring();
+    }
+
+    isMobileDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+               (navigator.maxTouchPoints && navigator.maxTouchPoints > 2);
+    }
+
+    applyMobileOptimizations(viewer) {
+        // Reduce quality settings for mobile
+        viewer.setAttribute('shadow-intensity', '0.5');
+        viewer.setAttribute('exposure', '0.8');
+        viewer.removeAttribute('auto-rotate'); // Disable auto-rotate on mobile to save battery
+        
+        // Reduce interaction sensitivity
+        viewer.style.touchAction = 'pan-y pinch-zoom';
+        
+        console.log(`Applied mobile optimizations to ${viewer.id}`);
+    }
+
+    setupPerformanceMonitoring() {
+        // Monitor frame rate and adjust quality accordingly
+        let frameCount = 0;
+        let lastTime = performance.now();
+        
+        const monitorPerformance = () => {
+            frameCount++;
+            const currentTime = performance.now();
+            
+            if (currentTime - lastTime >= 1000) {
+                const fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
+                
+                if (fps < 30) {
+                    this.reduceMobileQuality();
+                } else if (fps > 50) {
+                    this.increaseMobileQuality();
+                }
+                
+                frameCount = 0;
+                lastTime = currentTime;
+            }
+            
+            requestAnimationFrame(monitorPerformance);
+        };
+        
+        if (this.isMobileDevice()) {
+            requestAnimationFrame(monitorPerformance);
+        }
+    }
+
+    reduceMobileQuality() {
+        this.modelViewers.forEach(viewer => {
+            viewer.setAttribute('shadow-intensity', '0.3');
+            viewer.setAttribute('exposure', '0.6');
+        });
+    }
+
+    increaseMobileQuality() {
+        this.modelViewers.forEach(viewer => {
+            viewer.setAttribute('shadow-intensity', '0.8');
+            viewer.setAttribute('exposure', '1.0');
+        });
     }
 
     adjustLOD(viewer) {
@@ -592,7 +766,19 @@ document.addEventListener('DOMContentLoaded', () => {
     enhanced3DManager = new Enhanced3DModelManager();
     window.enhanced3DManager = enhanced3DManager; // Make globally accessible
     
-    console.log('Enhanced 3D Model Manager initialized');
+    // Force initialization of all model viewers
+    setTimeout(() => {
+        enhanced3DManager.setupModelFallbacks();
+        console.log('Enhanced 3D Model Manager initialized with all models');
+    }, 1000);
+});
+
+// Also initialize on window load as fallback
+window.addEventListener('load', () => {
+    if (!enhanced3DManager) {
+        enhanced3DManager = new Enhanced3DModelManager();
+        window.enhanced3DManager = enhanced3DManager;
+    }
 });
 
 // Export for module usage

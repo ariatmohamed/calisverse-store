@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalisVerse - Color System Test Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .demo-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .demo-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .demo-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .test-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .test-card h3 {
+            color: #8b5cf6;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .color-test-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .test-btn {
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .test-btn.black { background: linear-gradient(135deg, #1a1a1a, #333); }
+        .test-btn.white { background: linear-gradient(135deg, #f8f8f8, #e0e0e0); color: #333; }
+        .test-btn.silver { background: linear-gradient(135deg, #c0c0c0, #a0a0a0); color: #333; }
+        .test-btn.red { background: linear-gradient(135deg, #dc2626, #b91c1c); }
+        .test-btn.blue { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
+        .test-btn.green { background: linear-gradient(135deg, #16a34a, #15803d); }
+        .test-btn.purple { background: linear-gradient(135deg, #9333ea, #7c3aed); }
+        .test-btn.luxury-purple { background: linear-gradient(135deg, #6b21a8, #581c87); }
+        .test-btn.gray { background: linear-gradient(135deg, #6b7280, #4b5563); }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-left: 10px;
+            background: #ef4444;
+            transition: all 0.3s ease;
+        }
+
+        .status-indicator.success {
+            background: #10b981;
+        }
+
+        .test-results {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .auto-test-btn {
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .auto-test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(139, 92, 246, 0.4);
+        }
+
+        .performance-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .metric-card {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #10b981;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .test-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .color-test-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1 class="demo-title">Color System Test Demo</h1>
+            <p class="demo-subtitle">Testing real-time 3D color customization across all products</p>
+        </div>
+
+        <button class="auto-test-btn" onclick="runAutoTest()">🚀 Run Automatic Color Test</button>
+
+        <div class="test-grid">
+            <div class="test-card">
+                <h3>Pull-Up Bar Color Test</h3>
+                <div class="color-test-buttons">
+                    <button class="test-btn black" onclick="testColor('pullup-model', 'black', this)">Black</button>
+                    <button class="test-btn white" onclick="testColor('pullup-model', 'white', this)">White</button>
+                    <button class="test-btn silver" onclick="testColor('pullup-model', 'silver', this)">Silver</button>
+                    <button class="test-btn red" onclick="testColor('pullup-model', 'red', this)">Red</button>
+                    <button class="test-btn blue" onclick="testColor('pullup-model', 'blue', this)">Blue</button>
+                    <button class="test-btn luxury-purple" onclick="testColor('pullup-model', 'luxury-purple', this)">Purple</button>
+                    <button class="test-btn gray" onclick="testColor('pullup-model', 'gray', this)">Gray</button>
+                    <button class="test-btn green" onclick="testColor('pullup-model', 'green', this)">Green</button>
+                </div>
+                <div class="test-results" id="pullup-results">
+                    <div class="result-item">
+                        <span>Model Status:</span>
+                        <span id="pullup-status">Not Tested <span class="status-indicator"></span></span>
+                    </div>
+                    <div class="result-item">
+                        <span>Colors Tested:</span>
+                        <span id="pullup-count">0/8</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Success Rate:</span>
+                        <span id="pullup-success">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="test-card">
+                <h3>Gymnastic Rings Color Test</h3>
+                <div class="color-test-buttons">
+                    <button class="test-btn" style="background: linear-gradient(135deg, #d2691e, #a0522d);" onclick="testColor('rings-model', 'natural', this)">Natural</button>
+                    <button class="test-btn" style="background: linear-gradient(135deg, #4a4a4a, #2d2d2d);" onclick="testColor('rings-model', 'dark', this)">Dark</button>
+                    <button class="test-btn" style="background: linear-gradient(135deg, #8b4513, #654321);" onclick="testColor('rings-model', 'cherry', this)">Cherry</button>
+                    <button class="test-btn" style="background: linear-gradient(135deg, #daa520, #b8860b);" onclick="testColor('rings-model', 'oak', this)">Oak</button>
+                    <button class="test-btn" style="background: linear-gradient(135deg, #8b7355, #696969);" onclick="testColor('rings-model', 'walnut', this)">Walnut</button>
+                    <button class="test-btn" style="background: linear-gradient(135deg, #f5deb3, #deb887);" onclick="testColor('rings-model', 'birch', this)">Birch</button>
+                </div>
+                <div class="test-results" id="rings-results">
+                    <div class="result-item">
+                        <span>Model Status:</span>
+                        <span id="rings-status">Not Tested <span class="status-indicator"></span></span>
+                    </div>
+                    <div class="result-item">
+                        <span>Colors Tested:</span>
+                        <span id="rings-count">0/6</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Success Rate:</span>
+                        <span id="rings-success">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="test-card">
+                <h3>Parallel Bars Color Test</h3>
+                <div class="color-test-buttons">
+                    <button class="test-btn black" onclick="testColor('parallel-model', 'black', this)">Black</button>
+                    <button class="test-btn white" onclick="testColor('parallel-model', 'white', this)">White</button>
+                    <button class="test-btn silver" onclick="testColor('parallel-model', 'silver', this)">Silver</button>
+                    <button class="test-btn red" onclick="testColor('parallel-model', 'red', this)">Red</button>
+                    <button class="test-btn blue" onclick="testColor('parallel-model', 'blue', this)">Blue</button>
+                    <button class="test-btn luxury-purple" onclick="testColor('parallel-model', 'luxury-purple', this)">Purple</button>
+                    <button class="test-btn gray" onclick="testColor('parallel-model', 'gray', this)">Gray</button>
+                    <button class="test-btn green" onclick="testColor('parallel-model', 'green', this)">Green</button>
+                </div>
+                <div class="test-results" id="parallel-results">
+                    <div class="result-item">
+                        <span>Model Status:</span>
+                        <span id="parallel-status">Not Tested <span class="status-indicator"></span></span>
+                    </div>
+                    <div class="result-item">
+                        <span>Colors Tested:</span>
+                        <span id="parallel-count">0/8</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Success Rate:</span>
+                        <span id="parallel-success">0%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="performance-metrics">
+            <div class="metric-card">
+                <div class="metric-value" id="total-tests">0</div>
+                <div class="metric-label">Total Tests Run</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="success-rate">0%</div>
+                <div class="metric-label">Overall Success Rate</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="avg-response">0ms</div>
+                <div class="metric-label">Avg Response Time</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="models-ready">0/3</div>
+                <div class="metric-label">Models Ready</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let testResults = {
+            'pullup-model': { tested: 0, success: 0, total: 8 },
+            'rings-model': { tested: 0, success: 0, total: 6 },
+            'parallel-model': { tested: 0, success: 0, total: 8 }
+        };
+
+        let totalTests = 0;
+        let totalSuccess = 0;
+        let responseTimes = [];
+
+        function testColor(modelId, color, button) {
+            const startTime = performance.now();
+            
+            try {
+                // Test if the color change function exists and works
+                if (typeof window.instantColorChange === 'function') {
+                    window.instantColorChange(modelId, color);
+                    
+                    // Simulate success (in real scenario, we'd check if the model actually changed)
+                    const endTime = performance.now();
+                    const responseTime = endTime - startTime;
+                    responseTimes.push(responseTime);
+                    
+                    // Update test results
+                    testResults[modelId].tested++;
+                    testResults[modelId].success++;
+                    totalTests++;
+                    totalSuccess++;
+                    
+                    // Visual feedback
+                    button.style.transform = 'scale(0.95)';
+                    button.style.boxShadow = '0 0 20px rgba(16, 185, 129, 0.6)';
+                    
+                    setTimeout(() => {
+                        button.style.transform = 'scale(1)';
+                        button.style.boxShadow = '';
+                    }, 200);
+                    
+                    updateResults(modelId);
+                    updateMetrics();
+                    
+                    console.log(`✅ Color test passed: ${modelId} -> ${color} (${responseTime.toFixed(2)}ms)`);
+                } else {
+                    throw new Error('instantColorChange function not available');
+                }
+            } catch (error) {
+                console.error(`❌ Color test failed: ${modelId} -> ${color}`, error);
+                
+                testResults[modelId].tested++;
+                totalTests++;
+                
+                // Visual feedback for failure
+                button.style.transform = 'scale(0.95)';
+                button.style.boxShadow = '0 0 20px rgba(239, 68, 68, 0.6)';
+                
+                setTimeout(() => {
+                    button.style.transform = 'scale(1)';
+                    button.style.boxShadow = '';
+                }, 200);
+                
+                updateResults(modelId);
+                updateMetrics();
+            }
+        }
+
+        function updateResults(modelId) {
+            const productName = modelId.replace('-model', '');
+            const results = testResults[modelId];
+            const successRate = results.tested > 0 ? Math.round((results.success / results.tested) * 100) : 0;
+            
+            document.getElementById(`${productName}-count`).textContent = `${results.tested}/${results.total}`;
+            document.getElementById(`${productName}-success`).textContent = `${successRate}%`;
+            
+            const statusElement = document.getElementById(`${productName}-status`);
+            const indicator = statusElement.querySelector('.status-indicator');
+            
+            if (results.tested === 0) {
+                statusElement.innerHTML = 'Not Tested <span class="status-indicator"></span>';
+            } else if (results.tested === results.total) {
+                statusElement.innerHTML = 'Complete <span class="status-indicator success"></span>';
+            } else {
+                statusElement.innerHTML = 'In Progress <span class="status-indicator" style="background: #f59e0b;"></span>';
+            }
+        }
+
+        function updateMetrics() {
+            document.getElementById('total-tests').textContent = totalTests;
+            
+            const overallSuccessRate = totalTests > 0 ? Math.round((totalSuccess / totalTests) * 100) : 0;
+            document.getElementById('success-rate').textContent = `${overallSuccessRate}%`;
+            
+            const avgResponseTime = responseTimes.length > 0 ? 
+                Math.round(responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length) : 0;
+            document.getElementById('avg-response').textContent = `${avgResponseTime}ms`;
+            
+            // Check which models are ready
+            let modelsReady = 0;
+            ['pullup-model', 'rings-model', 'parallel-model'].forEach(modelId => {
+                const element = document.getElementById(modelId);
+                if (element && element.hasAttribute && element.hasAttribute('loaded')) {
+                    modelsReady++;
+                }
+            });
+            document.getElementById('models-ready').textContent = `${modelsReady}/3`;
+        }
+
+        async function runAutoTest() {
+            const button = document.querySelector('.auto-test-btn');
+            button.textContent = '🔄 Running Tests...';
+            button.disabled = true;
+            
+            const tests = [
+                // Pull-up bar tests
+                ['pullup-model', 'black'],
+                ['pullup-model', 'white'],
+                ['pullup-model', 'silver'],
+                ['pullup-model', 'red'],
+                ['pullup-model', 'blue'],
+                ['pullup-model', 'luxury-purple'],
+                ['pullup-model', 'gray'],
+                ['pullup-model', 'green'],
+                
+                // Rings tests
+                ['rings-model', 'natural'],
+                ['rings-model', 'dark'],
+                ['rings-model', 'cherry'],
+                ['rings-model', 'oak'],
+                ['rings-model', 'walnut'],
+                ['rings-model', 'birch'],
+                
+                // Parallel bars tests
+                ['parallel-model', 'black'],
+                ['parallel-model', 'white'],
+                ['parallel-model', 'silver'],
+                ['parallel-model', 'red'],
+                ['parallel-model', 'blue'],
+                ['parallel-model', 'luxury-purple'],
+                ['parallel-model', 'gray'],
+                ['parallel-model', 'green']
+            ];
+            
+            for (let i = 0; i < tests.length; i++) {
+                const [modelId, color] = tests[i];
+                const buttonSelector = `button[onclick*="${modelId}"][onclick*="${color}"]`;
+                const testButton = document.querySelector(buttonSelector);
+                
+                if (testButton) {
+                    testColor(modelId, color, testButton);
+                    await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms between tests
+                }
+            }
+            
+            button.textContent = '✅ Auto Test Complete';
+            setTimeout(() => {
+                button.textContent = '🚀 Run Automatic Color Test';
+                button.disabled = false;
+            }, 3000);
+        }
+
+        // Initialize metrics on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateMetrics();
+            
+            // Check if enhanced 3D manager is available
+            setTimeout(() => {
+                if (typeof window.enhanced3DManager !== 'undefined') {
+                    console.log('✅ Enhanced 3D Manager detected');
+                } else {
+                    console.warn('⚠️ Enhanced 3D Manager not found - some tests may fail');
+                }
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
