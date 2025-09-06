@@ -7,9 +7,24 @@ class CalisVerseStore {
     }
 
     init() {
-        this.initAnimations();
-        this.initColorTooltips();
-        this.updateCartDisplay();
+        // Wrap in DOMContentLoaded to ensure DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                this.initializeComponents();
+            });
+        } else {
+            this.initializeComponents();
+        }
+    }
+
+    initializeComponents() {
+        try {
+            this.initAnimations();
+            this.initColorTooltips();
+            this.updateCartDisplay();
+        } catch (error) {
+            console.error('CalisVerse initialization error:', error);
+        }
     }
 
     // Initialize GSAP animations
