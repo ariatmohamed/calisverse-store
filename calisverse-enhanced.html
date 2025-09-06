@@ -3,30 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CalisVerse - Premium 3D Fitness Equipment | Live Store with Custom Models</title>
-    <meta name="description" content="Premium calisthenics equipment for serious athletes. Professional pull-up bars, gymnastic rings, parallel bars, resistance bands, and ab wheels. Strengthen. Discipline. Progress.">
+    <title>CalisVerse - Train in 3D. Own your Strength.</title>
+    <meta name="description" content="Premium calisthenics equipment with interactive 3D previews. Professional rings, bars, and accessories for serious athletes. Train smarter, not harder.">
     <meta name="keywords" content="calisthenics equipment, pull-up bars, gymnastic rings, parallel bars, resistance bands, ab wheel, fitness equipment, bodyweight training">
     <meta name="author" content="CalisVerse">
     <meta property="og:title" content="CalisVerse - Premium Calisthenics Equipment">
     <meta property="og:description" content="Transform your training with professional-grade calisthenics equipment. Interactive 3D models, premium quality, fast shipping.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://ariatmohamed.github.io/calisverse-store/calisverse-enhanced.html">
-    <meta property="og:image" content="https://ariatmohamed.github.io/calisverse-store/assets/og-image.jpg">
+    <meta property="og:url" content="https://calisverse.com">
+    <meta property="og:image" content="./assets/og-banner-1200x630.jpg">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="CalisVerse - Premium 3D Fitness Equipment">
     <meta name="twitter:description" content="Professional calisthenics equipment with interactive 3D visualization. Strengthen. Discipline. Progress.">
-    <link rel="canonical" href="https://ariatmohamed.github.io/calisverse-store/calisverse-enhanced.html">
+    <link rel="canonical" href="https://calisverse.com">
     <meta name="theme-color" content="#8B5CF6">
     <meta name="robots" content="index, follow">
     <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    
+    <!-- Accessibility -->
+    <meta name="color-scheme" content="dark">
+    <link rel="preload" href="./assets/calisverse-logo.png" as="image" type="image/png">
+    
+    <!-- Performance -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js" as="script">
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" as="style">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="./enhanced-styles.css">
-    <link rel="stylesheet" href="./enhanced-styles-accessibility.css">
     
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -35,7 +46,7 @@
       "@type": "WebSite",
       "name": "CalisVerse",
       "description": "Premium calisthenics equipment for serious athletes. Professional pull-up bars, gymnastic rings, parallel bars, resistance bands, and ab wheels.",
-      "url": "https://ariatmohamed.github.io/calisverse-store/calisverse-enhanced.html"
+      "url": "https://calisverse.com"
     }
     </script>
 </head>
@@ -49,65 +60,67 @@
         <canvas id="cv-bg" style="display: none;"></canvas>
         
         <!-- Glassmorphism Navbar -->
-        <nav class="cv-nav">
-            <div class="cv-nav-brand">
-                <img src="./assets/calisverse-logo.png" alt="CalisVerse" class="cv-logo" height="36">
-                <span class="cv-brand-text">CalisVerse</span>
-            </div>
+        <nav class="cv-nav" id="main-nav">
+            <a class="cv-brand" href="#home" aria-label="CalisVerse">
+                <img src="./assets/calisverse-logo.png" alt="CalisVerse Logo" height="36" />
+                <span>CalisVerse</span>
+            </a>
             <div class="cv-nav-links">
-                <a href="#products" class="cv-nav-link">Products</a>
-                <a href="#about" class="cv-nav-link">About</a>
-                <button class="cv-cart-btn" onclick="toggleCart()" aria-label="Shopping cart">
-                    <span class="cv-cart-icon">🛒</span>
-                    <span class="cv-cart-count">0</span>
+                <a href="#home" class="cv-nav-link" data-section="home">Home</a>
+                <a href="#products" class="cv-nav-link" data-section="products">Products</a>
+                <a href="#about" class="cv-nav-link" data-section="about">About</a>
+                <a href="#contact" class="cv-nav-link" data-section="contact">Contact</a>
+                <button class="cv-cart-btn" onclick="toggleCart()" aria-label="Shopping cart with 0 items">
+                    <span class="cv-cart-icon" aria-hidden="true">🛒</span>
+                    <span class="cv-cart-count" aria-live="polite">0</span>
                 </button>
             </div>
         </nav>
 
         <!-- Hero Content -->
         <div class="cv-hero-content">
-            <h1 class="cv-hero-title">
-                <span class="cv-title-line1">Master Your</span>
-                <span class="cv-title-line2">Calisthenics Journey</span>
-            </h1>
-            <p class="cv-hero-subtitle">
-                Professional-grade equipment for serious athletes. Rings, bars, and accessories that elevate your bodyweight training to new heights.
-            </p>
+            <main id="main-content">
+                <h1 class="cv-hero-title">Train in 3D. Own your Strength.</h1>
+                <p class="cv-hero-subtitle">Experience calisthenics equipment like never before with interactive 3D previews. Experience before you buy.</p>
             
             <!-- Smart Search Bar -->
             <div class="cv-search-container">
                 <div class="cv-search-wrapper">
-                    <input type="text" id="cv-search" class="cv-search-input" placeholder="Search equipment... (Press / to focus)" autocomplete="off">
-                    <div class="cv-search-shortcut">/</div>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" id="cvSearchInput" class="cv-search-input" placeholder="Search equipment..." autocomplete="off" aria-label="Search products">
+                    <kbd class="cv-kbd">/</kbd>
                 </div>
-                <div id="cv-search-suggestions" class="cv-search-suggestions"></div>
+                <ul id="cvSearchList" class="cv-search-list" role="listbox" aria-label="Search suggestions"></ul>
             </div>
 
             <!-- CTAs -->
             <div class="cv-hero-actions">
-                <button class="cv-btn cv-btn-primary" onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})">
-                    Explore Equipment
-                </button>
-                <button class="cv-btn cv-btn-secondary" onclick="showAboutSection()">
-                    Our Story
-                </button>
+                <a href="#products" class="cv-btn cv-btn-primary">
+                    Explore Products
+                </a>
+                <a href="#about" class="cv-btn cv-btn-secondary">
+                    Learn Calisthenics
+                </a>
             </div>
 
             <!-- Product Tags Marquee -->
             <div class="cv-marquee">
-                <div class="cv-marquee-content">
-                    <span class="cv-tag">Gymnastic Rings</span>
-                    <span class="cv-tag">Pull-Up Bars</span>
-                    <span class="cv-tag">Parallettes</span>
-                    <span class="cv-tag">Dip Stations</span>
-                    <span class="cv-tag">Wall Bars</span>
-                    <span class="cv-tag">Resistance Bands</span>
-                    <span class="cv-tag">Weighted Vests</span>
-                    <span class="cv-tag">Door Anchors</span>
-                    <span class="cv-tag">Gymnastic Rings</span>
-                    <span class="cv-tag">Pull-Up Bars</span>
-                    <span class="cv-tag">Parallettes</span>
-                    <span class="cv-tag">Dip Stations</span>
+                <div class="cv-marquee-track">
+                    <span>Gymnastic Rings</span>
+                    <span>Pull-Up Bars</span>
+                    <span>Parallettes</span>
+                    <span>Dip Stations</span>
+                    <span>Wall Bars</span>
+                    <span>Resistance Bands</span>
+                    <span>Weighted Vests</span>
+                    <span>Door Anchors</span>
+                    <span>Gymnastic Rings</span>
+                    <span>Pull-Up Bars</span>
+                    <span>Parallettes</span>
+                    <span>Dip Stations</span>
                 </div>
             </div>
         </div>
@@ -115,128 +128,142 @@
 
     <!-- Main Content -->
     <main id="main-content">
-    <section id="products" class="hero" role="banner">
-        <div class="hero-content">
-            <h1 class="hero-title">Our Products</h1>
-            <p class="hero-tagline">Strengthen. Discipline. Progress.</p>
-            <p class="hero-subtitle">Elevate your training with premium-grade equipment</p>
-            <button class="cta-btn" onclick="scrollToProducts()" aria-describedby="hero-subtitle">Explore Products</button>
-        </div>
-    </section>
-
-    </section>
-    
-    <!-- Products Section -->
-    <section id="products" class="products-section" role="main" aria-labelledby="products-title">
-        <div class="container">
-            <h2 id="products-title" class="section-title">Explore Our Collection</h2>
+        <!-- Products Section -->
+        <section id="products" class="cv-products-section">
+            <div class="cv-container">
+                <div class="cv-section-header">
+                    <h2 class="cv-section-title">Premium Equipment</h2>
+                    <p class="cv-section-subtitle">Professional-grade calisthenics gear designed for serious athletes</p>
+                </div>
+                
+                <div class="cv-products-grid">
             
-            <!-- Product 1: Pull-Up Bar -->
-            <div class="product-card" data-product-id="pullup-bar">
-                <div class="product-layout">
-                    <div class="product-details">
-                        <h3 class="product-name">Professional Pull-Up Bar</h3>
-                        <p class="product-description">Heavy-duty steel construction with ergonomic grip design. Perfect for home and gym use.</p>
-                        <div class="product-features">
-                            <ul>
-                                <li>Maximum weight capacity: 300kg</li>
-                                <li>Powder-coated finish</li>
-                                <li>Easy installation</li>
-                                <li>Multiple grip positions</li>
-                            </ul>
-                        </div>
-                        <div class="product-price">$299.99</div>
-                        <button class="add-to-cart-btn" onclick="addToCart('pullup-bar', 'Professional Pull-Up Bar', 299.99)" aria-label="Add Professional Pull-Up Bar to cart for $299.99">
-                            Add to Cart
-                        </button>
-                    </div>
-                    <div class="product-visual">
-                        <div class="simple-3d-model" id="pullup-model" data-model="pullup">
-                            <div class="model-container">
-                                <svg width="300" height="200" viewBox="0 0 300 200" class="pullup-svg">
-                                    <!-- Pull-up bar structure -->
-                                    <rect x="50" y="80" width="200" height="8" rx="4" class="bar-main" fill="#333"/>
-                                    <rect x="40" y="75" width="20" height="18" rx="2" class="bar-mount" fill="#333"/>
-                                    <rect x="240" y="75" width="20" height="18" rx="2" class="bar-mount" fill="#333"/>
-                                    <rect x="80" y="78" width="140" height="12" rx="6" class="bar-grip" fill="#444"/>
-                                    <!-- Mounting brackets -->
-                                    <rect x="35" y="70" width="30" height="28" rx="3" class="bracket" fill="#333"/>
-                                    <rect x="235" y="70" width="30" height="28" rx="3" class="bracket" fill="#333"/>
-                                    <circle cx="45" cy="84" r="3" class="screw" fill="#666"/>
-                                    <circle cx="255" cy="84" r="3" class="screw" fill="#666"/>
+                    <!-- Product 1: Pull-Up Bar -->
+                    <div class="cv-product-card" data-product="pullup-bar">
+                        <div class="cv-product-image">
+                            <div class="cv-3d-preview" id="pullup-bar-3d">
+                                <!-- SVG fallback -->
+                                <svg class="cv-product-svg" width="200" height="150" viewBox="0 0 200 150" fill="none">
+                                    <rect x="20" y="60" width="160" height="8" rx="4" fill="#8B5CF6"/>
+                                    <rect x="15" y="55" width="10" height="18" rx="2" fill="#6366F1"/>
+                                    <rect x="175" y="55" width="10" height="18" rx="2" fill="#6366F1"/>
                                 </svg>
                             </div>
                         </div>
-                        <div class="color-customization">
-                            <div class="color-label">Choose Color:</div>
-                            <div class="color-options">
-                                <button class="color-swatch active" data-color="black" data-name="Matte Black" onclick="instantColorChange('pullup-model', 'black')" aria-label="Select Matte Black color" aria-pressed="true"></button>
-                                <button class="color-swatch" data-color="silver" data-name="Chrome Silver" onclick="instantColorChange('pullup-model', 'silver')" aria-label="Select Chrome Silver color" aria-pressed="false"></button>
-                                <button class="color-swatch" data-color="luxury-purple" data-name="Luxury Purple" onclick="instantColorChange('pullup-model', 'luxury-purple')" aria-label="Select Luxury Purple color" aria-pressed="false"></button>
-                                <button class="color-swatch" data-color="gray" data-name="Steel Gray" onclick="instantColorChange('pullup-model', 'gray')" aria-label="Select Steel Gray color" aria-pressed="false"></button>
-                                <button class="color-swatch" data-color="white" data-name="Pearl White" onclick="instantColorChange('pullup-model', 'white')" aria-label="Select Pearl White color" aria-pressed="false"></button>
-                                <button class="color-swatch" data-color="red" data-name="Fire Red" onclick="instantColorChange('pullup-model', 'red')" aria-label="Select Fire Red color" aria-pressed="false"></button>
-                                <button class="color-swatch custom-color" data-name="Custom Color" onclick="openColorPicker('pullup-model')" aria-label="Open custom color picker">
-                                    <i class="fas fa-palette" aria-hidden="true"></i>
+                        <div class="cv-product-content">
+                            <h3 class="cv-product-name">Professional Pull-Up Bar</h3>
+                            <p class="cv-product-benefit">Build upper body strength</p>
+                            <div class="cv-product-price">$299.99</div>
+                            <div class="cv-color-dots">
+                                <div class="cv-color-dot active" style="background: #1f2937;" data-color="black"></div>
+                                <div class="cv-color-dot" style="background: #374151;" data-color="gray"></div>
+                                <div class="cv-color-dot" style="background: #dc2626;" data-color="red"></div>
+                            </div>
+                            <div class="cv-product-actions">
+                                <button class="cv-btn-quick-view" onclick="openQuickView('pullup-bar')">Quick View</button>
+                                <button class="cv-btn-add-cart" onclick="addToCart('pullup-bar', 'Professional Pull-Up Bar', 299.99)">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 2: Gymnastic Rings -->
+                    <article class="cv-product-card" data-product-id="gymnastic-rings">
+                        <div class="cv-product-image">
+                            <div class="cv-3d-preview" id="rings-model" data-model="rings">
+                                <svg width="100%" height="200" viewBox="0 0 300 200" class="cv-product-svg">
+                                    <rect x="80" y="20" width="8" height="120" class="strap-left" fill="#8B5CF6"/>
+                                    <rect x="212" y="20" width="8" height="120" class="strap-right" fill="#8B5CF6"/>
+                                    <circle cx="84" cy="160" r="24" fill="none" stroke="#A855F7" stroke-width="6"/>
+                                    <circle cx="216" cy="160" r="24" fill="none" stroke="#A855F7" stroke-width="6"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="cv-product-content">
+                            <h3 class="cv-product-name">Professional Gymnastic Rings</h3>
+                            <p class="cv-product-benefit">Master advanced bodyweight movements</p>
+                            <div class="cv-product-price">$149.99</div>
+                            <div class="cv-color-dots">
+                                <button class="cv-color-dot active" data-color="#8B5CF6" aria-label="Purple"></button>
+                                <button class="cv-color-dot" data-color="#D97706" aria-label="Wood"></button>
+                                <button class="cv-color-dot" data-color="#1F2937" aria-label="Black"></button>
+                            </div>
+                            <div class="cv-product-actions">
+                                <button class="cv-btn-quick-view" onclick="openQuickView('gymnastic-rings')" aria-label="Quick view Gymnastic Rings">
+                                    Quick View
+                                </button>
+                                <button class="cv-btn-add-cart" onclick="addToCart('gymnastic-rings', 'Professional Gymnastic Rings', 149.99)" aria-label="Add to cart">
+                                    Add to Cart
                                 </button>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 2: Gymnastic Rings -->
-            <div class="product-card" data-product-id="gymnastic-rings">
-                <div class="product-layout">
-                    <div class="product-details">
-                        <h3 class="product-name">Professional Gymnastic Rings</h3>
-                        <p class="product-description">Olympic-grade gymnastic rings with adjustable straps. Perfect for muscle-ups, ring dips, and advanced movements.</p>
-                        <div class="product-features">
-                            <ul>
-                                <li>Premium birch wood construction</li>
-                                <li>Adjustable straps up to 5 meters</li>
-                                <li>Cam buckle system</li>
-                                <li>32mm diameter rings</li>
-                            </ul>
-                        </div>
-                        <div class="product-price">$149.99</div>
-                        <button class="add-to-cart-btn" onclick="addToCart('gymnastic-rings', 'Professional Gymnastic Rings', 149.99)">
-                            Add to Cart
-                        </button>
-                    </div>
-                    <div class="product-visual">
-                        <div class="simple-3d-model" id="rings-model" data-model="rings">
-                            <div class="model-container">
-                                <svg width="300" height="250" viewBox="0 0 300 250" class="rings-svg">
-                                    <!-- Straps -->
-                                    <rect x="80" y="20" width="8" height="120" class="strap-left" fill="#8B4513"/>
-                                    <rect x="212" y="20" width="8" height="120" class="strap-right" fill="#8B4513"/>
-                                    <!-- Rings -->
-                                    <circle cx="84" cy="180" r="35" fill="none" stroke="#D2691E" stroke-width="12" class="ring-left"/>
-                                    <circle cx="216" cy="180" r="35" fill="none" stroke="#D2691E" stroke-width="12" class="ring-right"/>
-                                    <!-- Connection points -->
-                                    <rect x="82" y="140" width="4" height="15" class="connection-left" fill="#654321"/>
-                                    <rect x="214" y="140" width="4" height="15" class="connection-right" fill="#654321"/>
-                                    <!-- Mounting points -->
-                                    <circle cx="84" cy="25" r="8" class="mount-left" fill="#333"/>
-                                    <circle cx="216" cy="25" r="8" class="mount-right" fill="#333"/>
+                    </article>
+                    <!-- Product 3: Parallettes -->
+                    <article class="cv-product-card" data-product-id="parallettes">
+                        <div class="cv-product-image">
+                            <div class="cv-3d-preview" id="parallettes-model" data-model="parallettes">
+                                <svg width="100%" height="200" viewBox="0 0 300 200" class="cv-product-svg">
+                                    <rect x="50" y="160" width="8" height="30" fill="#8B5CF6"/>
+                                    <rect x="90" y="160" width="8" height="30" fill="#8B5CF6"/>
+                                    <rect x="202" y="160" width="8" height="30" fill="#8B5CF6"/>
+                                    <rect x="242" y="160" width="8" height="30" fill="#8B5CF6"/>
+                                    <rect x="50" y="80" width="200" height="8" rx="4" fill="#A855F7"/>
+                                    <rect x="50" y="120" width="200" height="8" rx="4" fill="#A855F7"/>
                                 </svg>
                             </div>
                         </div>
-                        <div class="color-customization">
-                            <div class="color-label">Choose Wood Finish:</div>
-                            <div class="color-options">
-                                <button class="color-swatch active" data-color="natural" data-name="Natural Wood" onclick="instantColorChange('rings-model', 'natural')" aria-label="Select Natural Wood finish" aria-pressed="true" tabindex="0"></button>
-                                <div class="color-swatch" data-color="dark" data-name="Dark Walnut" onclick="instantColorChange('rings-model', 'dark')"></div>
-                                <div class="color-swatch" data-color="cherry" data-name="Cherry Wood" onclick="instantColorChange('rings-model', 'cherry')"></div>
-                                <div class="color-swatch" data-color="oak" data-name="Golden Oak" onclick="instantColorChange('rings-model', 'oak')"></div>
-                                <div class="color-swatch" data-color="walnut" data-name="Rich Walnut" onclick="instantColorChange('rings-model', 'walnut')"></div>
-                                <div class="color-swatch" data-color="birch" data-name="Light Birch" onclick="instantColorChange('rings-model', 'birch')"></div>
+                        <div class="cv-product-content">
+                            <h3 class="cv-product-name">Professional Parallettes</h3>
+                            <p class="cv-product-benefit">Perfect your handstands and L-sits</p>
+                            <div class="cv-product-price">$199.99</div>
+                            <div class="cv-color-dots">
+                                <button class="cv-color-dot active" data-color="#8B5CF6" aria-label="Purple"></button>
+                                <button class="cv-color-dot" data-color="#1F2937" aria-label="Black"></button>
+                                <button class="cv-color-dot" data-color="#9CA3AF" aria-label="Silver"></button>
+                            </div>
+                            <div class="cv-product-actions">
+                                <button class="cv-btn-quick-view" onclick="openQuickView('parallettes')" aria-label="Quick view Parallettes">
+                                    Quick View
+                                </button>
+                                <button class="cv-btn-add-cart" onclick="addToCart('parallettes', 'Professional Parallettes', 199.99)" aria-label="Add to cart">
+                                    Add to Cart
+                                </button>
                             </div>
                         </div>
-                    </div>
+                    </article>
+
+                    <!-- Product 4: Resistance Bands -->
+                    <article class="cv-product-card" data-product-id="resistance-bands">
+                        <div class="cv-product-image">
+                            <div class="cv-3d-preview" id="bands-model" data-model="bands">
+                                <svg width="100%" height="200" viewBox="0 0 300 200" class="cv-product-svg">
+                                    <ellipse cx="150" cy="100" rx="80" ry="40" fill="none" stroke="#8B5CF6" stroke-width="8"/>
+                                    <ellipse cx="150" cy="100" rx="60" ry="30" fill="none" stroke="#A855F7" stroke-width="6"/>
+                                    <ellipse cx="150" cy="100" rx="40" ry="20" fill="none" stroke="#C084FC" stroke-width="4"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="cv-product-content">
+                            <h3 class="cv-product-name">Premium Resistance Bands</h3>
+                            <p class="cv-product-benefit">Complete resistance training system</p>
+                            <div class="cv-product-price">$89.99</div>
+                            <div class="cv-color-dots">
+                                <button class="cv-color-dot active" data-color="#8B5CF6" aria-label="Purple"></button>
+                                <button class="cv-color-dot" data-color="#EF4444" aria-label="Red"></button>
+                                <button class="cv-color-dot" data-color="#10B981" aria-label="Green"></button>
+                            </div>
+                            <div class="cv-product-actions">
+                                <button class="cv-btn-quick-view" onclick="openQuickView('resistance-bands')" aria-label="Quick view Resistance Bands">
+                                    Quick View
+                                </button>
+                                <button class="cv-btn-add-cart" onclick="addToCart('resistance-bands', 'Premium Resistance Bands', 89.99)" aria-label="Add to cart">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </article>
                 </div>
             </div>
+        </section>
 
             <!-- Product 3: Parallel Bars -->
             <div class="product-card" data-product-id="parallel-bars">
@@ -613,19 +640,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="./enhanced-functionality.js"></script>
-    <script src="./enhanced-3d-functionality.js"></script>
-    <script src="./hero-canvas.js"></script>
-    <script src="./hero-3d.js"></script>
-    <script src="./reviews-system.js"></script>
-    <script src="./inventory-system.js"></script>
-    <script src="./payment-integration.js"></script>
-    <script src="./user-dashboard.js"></script>
-    <script src="./search-system.js"></script>
-
-    <script src="./enhanced-color-switcher.js"></script>
-    <script src="./security-enhancements.js"></script>
-    <script src="./inventory-system.js"></script>
+    <script src="./enhanced-functionality.js" defer></script>
+    <script src="./enhanced-3d-functionality.js" defer></script>
+    <script src="./hero-3d.js" defer></script>
+    <script src="./hero-canvas.js" defer></script>
+    <script src="./quick-view-modal.js" defer></script>
+    <script src="./performance-optimizations.js" defer></script>
     
     <!-- Analytics Integration -->
     <script>

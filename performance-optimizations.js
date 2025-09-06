@@ -47,8 +47,8 @@ class PerformanceOptimizer {
 
         // Preload critical images
         const criticalImages = [
-            '/assets/hero-bg.webp',
-            '/assets/logo.webp'
+            './assets/calisverse-logo.png',
+            './assets/og-banner-1200x630.jpg'
         ];
 
         criticalImages.forEach(src => {
