@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { ProductPage } from './components/ProductPage';
 import { preloadProductModels } from './utils/gltfCache';
 import type { Product } from './types';
 
-// Sample product data
+// Sample product data - using placeholder model for now
 const sampleProduct: Product = {
   id: 'pullup-bar-pro',
   name: 'Professional Pull-up Bar',
   price: 299.99,
   description: 'Premium steel construction pull-up bar designed for serious calisthenics training. Features ergonomic grips and supports up to 300lbs.',
-  modelPath: '/models/pullup-bar.glb',
+  modelPath: 'https://threejs.org/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf',
   variants: [
     {
       name: 'Black',

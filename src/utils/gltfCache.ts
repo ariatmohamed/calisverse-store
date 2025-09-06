@@ -14,15 +14,32 @@ class GLTFCacheManager {
       return this.loadingPromises.get(url)!;
     }
 
-    const promise = useGLTF.preload(url);
+    const promise = new Promise((resolve, reject) => {
+      try {
+        useGLTF.preload(url);
+        // Since useGLTF.preload doesn't return a promise, we simulate one
+        setTimeout(() => {
+          try {
+            const gltf = { scene: null }; // Placeholder
+            this.cache[url] = gltf;
+            resolve(gltf);
+          } catch (error) {
+            reject(error);
+          }
+        }, 100);
+      } catch (error) {
+        reject(error);
+      }
+    });
+
     this.loadingPromises.set(url, promise);
 
     promise
-      .then((gltf) => {
+      .then((gltf: any) => {
         this.cache[url] = gltf;
         this.loadingPromises.delete(url);
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.error(`Failed to preload GLTF: ${url}`, error);
         this.loadingPromises.delete(url);
       });

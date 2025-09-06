@@ -114,18 +114,16 @@ export const Product3DViewer: React.FC<Product3DViewerProps> = ({
           antialias: true,
           alpha: true,
           powerPreference: "high-performance",
-          physicallyCorrectLights: true,
           toneMapping: ACESFilmicToneMapping,
           toneMappingExposure: 1.2
         }}
         style={{ background: 'transparent' }}
       >
         <Suspense fallback={null}>
-          {/* HDRI Environment */}
+          {/* HDRI Environment - using preset for now */}
           <Environment
-            files="/hdri/studio_small_03_1k.hdr"
+            preset="studio"
             background={false}
-            intensity={0.8}
           />
           
           {/* Key Light */}
