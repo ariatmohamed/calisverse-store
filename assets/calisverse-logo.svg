@@ -1,0 +1,18 @@
+<svg width="200" height="60" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+  <!-- CV part with gradient -->
+  <defs>
+    <linearGradient id="cvGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#a855f7;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- C letter -->
+  <path d="M10 15 Q10 10 15 10 L25 10 Q30 10 30 15 L30 20 L25 20 L25 15 L15 15 L15 45 L25 45 L25 40 L30 40 L30 45 Q30 50 25 50 L15 50 Q10 50 10 45 Z" fill="url(#cvGradient)"/>
+  
+  <!-- V letter -->
+  <path d="M35 10 L40 10 L50 40 L60 10 L65 10 L52 50 L48 50 Z" fill="url(#cvGradient)"/>
+  
+  <!-- CALISVERSE text -->
+  <text x="75" y="35" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="600" fill="#e5e7eb" letter-spacing="1px">CALISVERSE</text>
+</svg>

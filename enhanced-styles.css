@@ -123,12 +123,27 @@ body {
 }
 
 .logo {
-    font-size: 28px;
-    font-weight: 800;
-    background: linear-gradient(135deg, var(--primary), var(--primary-light));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.brand-logo {
+    height: 40px;
+    width: auto;
+    transition: all 0.3s ease;
+}
+
+.brand-logo:hover {
+    transform: scale(1.05);
+}
+
+/* Mobile logo sizing */
+@media (max-width: 768px) {
+    .brand-logo {
+        height: 30px;
+    }
 }
 
 .nav-links {
